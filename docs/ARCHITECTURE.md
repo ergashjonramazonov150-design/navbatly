@@ -757,3 +757,5 @@ All other items use the defaults in §1.2.
 - Edge Functions are deployed to dev with `supabase functions deploy`; secrets set with `supabase secrets set`.
 - Free projects pause after ~1 week without activity — just "Restore" in the dashboard.
 - Never put real customer data in the dev project; use `seed.sql` demo data only.
+- **Config guard:** `vite build` fails if `VITE_SUPABASE_URL` / `VITE_SUPABASE_PUBLISHABLE_KEY` are missing, invalid, or a **secret** key (`src/lib/env-validation.ts`). A failed Vercel build keeps the previous version live. At runtime a bad config shows "Sayt vaqtincha ishlamayapti" instead of a blank page.
+- **After every deploy:** `npm run check:live` opens the live site in a real browser (installed Chrome via Playwright), desktop + phone size, and fails unless the pages actually render, without JavaScript errors or horizontal scrolling. HTTP 200 alone is not proof.
