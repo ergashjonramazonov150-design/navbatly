@@ -1,0 +1,2784 @@
+<!doctype html>
+<html lang="uz">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Navbatly — boshqaruv paneli (maket)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,500;7..72,600;7..72,700&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* ============================ Tokens — Direction A «Usta» ============================ */
+      :root {
+        --bg: #f6f1ea;
+        --surface: #fffdf9;
+        --surface-2: #fbf7f1;
+        --ink: #1f1b16;
+        --ink-soft: #3a3129;
+        --muted: #6f655a;
+        --line: #e6dccf;
+        --line-strong: #c9b9a5;
+        --accent: #b4532a;
+        --accent-soft: #f6e4d8;
+        --success: #3f7d4e;
+        --success-soft: #e3efe5;
+        --danger: #b3261e;
+        --danger-soft: #fbe9e7;
+        --chip-bg: #f1e6d8;
+        --chip-ink: #6b4a2e;
+        --disabled-ink: #a99c8c;
+        --sel-bg: #1f1b16;
+        --sel-ink: #fffdf9;
+        --sel-muted: #d9cfc3;
+        --font-display: Literata, Georgia, serif;
+        --font-body: Inter, system-ui, sans-serif;
+        --r-card: 16px;
+        --r-chip: 12px;
+        --sidebar: 248px;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html {
+        -webkit-text-size-adjust: 100%;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font: 14.5px/1.5 var(--font-body);
+      }
+      button,
+      input,
+      select,
+      textarea {
+        font: inherit;
+        color: inherit;
+      }
+      button {
+        -webkit-tap-highlight-color: transparent;
+      }
+      :focus-visible {
+        outline: 3px solid var(--accent);
+        outline-offset: 2px;
+      }
+      [hidden] {
+        display: none !important;
+      }
+      .num {
+        font-variant-numeric: tabular-nums;
+      }
+
+      /* ============================ Shell ============================ */
+      .shell {
+        min-height: 100dvh;
+      }
+      .sidebar {
+        position: fixed;
+        inset: 0 auto 0 0;
+        width: var(--sidebar);
+        background: var(--surface);
+        border-right: 1px solid var(--line);
+        display: flex;
+        flex-direction: column;
+        padding: 18px 14px;
+        z-index: 5;
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 4px 8px 18px;
+      }
+      .logo {
+        width: 38px;
+        height: 38px;
+        border-radius: 12px;
+        background: var(--accent);
+        color: #fff;
+        display: grid;
+        place-items: center;
+        font: 700 18px/1 var(--font-display);
+        flex: none;
+      }
+      .brand b {
+        display: block;
+        font-size: 14px;
+        line-height: 1.2;
+      }
+      .brand span {
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .nav {
+        display: grid;
+        gap: 4px;
+      }
+      .nav button {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        min-height: 44px;
+        padding: 0 12px;
+        border: 0;
+        border-radius: 12px;
+        background: transparent;
+        cursor: pointer;
+        font-weight: 600;
+        color: var(--ink-soft);
+        text-align: left;
+      }
+      .nav button:hover {
+        background: var(--surface-2);
+      }
+      .nav button[aria-current='page'] {
+        background: var(--sel-bg);
+        color: var(--sel-ink);
+      }
+      .nav .count {
+        margin-left: auto;
+        min-width: 22px;
+        height: 22px;
+        padding: 0 7px;
+        border-radius: 999px;
+        background: var(--accent);
+        color: #fff;
+        font-size: 12px;
+        display: grid;
+        place-items: center;
+      }
+      .nav svg,
+      .bottom-nav svg {
+        width: 20px;
+        height: 20px;
+        flex: none;
+      }
+      .me {
+        margin-top: auto;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 8px 4px;
+        border-top: 1px solid var(--line);
+      }
+      .me .av {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: #e9d8c4;
+        color: #7a3d1e;
+        display: grid;
+        place-items: center;
+        font: 700 15px/1 var(--font-display);
+        flex: none;
+      }
+      .me b {
+        display: block;
+        font-size: 13.5px;
+        line-height: 1.2;
+      }
+      .me span {
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .icon-btn {
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+        border: 0;
+        background: transparent;
+        display: grid;
+        place-items: center;
+        cursor: pointer;
+        color: var(--muted);
+        flex: none;
+      }
+      .icon-btn:hover {
+        background: var(--surface-2);
+        color: var(--ink);
+      }
+      .main {
+        margin-left: var(--sidebar);
+        padding: 28px 32px 120px;
+        max-width: 1180px;
+      }
+      .topbar,
+      .bottom-nav {
+        display: none;
+      }
+
+      @media (max-width: 899px) {
+        .sidebar {
+          display: none;
+        }
+        .main {
+          margin-left: 0;
+          padding: 16px 16px 120px;
+        }
+        .topbar {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          position: sticky;
+          top: 0;
+          z-index: 5;
+          padding: 10px 16px;
+          background: rgba(246, 241, 234, 0.92);
+          backdrop-filter: blur(10px);
+          border-bottom: 1px solid var(--line);
+        }
+        .topbar .logo {
+          width: 34px;
+          height: 34px;
+          font-size: 16px;
+          border-radius: 10px;
+        }
+        .topbar b {
+          flex: 1;
+          font-size: 14.5px;
+        }
+        .bottom-nav {
+          display: grid;
+          position: fixed;
+          inset: auto 0 0 0;
+          z-index: 5;
+          background: var(--surface);
+          border-top: 1px solid var(--line);
+          padding: 6px 6px calc(6px + env(safe-area-inset-bottom));
+          grid-auto-flow: column;
+          grid-auto-columns: 1fr;
+        }
+        .bottom-nav button {
+          border: 0;
+          background: transparent;
+          min-height: 54px;
+          display: grid;
+          justify-items: center;
+          align-content: center;
+          gap: 3px;
+          font-size: 11px;
+          font-weight: 600;
+          color: var(--muted);
+          cursor: pointer;
+          border-radius: 12px;
+          position: relative;
+        }
+        .bottom-nav button[aria-current='page'] {
+          color: var(--ink);
+          background: var(--surface-2);
+        }
+        .bottom-nav button[aria-current='page'] svg {
+          color: var(--accent);
+        }
+        .bottom-nav .dot {
+          position: absolute;
+          top: 6px;
+          right: calc(50% - 18px);
+          min-width: 18px;
+          height: 18px;
+          padding: 0 5px;
+          border-radius: 999px;
+          background: var(--accent);
+          color: #fff;
+          font-size: 10.5px;
+          display: grid;
+          place-items: center;
+        }
+      }
+
+      /* ============================ Page header ============================ */
+      .page-head {
+        display: flex;
+        align-items: flex-end;
+        gap: 16px;
+        flex-wrap: wrap;
+        margin-bottom: 18px;
+      }
+      .page-head .grow {
+        flex: 1;
+        min-width: 200px;
+      }
+      .page-head h1 {
+        font: 600 30px/1.1 var(--font-display);
+        letter-spacing: -0.015em;
+        margin: 0;
+      }
+      .page-head p {
+        margin: 4px 0 0;
+        color: var(--muted);
+      }
+      @media (max-width: 899px) {
+        .page-head h1 {
+          font-size: 25px;
+        }
+      }
+
+      /* ============================ Buttons & inputs ============================ */
+      .btn {
+        min-height: 46px;
+        padding: 0 18px;
+        border: 0;
+        border-radius: 999px;
+        font-weight: 600;
+        font-size: 14.5px;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        white-space: nowrap;
+        transition:
+          background 0.15s,
+          transform 0.08s;
+      }
+      .btn:active:not(:disabled) {
+        transform: translateY(1px);
+      }
+      .btn svg {
+        width: 18px;
+        height: 18px;
+      }
+      .btn-primary {
+        background: var(--ink);
+        color: var(--sel-ink);
+      }
+      .btn-primary:hover {
+        background: var(--ink-soft);
+      }
+      .btn-secondary {
+        background: var(--surface);
+        box-shadow: inset 0 0 0 1.5px var(--line-strong);
+      }
+      .btn-secondary:hover {
+        background: var(--surface-2);
+      }
+      .btn-success {
+        background: var(--success);
+        color: #fff;
+      }
+      .btn-danger {
+        background: var(--danger);
+        color: #fff;
+      }
+      .btn-ghost-danger {
+        background: transparent;
+        color: var(--danger);
+        box-shadow: inset 0 0 0 1.5px #e7b8b3;
+      }
+      .btn-sm {
+        min-height: 38px;
+        padding: 0 14px;
+        font-size: 13.5px;
+      }
+      .btn-block {
+        width: 100%;
+      }
+      .btn:disabled {
+        opacity: 0.45;
+        cursor: not-allowed;
+      }
+      .field {
+        display: grid;
+        gap: 6px;
+      }
+      .field > span {
+        font-weight: 600;
+        font-size: 13.5px;
+      }
+      .field small {
+        color: var(--muted);
+        font-size: 12.5px;
+      }
+      .input,
+      select.input {
+        width: 100%;
+        min-height: 46px;
+        padding: 0 14px;
+        border-radius: 12px;
+        border: 1.5px solid var(--line-strong);
+        background: var(--surface);
+        font-size: 15px;
+      }
+      textarea.input {
+        padding: 10px 14px;
+        min-height: 80px;
+        resize: vertical;
+      }
+      .input:focus {
+        outline: none;
+        border-color: var(--ink);
+        box-shadow: 0 0 0 3px rgba(31, 27, 22, 0.1);
+      }
+      .input[readonly] {
+        background: var(--surface-2);
+        color: var(--muted);
+      }
+      .phone-wrap {
+        display: flex;
+        border-radius: 12px;
+        border: 1.5px solid var(--line-strong);
+        background: var(--surface);
+        overflow: hidden;
+      }
+      .phone-wrap:focus-within {
+        border-color: var(--ink);
+        box-shadow: 0 0 0 3px rgba(31, 27, 22, 0.1);
+      }
+      .phone-wrap span {
+        display: grid;
+        place-items: center;
+        padding: 0 10px 0 14px;
+        color: var(--muted);
+        font-weight: 600;
+        border-right: 1px solid var(--line);
+      }
+      .phone-wrap input {
+        flex: 1;
+        min-width: 0;
+        border: 0;
+        outline: none;
+        background: transparent;
+        min-height: 46px;
+        padding: 0 12px;
+        font-size: 15px;
+      }
+      .grid-2 {
+        display: grid;
+        gap: 14px;
+        grid-template-columns: 1fr 1fr;
+      }
+      @media (max-width: 599px) {
+        .grid-2 {
+          grid-template-columns: 1fr;
+        }
+      }
+      .switch {
+        position: relative;
+        width: 46px;
+        height: 28px;
+        flex: none;
+      }
+      .switch input {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        margin: 0;
+        cursor: pointer;
+        z-index: 1;
+      }
+      .switch i {
+        position: absolute;
+        inset: 0;
+        border-radius: 999px;
+        background: var(--line-strong);
+        transition: background 0.15s;
+      }
+      .switch i::after {
+        content: '';
+        position: absolute;
+        top: 3px;
+        left: 3px;
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        background: #fff;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        transition: transform 0.15s;
+      }
+      .switch input:checked + i {
+        background: var(--success);
+      }
+      .switch input:checked + i::after {
+        transform: translateX(18px);
+      }
+      .switch input:focus-visible + i {
+        outline: 3px solid var(--accent);
+        outline-offset: 2px;
+      }
+
+      /* ============================ Chips / segmented ============================ */
+      .filters {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        align-items: center;
+        margin-bottom: 16px;
+      }
+      .seg {
+        display: inline-flex;
+        padding: 3px;
+        border-radius: 999px;
+        background: var(--surface);
+        box-shadow: inset 0 0 0 1.5px var(--line);
+        overflow-x: auto;
+        max-width: 100%;
+        scrollbar-width: none;
+      }
+      .seg button {
+        min-height: 38px;
+        padding: 0 14px;
+        border: 0;
+        border-radius: 999px;
+        background: transparent;
+        font-weight: 600;
+        font-size: 13.5px;
+        cursor: pointer;
+        white-space: nowrap;
+        color: var(--ink-soft);
+      }
+      .seg button[aria-pressed='true'] {
+        background: var(--sel-bg);
+        color: var(--sel-ink);
+      }
+      .seg .n {
+        opacity: 0.65;
+        margin-left: 4px;
+        font-weight: 500;
+      }
+      .filters select.input {
+        width: auto;
+        min-height: 44px;
+        border-radius: 999px;
+        padding: 0 36px 0 14px;
+      }
+
+      /* ============================ Status badges ============================ */
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 10px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 600;
+        white-space: nowrap;
+      }
+      .badge::before {
+        content: '';
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: currentColor;
+      }
+      .b-pending {
+        background: var(--accent-soft);
+        color: var(--accent);
+      }
+      .b-confirmed {
+        background: var(--success-soft);
+        color: var(--success);
+      }
+      .b-cancelled {
+        background: #efe8de;
+        color: var(--muted);
+      }
+      .tag {
+        font-size: 11.5px;
+        font-weight: 600;
+        padding: 2px 8px;
+        border-radius: 6px;
+        background: var(--chip-bg);
+        color: var(--chip-ink);
+      }
+
+      /* ============================ Appointment list ============================ */
+      .banner {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 14px 12px 16px;
+        border-radius: 14px;
+        background: var(--accent-soft);
+        color: #6d2f14;
+        margin-bottom: 16px;
+        flex-wrap: wrap;
+      }
+      .banner.info {
+        background: var(--surface);
+        color: var(--muted);
+        box-shadow: inset 0 0 0 1.5px var(--line);
+      }
+      .banner b {
+        font-weight: 700;
+      }
+      .banner .grow {
+        flex: 1;
+        min-width: 180px;
+      }
+      .day-group {
+        margin-bottom: 22px;
+      }
+      .day-title {
+        display: flex;
+        align-items: baseline;
+        gap: 10px;
+        margin: 0 0 10px;
+        font: 600 18px/1.2 var(--font-display);
+      }
+      .day-title span {
+        font: 500 13px/1 var(--font-body);
+        color: var(--muted);
+      }
+      .appt-list {
+        display: grid;
+        gap: 10px;
+      }
+      .appt {
+        display: grid;
+        grid-template-columns: 84px 1fr auto;
+        gap: 4px 16px;
+        align-items: center;
+        padding: 14px 16px;
+        border-radius: var(--r-card);
+        background: var(--surface);
+        border: 1.5px solid var(--line);
+      }
+      .appt.pending {
+        border-color: #e7c4af;
+        box-shadow: inset 4px 0 0 var(--accent);
+      }
+      .appt.cancelled {
+        background: transparent;
+        border-style: dashed;
+      }
+      .appt.cancelled .who,
+      .appt.cancelled .time b {
+        text-decoration: line-through;
+        color: var(--muted);
+      }
+      .appt.past:not(.cancelled) {
+        opacity: 0.62;
+      }
+      .appt .time b {
+        display: block;
+        font: 600 20px/1.1 var(--font-display);
+      }
+      .appt .time span {
+        font-size: 12.5px;
+        color: var(--muted);
+      }
+      .appt .who {
+        font-weight: 650;
+        font-size: 15.5px;
+      }
+      .appt .what {
+        color: var(--muted);
+        font-size: 13.5px;
+        display: flex;
+        gap: 6px 10px;
+        flex-wrap: wrap;
+        align-items: center;
+        margin-top: 2px;
+      }
+      .appt .tel {
+        color: var(--ink-soft);
+        text-decoration: none;
+        font-weight: 500;
+        font-variant-numeric: tabular-nums;
+      }
+      .appt .tel:hover {
+        color: var(--accent);
+      }
+      .appt .note {
+        font-size: 13px;
+        color: var(--chip-ink);
+        margin-top: 4px;
+      }
+      .appt .reason {
+        font-size: 13px;
+        color: var(--muted);
+        margin-top: 4px;
+      }
+      .appt .side {
+        display: grid;
+        justify-items: end;
+        gap: 6px;
+      }
+      .appt .price {
+        font-weight: 700;
+        white-space: nowrap;
+      }
+      .appt .actions {
+        grid-column: 2 / -1;
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-top: 8px;
+      }
+      @media (max-width: 599px) {
+        .appt {
+          grid-template-columns: 64px 1fr;
+          padding: 14px;
+        }
+        .appt .time b {
+          font-size: 18px;
+        }
+        .appt .side {
+          grid-column: 2;
+          justify-items: start;
+          grid-auto-flow: column;
+          align-items: center;
+          justify-content: start;
+          gap: 10px;
+          margin-top: 6px;
+        }
+        .appt .actions {
+          grid-column: 1 / -1;
+        }
+        .appt .actions .btn {
+          flex: 1;
+          min-height: 44px;
+        }
+      }
+      .empty {
+        text-align: center;
+        padding: 40px 16px;
+        border-radius: var(--r-card);
+        border: 1.5px dashed var(--line-strong);
+        color: var(--muted);
+      }
+      .empty b {
+        display: block;
+        color: var(--ink);
+        font: 600 18px/1.3 var(--font-display);
+        margin-bottom: 4px;
+      }
+
+      /* ============================ Calendar ============================ */
+      .cal-bar {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-bottom: 14px;
+      }
+      .cal-bar .date-label {
+        font: 600 20px/1.2 var(--font-display);
+        margin: 0 6px;
+        min-width: 190px;
+      }
+      .cal-bar .spacer {
+        flex: 1;
+      }
+      .legend {
+        display: flex;
+        gap: 14px;
+        font-size: 12.5px;
+        color: var(--muted);
+        flex-wrap: wrap;
+        align-items: center;
+      }
+      .legend i {
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        border-radius: 4px;
+        margin-right: 6px;
+        vertical-align: -2px;
+      }
+      .check-inline {
+        display: inline-flex;
+        gap: 8px;
+        align-items: center;
+        font-size: 13.5px;
+        cursor: pointer;
+        min-height: 44px;
+      }
+      .check-inline input {
+        width: 18px;
+        height: 18px;
+        accent-color: var(--ink);
+      }
+      .cal-scroll {
+        overflow-x: auto;
+        border-radius: var(--r-card);
+        border: 1.5px solid var(--line);
+        background: var(--surface);
+      }
+      .cal {
+        display: grid;
+        min-width: 100%;
+        position: relative;
+      }
+      .cal-head {
+        position: sticky;
+        top: 0;
+        z-index: 3;
+        display: contents;
+      }
+      .cal-corner,
+      .cal-col-head {
+        position: sticky;
+        top: 0;
+        z-index: 3;
+        background: var(--surface);
+        border-bottom: 1.5px solid var(--line);
+        height: 64px;
+      }
+      .cal-corner {
+        left: 0;
+        z-index: 4;
+      }
+      .cal-col-head {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 0 14px;
+        border-left: 1px solid var(--line);
+      }
+      .cal-col-head .av {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: #e9d8c4;
+        color: #7a3d1e;
+        display: grid;
+        place-items: center;
+        font: 700 15px/1 var(--font-display);
+        flex: none;
+      }
+      .cal-col-head b {
+        display: block;
+        font-size: 14px;
+        line-height: 1.2;
+      }
+      .cal-col-head span {
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .cal-axis {
+        position: sticky;
+        left: 0;
+        z-index: 2;
+        background: var(--surface);
+        border-right: 1px solid var(--line);
+      }
+      .cal-axis div {
+        position: absolute;
+        right: 8px;
+        font-size: 11.5px;
+        color: var(--muted);
+        transform: translateY(-50%);
+        font-variant-numeric: tabular-nums;
+      }
+      .cal-col {
+        position: relative;
+        border-left: 1px solid var(--line);
+        cursor: copy;
+      }
+      .cal-col .hour {
+        position: absolute;
+        left: 0;
+        right: 0;
+        border-top: 1px solid var(--line);
+      }
+      .cal-col .half {
+        position: absolute;
+        left: 0;
+        right: 0;
+        border-top: 1px dashed #efe6da;
+      }
+      .cal-col .off {
+        position: absolute;
+        left: 0;
+        right: 0;
+        background: repeating-linear-gradient(135deg, #f3ece2 0 6px, #ece3d6 6px 12px);
+        display: grid;
+        place-items: center;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--muted);
+        cursor: default;
+      }
+      .ev {
+        position: absolute;
+        left: 6px;
+        right: 6px;
+        border-radius: 10px;
+        padding: 6px 9px;
+        overflow: hidden;
+        cursor: pointer;
+        border: 0;
+        text-align: left;
+        font-size: 12.5px;
+        line-height: 1.3;
+        display: block;
+        transition:
+          transform 0.08s,
+          box-shadow 0.15s;
+      }
+      .ev:hover {
+        box-shadow: 0 6px 16px rgba(31, 27, 22, 0.18);
+        z-index: 2;
+      }
+      .ev b {
+        display: block;
+        font-size: 13px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .ev span {
+        display: block;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        opacity: 0.85;
+      }
+      .ev.confirmed {
+        background: var(--sel-bg);
+        color: var(--sel-ink);
+      }
+      .ev.pending {
+        background: var(--accent-soft);
+        color: #6d2f14;
+        box-shadow: inset 0 0 0 1.5px var(--accent);
+        background-image: repeating-linear-gradient(
+          135deg,
+          rgba(180, 83, 42, 0.07) 0 6px,
+          transparent 6px 12px
+        );
+      }
+      .ev.cancelled {
+        background: transparent;
+        color: var(--muted);
+        box-shadow: inset 0 0 0 1.5px var(--line-strong);
+        text-decoration: line-through;
+      }
+      .now-line {
+        position: absolute;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: var(--danger);
+        z-index: 2;
+        pointer-events: none;
+      }
+      .now-line::before {
+        content: '';
+        position: absolute;
+        left: -5px;
+        top: -4px;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: var(--danger);
+      }
+
+      /* ============================ Generic cards / lists ============================ */
+      .panel-card {
+        background: var(--surface);
+        border: 1.5px solid var(--line);
+        border-radius: var(--r-card);
+        padding: 20px;
+        margin-bottom: 16px;
+      }
+      .panel-card h2 {
+        font: 600 19px/1.2 var(--font-display);
+        margin: 0 0 4px;
+      }
+      .panel-card > p {
+        margin: 0 0 16px;
+        color: var(--muted);
+        font-size: 13.5px;
+      }
+      .panel-card .stack {
+        display: grid;
+        gap: 14px;
+      }
+      .rows {
+        display: grid;
+        gap: 10px;
+      }
+      .row {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 14px 16px;
+        border-radius: var(--r-card);
+        background: var(--surface);
+        border: 1.5px solid var(--line);
+        cursor: pointer;
+        text-align: left;
+        width: 100%;
+      }
+      .row:hover {
+        border-color: var(--line-strong);
+      }
+      .row.inactive {
+        background: transparent;
+        border-style: dashed;
+      }
+      .row.inactive .title {
+        color: var(--muted);
+      }
+      .row .grow {
+        flex: 1;
+        min-width: 0;
+      }
+      .row .title {
+        font-weight: 650;
+        font-size: 15.5px;
+      }
+      .row .sub {
+        color: var(--muted);
+        font-size: 13px;
+        margin-top: 2px;
+        display: flex;
+        gap: 6px 10px;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+      .row .price {
+        font-weight: 700;
+        white-space: nowrap;
+      }
+      .row .av {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: #e9d8c4;
+        color: #7a3d1e;
+        display: grid;
+        place-items: center;
+        font: 700 19px/1 var(--font-display);
+        flex: none;
+      }
+      .hint-box {
+        display: flex;
+        gap: 10px;
+        padding: 12px 14px;
+        border-radius: 12px;
+        background: var(--surface-2);
+        color: var(--muted);
+        font-size: 13px;
+        border: 1px solid var(--line);
+      }
+      .hint-box.warn {
+        background: var(--accent-soft);
+        color: #6d2f14;
+        border-color: #ecc9b4;
+      }
+      .hint-box.err {
+        background: var(--danger-soft);
+        color: var(--danger);
+        border-color: #f0c4bf;
+      }
+      .hint-box.ok {
+        background: var(--success-soft);
+        color: var(--success);
+        border-color: #c7dfcc;
+      }
+      .tabs {
+        display: flex;
+        gap: 4px;
+        border-bottom: 1.5px solid var(--line);
+        margin-bottom: 18px;
+        overflow-x: auto;
+        scrollbar-width: none;
+      }
+      .tabs button {
+        border: 0;
+        background: transparent;
+        padding: 0 14px;
+        min-height: 46px;
+        font-weight: 600;
+        color: var(--muted);
+        cursor: pointer;
+        border-bottom: 2.5px solid transparent;
+        margin-bottom: -1.5px;
+        white-space: nowrap;
+      }
+      .tabs button[aria-selected='true'] {
+        color: var(--ink);
+        border-bottom-color: var(--accent);
+      }
+      .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        border: 0;
+        background: none;
+        color: var(--muted);
+        font-weight: 600;
+        cursor: pointer;
+        padding: 8px 0;
+        min-height: 44px;
+        margin-bottom: 4px;
+      }
+
+      /* Working hours editor */
+      .wh {
+        display: grid;
+        gap: 8px;
+      }
+      .wh-day {
+        display: grid;
+        grid-template-columns: 130px 1fr;
+        gap: 12px;
+        align-items: start;
+        padding: 12px 14px;
+        border-radius: 14px;
+        background: var(--surface-2);
+        border: 1px solid var(--line);
+      }
+      .wh-day.off {
+        opacity: 0.7;
+      }
+      .wh-day .dname {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        min-height: 44px;
+        font-weight: 600;
+      }
+      .wh-ints {
+        display: grid;
+        gap: 8px;
+      }
+      .wh-int {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      .wh-int input {
+        width: 118px;
+        min-height: 44px;
+      }
+      .wh-int .dash {
+        color: var(--muted);
+      }
+      .wh-off {
+        color: var(--muted);
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+      }
+      .wh-err {
+        color: var(--danger);
+        font-size: 12.5px;
+      }
+      @media (max-width: 599px) {
+        .wh-day {
+          grid-template-columns: 1fr;
+        }
+        .wh-int input {
+          width: 104px;
+        }
+      }
+
+      /* ============================ Modal / sheet ============================ */
+      .overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 20;
+        background: rgba(31, 27, 22, 0.45);
+        display: grid;
+        place-items: center;
+        padding: 16px;
+      }
+      .modal {
+        width: 100%;
+        max-width: 560px;
+        max-height: calc(100dvh - 32px);
+        overflow-y: auto;
+        background: var(--surface);
+        border-radius: 22px;
+        box-shadow: 0 30px 70px rgba(31, 27, 22, 0.3);
+      }
+      .modal-head {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 20px 20px 4px;
+        position: sticky;
+        top: 0;
+        background: var(--surface);
+        z-index: 1;
+      }
+      .modal-head h2 {
+        flex: 1;
+        font: 600 22px/1.2 var(--font-display);
+        margin: 0;
+      }
+      .modal-body {
+        padding: 12px 20px 8px;
+        display: grid;
+        gap: 14px;
+      }
+      .modal-foot {
+        display: flex;
+        gap: 10px;
+        justify-content: flex-end;
+        padding: 14px 20px 20px;
+        position: sticky;
+        bottom: 0;
+        background: var(--surface);
+        border-top: 1px solid var(--line);
+        flex-wrap: wrap;
+      }
+      @media (max-width: 599px) {
+        .overlay {
+          place-items: end stretch;
+          padding: 0;
+        }
+        .modal {
+          max-width: none;
+          border-radius: 22px 22px 0 0;
+          max-height: 92dvh;
+        }
+        .modal-foot {
+          padding-bottom: calc(16px + env(safe-area-inset-bottom));
+        }
+        .modal-foot .btn {
+          flex: 1;
+        }
+      }
+      .kv {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 6px 16px;
+        font-size: 14px;
+      }
+      .kv dt {
+        color: var(--muted);
+      }
+      .kv dd {
+        margin: 0;
+        font-weight: 600;
+      }
+      .chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .chip {
+        min-height: 40px;
+        padding: 0 14px;
+        border-radius: var(--r-chip);
+        border: 1.5px solid var(--line);
+        background: var(--surface);
+        font-weight: 600;
+        font-size: 13.5px;
+        cursor: pointer;
+        font-variant-numeric: tabular-nums;
+      }
+      .chip:hover {
+        border-color: var(--line-strong);
+      }
+      .chip[aria-pressed='true'] {
+        background: var(--sel-bg);
+        border-color: var(--sel-bg);
+        color: var(--sel-ink);
+        box-shadow: 0 0 0 3px rgba(180, 83, 42, 0.3);
+      }
+      .slot-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
+        gap: 8px;
+        max-height: 196px;
+        overflow-y: auto;
+        padding: 2px;
+      }
+      .counter {
+        text-align: right;
+        font-size: 12px;
+        color: var(--muted);
+      }
+
+      /* ============================ Toast ============================ */
+      .toast {
+        position: fixed;
+        left: 50%;
+        bottom: 28px;
+        transform: translate(-50%, 20px);
+        opacity: 0;
+        z-index: 30;
+        background: var(--ink);
+        color: var(--sel-ink);
+        padding: 12px 18px;
+        border-radius: 14px;
+        font-weight: 600;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+        transition: all 0.2s;
+        pointer-events: none;
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        max-width: calc(100vw - 32px);
+      }
+      .toast.show {
+        opacity: 1;
+        transform: translate(-50%, 0);
+      }
+      @media (max-width: 899px) {
+        .toast {
+          bottom: 92px;
+        }
+      }
+
+      /* ============================ Login ============================ */
+      .login {
+        min-height: 100dvh;
+        display: grid;
+        place-items: center;
+        padding: 24px 16px;
+        background: radial-gradient(1200px 500px at 50% -10%, #efe3d3, var(--bg));
+      }
+      .login-card {
+        width: 100%;
+        max-width: 400px;
+        background: var(--surface);
+        border-radius: 24px;
+        padding: 28px 24px;
+        border: 1.5px solid var(--line);
+        box-shadow: 0 30px 60px rgba(31, 27, 22, 0.08);
+      }
+      .login-card .logo {
+        width: 48px;
+        height: 48px;
+        font-size: 22px;
+        border-radius: 15px;
+        margin-bottom: 18px;
+      }
+      .login-card h1 {
+        font: 600 26px/1.15 var(--font-display);
+        margin: 0 0 6px;
+      }
+      .login-card > p {
+        margin: 0 0 22px;
+        color: var(--muted);
+      }
+      .login-card form {
+        display: grid;
+        gap: 14px;
+      }
+      .pw {
+        position: relative;
+      }
+      .pw .input {
+        padding-right: 52px;
+      }
+      .pw button {
+        position: absolute;
+        right: 4px;
+        top: 50%;
+        transform: translateY(-50%);
+      }
+      .link-btn {
+        border: 0;
+        background: none;
+        color: var(--accent);
+        font-weight: 600;
+        cursor: pointer;
+        padding: 8px 0;
+        min-height: 44px;
+        justify-self: start;
+      }
+      .login-foot {
+        margin-top: 18px;
+        font-size: 12.5px;
+        color: var(--muted);
+        text-align: center;
+      }
+
+      /* ============================ Mockup control ============================ */
+      .mock-btn {
+        position: fixed;
+        right: 16px;
+        bottom: 20px;
+        z-index: 15;
+        min-height: 44px;
+        padding: 0 16px;
+        border-radius: 999px;
+        border: 0;
+        background: var(--accent);
+        color: #fff;
+        font-weight: 700;
+        cursor: pointer;
+        box-shadow: 0 10px 24px rgba(180, 83, 42, 0.35);
+      }
+      @media (max-width: 899px) {
+        .mock-btn {
+          bottom: 84px;
+        }
+      }
+      .mock-panel {
+        position: fixed;
+        right: 16px;
+        bottom: 74px;
+        z-index: 16;
+        width: min(360px, calc(100vw - 32px));
+        max-height: 70dvh;
+        overflow-y: auto;
+        background: var(--surface);
+        border-radius: 18px;
+        border: 1.5px solid var(--line);
+        box-shadow: 0 24px 60px rgba(31, 27, 22, 0.25);
+        padding: 16px 18px;
+        font-size: 13.5px;
+      }
+      @media (max-width: 899px) {
+        .mock-panel {
+          bottom: 138px;
+        }
+      }
+      .mock-panel h3 {
+        font-size: 11.5px;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: var(--muted);
+        margin: 14px 0 8px;
+      }
+      .mock-panel h3:first-child {
+        margin-top: 0;
+      }
+      .mock-panel ul {
+        margin: 0;
+        padding-left: 18px;
+        color: var(--muted);
+      }
+      .mock-panel li {
+        margin: 4px 0;
+      }
+      .mock-panel li b {
+        color: var(--ink);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app"></div>
+    <div id="modalRoot"></div>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <button class="mock-btn" id="mockBtn" type="button" aria-expanded="false">⚙ Maket</button>
+    <div class="mock-panel" id="mockPanel" hidden></div>
+
+    <script>
+      /* =========================== Icons =========================== */
+      const ic = (d) =>
+        `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`
+      const ICON = {
+        list: ic('<path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>'),
+        cal: ic(
+          '<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>',
+        ),
+        scissors: ic(
+          '<circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4 8.12 15.88M14.47 14.48 20 20M8.12 8.12 12 12"/>',
+        ),
+        users: ic(
+          '<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>',
+        ),
+        sliders: ic(
+          '<path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/>',
+        ),
+        plus: ic('<path d="M12 5v14M5 12h14"/>'),
+        left: ic('<path d="m15 18-6-6 6-6"/>'),
+        right: ic('<path d="m9 18 6-6-6-6"/>'),
+        x: ic('<path d="M18 6 6 18M6 6l12 12"/>'),
+        logout: ic('<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/>'),
+        eye: ic(
+          '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>',
+        ),
+        copy: ic(
+          '<rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>',
+        ),
+        send: ic('<path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/>'),
+      }
+
+      /* =========================== Demo data (from the seed) =========================== */
+      const SERVICES = [
+        {
+          id: 'b1',
+          name: 'Soch olish',
+          desc: 'Yuvish va ukladka bilan',
+          dur: 30,
+          price: 80000,
+          active: true,
+        },
+        {
+          id: 'b2',
+          name: 'Soqol olish',
+          desc: 'Shakl berish va issiq sochiq',
+          dur: 20,
+          price: 50000,
+          active: true,
+        },
+        {
+          id: 'b3',
+          name: 'Soch + soqol',
+          desc: 'Kompleks xizmat',
+          dur: 50,
+          price: 120000,
+          active: true,
+        },
+        {
+          id: 'b4',
+          name: 'Bolalar soch turmagi',
+          desc: '12 yoshgacha',
+          dur: 30,
+          price: 60000,
+          active: true,
+        },
+        {
+          id: 'b5',
+          name: 'Ukladka',
+          desc: 'Bayram yoki tadbir uchun',
+          dur: 20,
+          price: 40000,
+          active: true,
+        },
+      ]
+      const STAFF = [
+        {
+          id: 'a1',
+          name: 'Jasur',
+          bio: 'Klassik va zamonaviy soch turmaklari. 8 yillik tajriba.',
+          services: ['b1', 'b2', 'b3', 'b4', 'b5'],
+          login: true,
+          active: true,
+        },
+        {
+          id: 'a2',
+          name: 'Bobur',
+          bio: "Soqol va fade bo'yicha mutaxassis.",
+          services: ['b1', 'b2', 'b3'],
+          login: false,
+          active: true,
+        },
+        {
+          id: 'a3',
+          name: 'Akmal',
+          bio: 'Bolalar soch turmaklari va ukladka.',
+          services: ['b1', 'b4', 'b5'],
+          login: false,
+          active: true,
+        },
+      ]
+      // Weekly hours per staff, JS weekday (0 = Sunday). Seed: Mon–Sat 09–13, 14–20.
+      const STD = [
+        [540, 780],
+        [840, 1200],
+      ]
+      const HOURS = Object.fromEntries(
+        STAFF.map((s) => [s.id, { 0: [], 1: STD, 2: STD, 3: STD, 4: STD, 5: STD, 6: STD }]),
+      )
+      const SETTINGS = {
+        name: 'Navbatly Demo Barbershop',
+        phone: '90 000 00 00',
+        address: "Toshkent sh., Namuna ko'chasi, 1-uy",
+        step: 15,
+        horizon: 30,
+        notice: 60,
+        maxPerPhone: 3,
+        autoConfirm: false,
+        tgChat: '',
+        tgEnabled: false,
+        tgLastError: null,
+      }
+      const CLOSED_DAYS = [] // business-wide time_off (staff_id = null)
+      const TIME_OFF = { a1: [], a2: [{ from: 6, to: 8, reason: "Ta'til" }], a3: [] } // day offsets
+
+      const WD_SHORT = ['Ya', 'Du', 'Se', 'Ch', 'Pa', 'Ju', 'Sh']
+      const WD_LONG = [
+        'Yakshanba',
+        'Dushanba',
+        'Seshanba',
+        'Chorshanba',
+        'Payshanba',
+        'Juma',
+        'Shanba',
+      ]
+      const MONTHS = [
+        'yanvar',
+        'fevral',
+        'mart',
+        'aprel',
+        'may',
+        'iyun',
+        'iyul',
+        'avgust',
+        'sentabr',
+        'oktabr',
+        'noyabr',
+        'dekabr',
+      ]
+
+      /* =========================== Helpers =========================== */
+      const $ = (id) => document.getElementById(id)
+      const esc = (s) =>
+        String(s ?? '').replace(
+          /[&<>"']/g,
+          (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c],
+        )
+      const money = (n) => Number(n).toLocaleString('ru-RU').replace(/\s/g, ' ') + " so'm"
+      const hhmm = (m) =>
+        String(Math.floor(m / 60)).padStart(2, '0') + ':' + String(m % 60).padStart(2, '0')
+      const toMin = (t) => {
+        const [h, m] = String(t).split(':').map(Number)
+        return h * 60 + m
+      }
+      const fmtPhone = (d) =>
+        [d.slice(0, 2), d.slice(2, 5), d.slice(5, 7), d.slice(7, 9)].filter(Boolean).join(' ')
+      const telHref = (p) => 'tel:+998' + p.replace(/\D/g, '')
+      const svc = (id) => SERVICES.find((s) => s.id === id)
+      const stf = (id) => STAFF.find((s) => s.id === id)
+
+      // "Today" / "now" in Asia/Tashkent, whatever the viewer's timezone
+      const P = Object.fromEntries(
+        new Intl.DateTimeFormat('en-GB', {
+          timeZone: 'Asia/Tashkent',
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+          hour: '2-digit',
+          minute: '2-digit',
+          hourCycle: 'h23',
+        })
+          .formatToParts(new Date())
+          .map((p) => [p.type, p.value]),
+      )
+      const TODAY = Date.UTC(+P.year, +P.month - 1, +P.day)
+      const NOW = +P.hour * 60 + +P.minute
+      const dayOf = (off) => {
+        const d = new Date(TODAY + off * 864e5)
+        return { off, dow: d.getUTCDay(), day: d.getUTCDate(), month: d.getUTCMonth() }
+      }
+      const dayLabel = (off, long = false) => {
+        const d = dayOf(off)
+        const rel =
+          off === 0 ? 'Bugun' : off === 1 ? 'Ertaga' : off === -1 ? 'Kecha' : WD_LONG[d.dow]
+        return `${rel}, ${d.day}-${MONTHS[d.month]}${long && off >= -1 && off <= 1 ? ' (' + WD_LONG[d.dow].toLowerCase() + ')' : ''}`
+      }
+      // working days from today (Sunday skipped) for realistic sample data
+      const WORKDAYS = []
+      for (let o = 0; WORKDAYS.length < 3; o++) if (dayOf(o).dow !== 0) WORKDAYS.push(o)
+
+      /* =========================== Sample appointments (FAKE customers) =========================== */
+      let seq = 0
+      const A = (w, staff, service, time, status, source = 'online', note = '', reason = '') => {
+        seq++
+        return {
+          id: 'ap' + seq,
+          off: WORKDAYS[w],
+          staff,
+          service,
+          start: toMin(time),
+          status,
+          source,
+          note,
+          reason,
+          name: 'Test mijoz ' + seq,
+          phone: '90 000 00 ' + String(seq).padStart(2, '0'),
+          price: svc(service).price,
+        }
+      }
+      const APPTS = [
+        A(0, 'a1', 'b1', '09:00', 'confirmed'),
+        A(0, 'a1', 'b3', '10:00', 'pending', 'online', 'Biroz kechikishim mumkin'),
+        A(0, 'a1', 'b5', '12:00', 'confirmed', 'admin'),
+        A(0, 'a1', 'b1', '15:30', 'pending'),
+        A(0, 'a1', 'b2', '17:00', 'cancelled', 'online', '', "Mijoz qo'ng'iroq qilib bekor qildi"),
+        A(0, 'a2', 'b2', '09:30', 'confirmed'),
+        A(0, 'a2', 'b1', '11:00', 'pending'),
+        A(0, 'a2', 'b3', '14:00', 'confirmed'),
+        A(0, 'a2', 'b1', '18:00', 'confirmed', 'admin'),
+        A(0, 'a3', 'b4', '10:00', 'confirmed'),
+        A(0, 'a3', 'b1', '11:30', 'pending'),
+        A(0, 'a3', 'b5', '16:00', 'confirmed'),
+        A(1, 'a1', 'b1', '10:00', 'pending'),
+        A(1, 'a2', 'b2', '15:00', 'confirmed'),
+        A(1, 'a3', 'b4', '09:30', 'pending', 'online', 'Bola 6 yoshda'),
+        A(2, 'a1', 'b5', '12:00', 'confirmed'),
+        A(2, 'a3', 'b1', '18:00', 'pending'),
+      ]
+      const endOf = (a) => a.start + svc(a.service).dur
+      const isPast = (a) => a.off < 0 || (a.off === 0 && endOf(a) <= NOW)
+
+      /* =========================== State =========================== */
+      const S = {
+        loggedIn: true,
+        role: 'owner',
+        view: 'appointments',
+        period: 'today',
+        status: 'all',
+        staffFilter: 'all',
+        calOff: WORKDAYS[0],
+        showCancelled: false,
+        staffId: null,
+        staffTab: 'hours',
+        hoursDraft: null,
+        modal: null,
+        mockOpen: false,
+        pwVisible: false,
+        loginError: false,
+      }
+      const ME_STAFF = 'a1' // the barber login is linked to Jasur (seed)
+      const isOwner = () => S.role === 'owner'
+      const visibleAppts = () => APPTS.filter((a) => isOwner() || a.staff === ME_STAFF)
+      const pendingCount = () => visibleAppts().filter((a) => a.status === 'pending').length
+
+      /* =========================== Shell =========================== */
+      const NAV = [
+        { id: 'appointments', label: 'Yozilishlar', icon: 'list', owner: false },
+        { id: 'calendar', label: 'Kalendar', icon: 'cal', owner: false },
+        { id: 'services', label: 'Xizmatlar', icon: 'scissors', owner: true },
+        { id: 'staff', label: 'Ustalar', icon: 'users', owner: true },
+        { id: 'settings', label: 'Sozlamalar', icon: 'sliders', owner: true },
+      ]
+      const navItems = () => NAV.filter((n) => !n.owner || isOwner())
+
+      function render() {
+        if (!S.loggedIn) {
+          $('app').innerHTML = viewLogin()
+          renderModal()
+          renderMock()
+          return
+        }
+        if (!navItems().some((n) => n.id === S.view)) S.view = 'appointments'
+        const pc = pendingCount()
+        const me = isOwner()
+          ? { av: 'E', name: 'Salon egasi', role: 'Egasi' }
+          : { av: 'J', name: 'Jasur', role: 'Usta' }
+        const navBtn = (
+          n,
+          cls,
+        ) => `<button type="button" data-action="nav" data-id="${n.id}" ${S.view === n.id ? 'aria-current="page"' : ''}>
+            ${ICON[n.icon]}<span>${n.label}</span>${n.id === 'appointments' && pc ? (cls === 'side' ? `<span class="count">${pc}</span>` : `<span class="dot">${pc}</span>`) : ''}</button>`
+        const views = {
+          appointments: viewAppointments,
+          calendar: viewCalendar,
+          services: viewServices,
+          staff: viewStaff,
+          settings: viewSettings,
+        }
+        $('app').innerHTML = `<div class="shell">
+          <aside class="sidebar">
+            <div class="brand"><div class="logo">N</div><div><b>${esc(SETTINGS.name)}</b><span>Boshqaruv paneli</span></div></div>
+            <nav class="nav" aria-label="Asosiy menyu">${navItems()
+              .map((n) => navBtn(n, 'side'))
+              .join('')}</nav>
+            <div class="me"><div class="av">${me.av}</div><div style="flex:1;min-width:0"><b>${me.name}</b><span>${me.role}</span></div>
+              <button class="icon-btn" type="button" data-action="logout" aria-label="Chiqish" title="Chiqish">${ICON.logout}</button></div>
+          </aside>
+          <header class="topbar"><div class="logo">N</div><b>${esc(SETTINGS.name)}</b>
+            <button class="icon-btn" type="button" data-action="logout" aria-label="Chiqish">${ICON.logout}</button></header>
+          <main class="main">${views[S.view]()}</main>
+          <nav class="bottom-nav" aria-label="Asosiy menyu">${navItems()
+            .map((n) => navBtn(n, 'bottom'))
+            .join('')}</nav>
+        </div>`
+        renderModal()
+        renderMock()
+      }
+
+      /* =========================== View: Login =========================== */
+      const viewLogin = () => `<div class="login"><div class="login-card">
+          <div class="logo">N</div>
+          <h1>Boshqaruv paneli</h1>
+          <p>Salon egasi va ustalar uchun kirish.</p>
+          <form data-form="login" novalidate>
+            <label class="field"><span>Email</span><input class="input" type="email" name="email" autocomplete="username" placeholder="siz@misol.uz" /></label>
+            <label class="field"><span>Parol</span><div class="pw">
+              <input class="input" type="${S.pwVisible ? 'text' : 'password'}" name="password" autocomplete="current-password" placeholder="••••••••" />
+              <button class="icon-btn" type="button" data-action="toggle-pw" aria-label="Parolni ko'rsatish">${ICON.eye}</button></div></label>
+            ${S.loginError ? `<div class="hint-box err" role="alert">Email yoki parol noto'g'ri. Qayta urinib ko'ring.</div>` : ''}
+            <button class="btn btn-primary btn-block" type="submit" style="min-height:52px">Kirish</button>
+            <button class="link-btn" type="button" data-action="toast" data-text="Parolni tiklash havolasi emailingizga yuborildi">Parolni unutdingizmi?</button>
+          </form>
+          <p class="login-foot">Ro'yxatdan o'tish yo'q — hisobni salon egasi yoki Navbatly administratori yaratadi.</p>
+        </div></div>`
+
+      /* =========================== View: Appointments =========================== */
+      const STATUS_LABEL = {
+        pending: 'Kutilmoqda',
+        confirmed: 'Tasdiqlangan',
+        cancelled: 'Bekor qilingan',
+      }
+      const periodMatch = (a) =>
+        S.period === 'today'
+          ? a.off === 0
+          : S.period === 'tomorrow'
+            ? a.off === 1
+            : S.period === 'week'
+              ? a.off >= 0 && a.off < 7
+              : true
+
+      function apptCard(a) {
+        const s = svc(a.service),
+          st = stf(a.staff),
+          past = isPast(a)
+        // pending stays actionable even after its time (owner must still resolve it)
+        const actions =
+          a.status === 'cancelled' || (past && a.status === 'confirmed')
+            ? ''
+            : `<div class="actions">
+            ${a.status === 'pending' ? `<button class="btn btn-success btn-sm" type="button" data-action="confirm" data-id="${a.id}">Tasdiqlash</button>` : ''}
+            <button class="btn btn-ghost-danger btn-sm" type="button" data-action="cancel" data-id="${a.id}">Bekor qilish</button></div>`
+        return `<article class="appt ${a.status} ${past ? 'past' : ''}">
+          <div class="time"><b class="num">${hhmm(a.start)}</b><span class="num">${hhmm(endOf(a))} gacha</span></div>
+          <div style="min-width:0">
+            <div class="who">${esc(a.name)}</div>
+            <div class="what"><a class="tel" href="${telHref(a.phone)}">+998 ${esc(a.phone)}</a><span>·</span><span>${s.name}</span>${isOwner() ? `<span>·</span><span>${st.name}</span>` : ''}</div>
+            ${a.note ? `<div class="note">💬 ${esc(a.note)}</div>` : ''}
+            ${a.status === 'cancelled' && a.reason ? `<div class="reason">Sabab: ${esc(a.reason)}</div>` : ''}
+          </div>
+          <div class="side"><span class="badge b-${a.status}">${past && a.status === 'confirmed' ? "O'tgan" : STATUS_LABEL[a.status]}</span>
+            <span class="price">${money(a.price)}</span><span class="tag">${a.source === 'online' ? 'Onlayn' : 'Admin'}</span></div>
+          ${actions}
+        </article>`
+      }
+
+      function viewAppointments() {
+        const base = visibleAppts()
+          .filter((a) => S.staffFilter === 'all' || a.staff === S.staffFilter)
+          .filter(periodMatch)
+        const count = (st) => base.filter((a) => st === 'all' || a.status === st).length
+        const list = base
+          .filter((a) => S.status === 'all' || a.status === S.status)
+          .sort((x, y) => x.off - y.off || x.start - y.start)
+        const days = [...new Set(list.map((a) => a.off))]
+        const pc = pendingCount()
+        const seg = (key, opts) =>
+          `<div class="seg" role="group">${opts.map(([v, l, n]) => `<button type="button" data-action="set" data-key="${key}" data-val="${v}" aria-pressed="${S[key] === v}">${l}${n != null ? `<span class="n">${n}</span>` : ''}</button>`).join('')}</div>`
+        return `<div class="page-head"><div class="grow"><h1>Yozilishlar</h1><p>${dayLabel(0, true)}</p></div>
+            <button class="btn btn-primary" type="button" data-action="new">${ICON.plus} Yangi yozilish</button></div>
+          ${!isOwner() ? `<div class="banner info"><div class="grow">Siz <b>faqat o'zingizga</b> yozilgan mijozlarni ko'rasiz va boshqarasiz.</div></div>` : ''}
+          ${
+            pc
+              ? `<div class="banner"><div class="grow"><b>${pc} ta yozilish</b> tasdiqlashingizni kutmoqda.</div>
+              ${S.status !== 'pending' ? `<button class="btn btn-sm btn-primary" type="button" data-action="show-pending">Ko'rish</button>` : ''}</div>`
+              : ''
+          }
+          <div class="filters">
+            ${seg('period', [
+              ['today', 'Bugun'],
+              ['tomorrow', 'Ertaga'],
+              ['week', '7 kun'],
+              ['all', 'Hammasi'],
+            ])}
+            ${seg('status', [
+              ['all', 'Hammasi', count('all')],
+              ['pending', 'Kutilmoqda', count('pending')],
+              ['confirmed', 'Tasdiqlangan', count('confirmed')],
+              ['cancelled', 'Bekor', count('cancelled')],
+            ])}
+            ${isOwner() ? `<select class="input" data-model="staffFilter" aria-label="Usta bo'yicha"><option value="all">Barcha ustalar</option>${STAFF.map((s) => `<option value="${s.id}" ${S.staffFilter === s.id ? 'selected' : ''}>${s.name}</option>`).join('')}</select>` : ''}
+          </div>
+          ${
+            days.length
+              ? days
+                  .map((off) => {
+                    const items = list.filter((a) => a.off === off)
+                    return `<section class="day-group"><h2 class="day-title">${dayLabel(off)} <span>${items.length} ta</span></h2>
+                <div class="appt-list">${items.map(apptCard).join('')}</div></section>`
+                  })
+                  .join('')
+              : `<div class="empty"><b>${S.period === 'today' && dayOf(0).dow === 0 ? 'Bugun dam olish kuni' : "Yozilishlar yo'q"}</b>Tanlangan filtrlar bo'yicha hech narsa topilmadi.</div>`
+          }`
+      }
+
+      /* =========================== View: Calendar (day) =========================== */
+      const PX = 1.5 // pixels per minute
+      function viewCalendar() {
+        const off = S.calOff,
+          d = dayOf(off)
+        const cols = isOwner() ? STAFF.filter((s) => s.active) : [stf(ME_STAFF)]
+        const items = APPTS.filter(
+          (a) =>
+            a.off === off &&
+            cols.some((c) => c.id === a.staff) &&
+            (S.showCancelled || a.status !== 'cancelled'),
+        )
+        const allIntervals = cols.flatMap((c) => HOURS[c.id][d.dow])
+        let from = 9 * 60,
+          to = 20 * 60
+        for (const [f, t] of allIntervals) {
+          from = Math.min(from, f)
+          to = Math.max(to, t)
+        }
+        for (const a of items) {
+          from = Math.min(from, a.start)
+          to = Math.max(to, endOf(a))
+        }
+        from = Math.floor(from / 60) * 60
+        to = Math.ceil(to / 60) * 60
+        const H = (to - from) * PX
+        const y = (m) => (m - from) * PX
+        const colW = isOwner() ? 'minmax(170px, 1fr)' : 'minmax(220px, 1fr)'
+        const closedDay = d.dow === 0
+        const hourLines = Array.from({ length: (to - from) / 60 + 1 }, (_, i) => from + i * 60)
+
+        const col = (c) => {
+          const ints = HOURS[c.id][d.dow]
+          // grey out non-working parts of the day (before, between, after intervals)
+          const gaps = []
+          let cur = from
+          for (const [f, t] of [...ints].sort((a, b) => a[0] - b[0])) {
+            if (f > cur) gaps.push([cur, f])
+            cur = Math.max(cur, t)
+          }
+          if (cur < to) gaps.push([cur, to])
+          const gapHtml = gaps
+            .map(
+              ([f, t]) =>
+                `<div class="off" style="top:${y(f)}px;height:${(t - f) * PX}px">${t - f >= 45 ? (f > 9 * 60 && t < 15 * 60 ? 'Tushlik' : ints.length ? 'Ish vaqtidan tashqari' : 'Dam olish') : ''}</div>`,
+            )
+            .join('')
+          const evs = items
+            .filter((a) => a.staff === c.id)
+            .map((a) => {
+              const h = svc(a.service).dur * PX - 3
+              return `<button class="ev ${a.status}" type="button" data-action="detail" data-id="${a.id}" style="top:${y(a.start) + 1}px;height:${h}px"
+                aria-label="${hhmm(a.start)} ${esc(a.name)}, ${svc(a.service).name}, ${STATUS_LABEL[a.status]}">
+                <b class="num">${hhmm(a.start)} · ${esc(a.name)}</b>${h > 40 ? `<span>${svc(a.service).name}</span>` : ''}</button>`
+            })
+            .join('')
+          return `<div class="cal-col" data-action="cal-new" data-staff="${c.id}" style="height:${H}px">
+              ${hourLines.map((m) => `<div class="hour" style="top:${y(m)}px"></div><div class="half" style="top:${y(m + 30)}px"></div>`).join('')}
+              ${gapHtml}${evs}
+              ${off === 0 && NOW > from && NOW < to ? `<div class="now-line" style="top:${y(NOW)}px"></div>` : ''}
+            </div>`
+        }
+        const counts = (c) =>
+          items.filter((a) => a.staff === c.id && a.status !== 'cancelled').length
+        return `<div class="page-head"><div class="grow"><h1>Kalendar</h1><p>Bo'sh joyni bosing — yangi yozilish qo'shiladi.</p></div>
+            <button class="btn btn-primary" type="button" data-action="new">${ICON.plus} Yangi yozilish</button></div>
+          <div class="cal-bar">
+            <button class="icon-btn" type="button" data-action="cal-prev" aria-label="Oldingi kun" style="background:var(--surface);box-shadow:inset 0 0 0 1.5px var(--line)">${ICON.left}</button>
+            <button class="icon-btn" type="button" data-action="cal-next" aria-label="Keyingi kun" style="background:var(--surface);box-shadow:inset 0 0 0 1.5px var(--line)">${ICON.right}</button>
+            <span class="date-label">${dayLabel(off)}</span>
+            ${off !== 0 ? `<button class="btn btn-secondary btn-sm" type="button" data-action="cal-today">Bugun</button>` : ''}
+            <span class="spacer"></span>
+            <label class="check-inline"><input type="checkbox" data-model="showCancelled" ${S.showCancelled ? 'checked' : ''}/> Bekor qilinganlar</label>
+          </div>
+          <div class="legend" style="margin-bottom:12px"><span><i style="background:var(--sel-bg)"></i>Tasdiqlangan</span>
+            <span><i style="background:var(--accent-soft);box-shadow:inset 0 0 0 1.5px var(--accent)"></i>Kutilmoqda</span>
+            <span><i style="background:repeating-linear-gradient(135deg,#f3ece2 0 3px,#e3d8c9 3px 6px)"></i>Ish vaqtidan tashqari</span></div>
+          ${
+            closedDay && !items.length
+              ? `<div class="empty"><b>Yakshanba — dam olish kuni</b>Bu kunda hech kim ishlamaydi.</div>`
+              : `
+          <div class="cal-scroll"><div class="cal" style="grid-template-columns:56px repeat(${cols.length}, ${colW})">
+            <div class="cal-corner"></div>
+            ${cols.map((c) => `<div class="cal-col-head"><div class="av">${c.name[0]}</div><div><b>${c.name}</b><span>${counts(c)} ta yozilish</span></div></div>`).join('')}
+            <div class="cal-axis" style="height:${H}px">${hourLines.map((m) => `<div style="top:${y(m)}px">${hhmm(m)}</div>`).join('')}</div>
+            ${cols.map(col).join('')}
+          </div></div>`
+          }`
+      }
+
+      /* =========================== View: Services =========================== */
+      const viewServices =
+        () => `<div class="page-head"><div class="grow"><h1>Xizmatlar</h1><p>Mijozlar bron sahifasida faqat faol xizmatlarni ko'radi.</p></div>
+          <button class="btn btn-primary" type="button" data-action="svc-edit" data-id="">${ICON.plus} Yangi xizmat</button></div>
+        <div class="rows">${SERVICES.map((s) => {
+          const n = STAFF.filter((st) => st.services.includes(s.id)).length
+          return `<div class="row ${s.active ? '' : 'inactive'}" role="button" tabindex="0" data-action="svc-edit" data-id="${s.id}">
+            <div class="grow"><div class="title">${esc(s.name)}</div>
+              <div class="sub"><span class="tag">${s.dur} daq</span><span>${n} ta usta</span>${s.active ? '' : '<span class="badge b-cancelled">Nofaol</span>'}<span>${esc(s.desc)}</span></div></div>
+            <div class="price">${money(s.price)}</div>
+            <label class="switch" title="${s.active ? 'Faol' : 'Nofaol'}" data-stop><input type="checkbox" data-action="svc-toggle" data-id="${s.id}" ${s.active ? 'checked' : ''} aria-label="${esc(s.name)} — faol"/><i></i></label>
+          </div>`
+        }).join('')}</div>
+        <div class="hint-box" style="margin-top:16px">ℹ️ Xizmatni o'chirib bo'lmaydi — <b>nofaol</b> qiling. Eski yozilishlar va narxlar tarixi saqlanib qoladi.</div>`
+
+      /* =========================== View: Staff =========================== */
+      function viewStaff() {
+        if (S.staffId) return viewStaffDetail()
+        return `<div class="page-head"><div class="grow"><h1>Ustalar</h1><p>Ish vaqti, xizmatlar va dam olish kunlari.</p></div>
+            <button class="btn btn-primary" type="button" data-action="toast" data-text="Maket: yangi usta formasi 3-bosqichda (M3)">${ICON.plus} Yangi usta</button></div>
+          <div class="rows">${STAFF.map((s) => {
+            const today = HOURS[s.id][dayOf(0).dow]
+            return `<button class="row" type="button" data-action="staff-open" data-id="${s.id}">
+              <div class="av">${s.name[0]}</div>
+              <div class="grow"><div class="title">${s.name}</div>
+                <div class="sub"><span>Bugun: ${today.length ? today.map(([f, t]) => hhmm(f) + '–' + hhmm(t)).join(', ') : 'dam olish'}</span>
+                  <span class="tag">${s.services.length} ta xizmat</span>
+                  <span class="badge ${s.login ? 'b-confirmed' : 'b-cancelled'}">${s.login ? 'Kirish bor' : "Kirish yo'q"}</span></div></div>
+              <span style="color:var(--muted)">${ICON.right}</span></button>`
+          }).join('')}</div>`
+      }
+
+      function viewStaffDetail() {
+        const s = stf(S.staffId)
+        const tab = (id, l) =>
+          `<button type="button" role="tab" data-action="staff-tab" data-id="${id}" aria-selected="${S.staffTab === id}">${l}</button>`
+        let body = ''
+        if (S.staffTab === 'hours') {
+          const draft = S.hoursDraft
+          const order = [1, 2, 3, 4, 5, 6, 0]
+          body = `<div class="panel-card"><h2>Haftalik ish vaqti</h2><p>Tushlik = bir kunda ikkita oraliq. Oraliqlar ustma-ust tushmasligi kerak.</p>
+            <div class="wh">${order
+              .map((dow) => {
+                const ints = draft[dow],
+                  err = overlapError(ints)
+                return `<div class="wh-day ${ints.length ? '' : 'off'}">
+                <div class="dname"><label class="switch"><input type="checkbox" data-action="wh-day" data-dow="${dow}" ${ints.length ? 'checked' : ''} aria-label="${WD_LONG[dow]} — ishlaydi"/><i></i></label>${WD_LONG[dow]}</div>
+                <div class="wh-ints">${
+                  ints.length
+                    ? ints
+                        .map(
+                          ([f, t], i) => `<div class="wh-int">
+                    <input class="input num" type="time" step="900" value="${hhmm(f)}" data-wh="${dow}:${i}:0" aria-label="${WD_LONG[dow]} boshlanishi"/>
+                    <span class="dash">—</span>
+                    <input class="input num" type="time" step="900" value="${hhmm(t)}" data-wh="${dow}:${i}:1" aria-label="${WD_LONG[dow]} tugashi"/>
+                    <button class="icon-btn" type="button" data-action="wh-del" data-dow="${dow}" data-i="${i}" aria-label="Oraliqni o'chirish">${ICON.x}</button></div>`,
+                        )
+                        .join('') +
+                      `<div><button class="btn btn-secondary btn-sm" type="button" data-action="wh-add" data-dow="${dow}">${ICON.plus} Oraliq</button></div>` +
+                      (err ? `<div class="wh-err">${err}</div>` : '')
+                    : `<div class="wh-off">Dam olish kuni</div>`
+                }</div></div>`
+              })
+              .join('')}</div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px">
+              <button class="btn btn-secondary" type="button" data-action="wh-copy">Dushanbani barcha ish kunlariga nusxalash</button>
+              <span style="flex:1"></span>
+              <button class="btn btn-primary" type="button" data-action="wh-save">Saqlash</button></div></div>`
+        }
+        if (S.staffTab === 'services') {
+          body = `<div class="panel-card"><h2>${s.name} bajaradigan xizmatlar</h2><p>Mijoz faqat shu xizmatlar uchun ${s.name}ni tanlay oladi.</p>
+            <div class="rows">${SERVICES.map(
+              (v) => `<label class="row" style="cursor:pointer">
+                <input type="checkbox" data-action="staff-svc" data-id="${v.id}" ${s.services.includes(v.id) ? 'checked' : ''} style="width:20px;height:20px;accent-color:var(--ink)"/>
+                <div class="grow"><div class="title">${esc(v.name)}</div><div class="sub"><span class="tag">${v.dur} daq</span>${v.active ? '' : '<span class="badge b-cancelled">Nofaol</span>'}</div></div>
+                <div class="price">${money(v.price)}</div></label>`,
+            ).join('')}</div></div>`
+        }
+        if (S.staffTab === 'off') {
+          const list = TIME_OFF[s.id]
+          body = `<div class="panel-card"><h2>Dam olish va ta'til</h2><p>Bu kunlarda ${s.name}ga onlayn yozilib bo'lmaydi.</p>
+            ${
+              list.length
+                ? `<div class="rows" style="margin-bottom:14px">${list
+                    .map(
+                      (t, i) => `<div class="row" style="cursor:default">
+                <div class="grow"><div class="title">${dayLabel(t.from).split(', ')[1]} — ${dayLabel(t.to).split(', ')[1]}</div><div class="sub">${esc(t.reason || '—')}</div></div>
+                <button class="icon-btn" type="button" data-action="off-del" data-i="${i}" aria-label="O'chirish">${ICON.x}</button></div>`,
+                    )
+                    .join('')}</div>`
+                : `<div class="empty" style="margin-bottom:14px;padding:24px"><b>Rejalashtirilgan dam olish yo'q</b></div>`
+            }
+            <div class="grid-2"><label class="field"><span>Boshlanishi</span><input class="input" type="date" id="offFrom"/></label>
+              <label class="field"><span>Tugashi</span><input class="input" type="date" id="offTo"/></label></div>
+            <label class="field" style="margin-top:12px"><span>Sabab <small>(ixtiyoriy)</small></span><input class="input" id="offReason" maxlength="200" placeholder="Masalan: ta'til"/></label>
+            <div style="margin-top:14px"><button class="btn btn-primary" type="button" data-action="off-add">${ICON.plus} Qo'shish</button></div></div>`
+        }
+        if (S.staffTab === 'profile') {
+          body = `<div class="panel-card"><div class="stack">
+            <label class="field"><span>Ism</span><input class="input" value="${esc(s.name)}" maxlength="80"/></label>
+            <label class="field"><span>Qisqacha ma'lumot</span><textarea class="input" maxlength="300">${esc(s.bio)}</textarea><small>Mijozlar bron sahifasida ko'radi.</small></label>
+            <div class="hint-box">${s.login ? "🔑 Bu ustaning <b>kirish hisobi bor</b> — u faqat o'z yozilishlarini ko'radi." : "🔑 Kirish hisobi yo'q. Ustaga kirish kerak bo'lsa, Navbatly administratori yaratadi."}</div>
+            <div style="display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap">
+              <label class="check-inline"><span class="switch"><input type="checkbox" ${s.active ? 'checked' : ''}/><i></i></span> Faol (mijozlarga ko'rinadi)</label>
+              <button class="btn btn-primary" type="button" data-action="toast" data-text="Saqlandi ✓">Saqlash</button></div></div></div>`
+        }
+        return `<button class="back-link" type="button" data-action="staff-back">${ICON.left} Ustalar</button>
+          <div class="page-head"><div class="grow" style="display:flex;gap:14px;align-items:center">
+            <div class="row" style="padding:0;border:0;background:none;width:auto;cursor:default"><div class="av">${s.name[0]}</div></div>
+            <div><h1>${s.name}</h1><p>${esc(s.bio)}</p></div></div></div>
+          <div class="tabs" role="tablist">${tab('hours', 'Ish vaqti')}${tab('services', 'Xizmatlar')}${tab('off', 'Dam olish')}${tab('profile', 'Profil')}</div>${body}`
+      }
+      // Mirrors the database rule (EXCLUDE on working_hours): no overlapping intervals
+      function overlapError(ints) {
+        for (const [f, t] of ints)
+          if (t <= f) return "Tugash vaqti boshlanishidan keyin bo'lishi kerak."
+        const s = [...ints].sort((a, b) => a[0] - b[0])
+        for (let i = 1; i < s.length; i++)
+          if (s[i][0] < s[i - 1][1]) return 'Oraliqlar ustma-ust tushmasligi kerak.'
+        return ''
+      }
+
+      /* =========================== View: Settings =========================== */
+      const viewSettings = () => {
+        const opt = (vals, cur, fmt = (v) => v) =>
+          vals
+            .map((v) => `<option value="${v}" ${+cur === v ? 'selected' : ''}>${fmt(v)}</option>`)
+            .join('')
+        return `<div class="page-head"><div class="grow"><h1>Sozlamalar</h1><p>Salon ma'lumotlari, bron qoidalari va xabarnomalar.</p></div></div>
+          <div class="panel-card"><h2>Salon ma'lumotlari</h2><p>Bular mijozlarning bron sahifasida ko'rinadi.</p><div class="stack">
+            <label class="field"><span>Salon nomi</span><input class="input" data-set="name" value="${esc(SETTINGS.name)}" maxlength="100"/></label>
+            <label class="field"><span>Telefon</span><div class="phone-wrap"><span>+998</span><input type="tel" inputmode="numeric" data-set="phone" value="${esc(SETTINGS.phone)}"/></div>
+              <small>⚠️ Bu raqamni <b>hamma mijozlar ko'radi</b>. Salonning ish raqamini yozing — shaxsiy raqamingizni emas.</small></label>
+            <label class="field"><span>Manzil</span><input class="input" data-set="address" value="${esc(SETTINGS.address)}" maxlength="200"/></label>
+            <div class="grid-2">
+              <label class="field"><span>Bron havolasi</span><div style="display:flex;gap:8px"><input class="input" readonly value="navbatly.uz/b/demo"/>
+                <button class="btn btn-secondary" type="button" data-action="copy-link" aria-label="Nusxa olish">${ICON.copy}</button></div>
+                <small>Havolani Navbatly administratori o'zgartiradi.</small></label>
+              <label class="field"><span>Vaqt mintaqasi</span><input class="input" readonly value="Toshkent (UTC+5)"/><small>Platforma administratori o'zgartiradi.</small></label>
+            </div></div></div>
+
+          <div class="panel-card"><h2>Bron qoidalari</h2><p>Onlayn yozilish qanday ishlashini belgilaydi.</p><div class="stack">
+            <div class="grid-2">
+              <label class="field"><span>Vaqt qadami</span><select class="input" data-set="step">${opt([5, 10, 15, 20, 30, 60], SETTINGS.step, (v) => v + ' daqiqa')}</select><small>Vaqt tugmalari orasidagi farq (09:00, 09:15…)</small></label>
+              <label class="field"><span>Necha kun oldin yozilish mumkin</span><select class="input" data-set="horizon">${opt([7, 14, 30, 60, 90], SETTINGS.horizon, (v) => v + ' kun')}</select></label>
+              <label class="field"><span>Eng kamida oldindan</span><select class="input" data-set="notice">${opt([0, 30, 60, 120, 180, 1440], SETTINGS.notice, (v) => (v === 0 ? 'Cheklovsiz' : v === 1440 ? '1 kun' : v >= 60 ? v / 60 + ' soat' : v + ' daqiqa'))}</select><small>Masalan, 1 soat: 14:00 da mijoz 15:00 dan oldingi vaqtni ololmaydi.</small></label>
+              <label class="field"><span>Bitta raqamga faol yozilishlar</span><select class="input" data-set="maxPerPhone">${opt([1, 2, 3, 5, 10], SETTINGS.maxPerPhone, (v) => v + ' ta')}</select><small>Spamdan himoya.</small></label>
+            </div>
+            <label class="row" style="cursor:pointer"><div class="grow"><div class="title">Avtomatik tasdiqlash</div>
+              <div class="sub">Yoqilsa, onlayn yozilishlar darhol «Tasdiqlangan» bo'ladi. O'chiq bo'lsa, siz har birini tasdiqlaysiz.</div></div>
+              <span class="switch"><input type="checkbox" data-set="autoConfirm" ${SETTINGS.autoConfirm ? 'checked' : ''}/><i></i></span></label>
+          </div></div>
+
+          <div class="panel-card"><h2>Salon yopiq kunlari</h2><p>Bayramlar yoki ta'mirlash — bu kunlarda hech qaysi ustaga yozilib bo'lmaydi.</p>
+            ${
+              CLOSED_DAYS.length
+                ? `<div class="rows" style="margin-bottom:14px">${CLOSED_DAYS.map(
+                    (
+                      c,
+                      i,
+                    ) => `<div class="row" style="cursor:default"><div class="grow"><div class="title">${esc(c.label)}</div><div class="sub">${esc(c.reason || '—')}</div></div>
+                <button class="icon-btn" type="button" data-action="closed-del" data-i="${i}" aria-label="O'chirish">${ICON.x}</button></div>`,
+                  ).join('')}</div>`
+                : ''
+            }
+            <div class="grid-2"><label class="field"><span>Sana</span><input class="input" type="date" id="closedDate"/></label>
+              <label class="field"><span>Sabab <small>(ixtiyoriy)</small></span><input class="input" id="closedReason" placeholder="Masalan: Mustaqillik kuni" maxlength="200"/></label></div>
+            <div style="margin-top:14px"><button class="btn btn-secondary" type="button" data-action="closed-add">${ICON.plus} Yopiq kun qo'shish</button></div></div>
+
+          <div class="panel-card"><h2>Telegram xabarnomalari</h2><p>Yangi onlayn yozilish bo'lganda Telegram'ga xabar keladi.</p><div class="stack">
+            <div class="hint-box"><div><b>Chat ID ni qanday topish mumkin:</b><br/>1) Telegram'da <b>@NavbatlyBot</b> ni oching va «Start» ni bosing.<br/>2) <b>@userinfobot</b> ga yozing — u sizning ID raqamingizni yuboradi.<br/>3) Raqamni pastga kiriting va «Sinov xabari» ni bosing.</div></div>
+            <label class="field"><span>Chat ID</span><input class="input num" inputmode="numeric" data-set="tgChat" value="${esc(SETTINGS.tgChat)}" placeholder="Masalan: 123456789"/></label>
+            <label class="row" style="cursor:pointer"><div class="grow"><div class="title">Xabarnomalar yoqilgan</div></div>
+              <span class="switch"><input type="checkbox" data-set="tgEnabled" ${SETTINGS.tgEnabled ? 'checked' : ''}/><i></i></span></label>
+            ${SETTINGS.tgLastError === false ? `<div class="hint-box ok">✅ Sinov xabari yuborildi. Telegram'ni tekshiring.</div>` : SETTINGS.tgLastError ? `<div class="hint-box err">⚠️ ${esc(SETTINGS.tgLastError)}</div>` : ''}
+            <div><button class="btn btn-secondary" type="button" data-action="tg-test">${ICON.send} Sinov xabarini yuborish</button></div>
+          </div></div>
+          <div style="display:flex;justify-content:flex-end"><button class="btn btn-primary" type="button" data-action="toast" data-text="Sozlamalar saqlandi ✓" style="min-height:50px;padding:0 28px">O'zgarishlarni saqlash</button></div>`
+      }
+
+      /* =========================== Modals =========================== */
+      function renderModal() {
+        const m = S.modal
+        if (!m) {
+          $('modalRoot').innerHTML = ''
+          return
+        }
+        let html = ''
+        const head = (t) =>
+          `<div class="modal-head"><h2 id="mTitle">${t}</h2><button class="icon-btn" type="button" data-action="close" aria-label="Yopish">${ICON.x}</button></div>`
+        if (m.type === 'detail' || m.type === 'cancel') {
+          const a = APPTS.find((x) => x.id === m.id),
+            s = svc(a.service)
+          const kv = `<dl class="kv"><dt>Mijoz</dt><dd>${esc(a.name)}</dd><dt>Telefon</dt><dd><a class="tel" href="${telHref(a.phone)}" style="color:inherit">+998 ${esc(a.phone)}</a></dd>
+            <dt>Xizmat</dt><dd>${s.name} · ${s.dur} daq</dd><dt>Usta</dt><dd>${stf(a.staff).name}</dd>
+            <dt>Vaqt</dt><dd class="num">${dayLabel(a.off)}, ${hhmm(a.start)}–${hhmm(endOf(a))}</dd><dt>Narx</dt><dd>${money(a.price)}</dd>
+            <dt>Holat</dt><dd><span class="badge b-${a.status}">${STATUS_LABEL[a.status]}</span></dd><dt>Manba</dt><dd>${a.source === 'online' ? 'Onlayn' : 'Admin'}</dd>
+            ${a.note ? `<dt>Izoh</dt><dd>${esc(a.note)}</dd>` : ''}${a.reason ? `<dt>Sabab</dt><dd>${esc(a.reason)}</dd>` : ''}</dl>`
+          if (m.type === 'detail') {
+            const canAct = a.status === 'pending' || (a.status === 'confirmed' && !isPast(a))
+            html = `${head('Yozilish')}<div class="modal-body">${kv}</div>
+              <div class="modal-foot">${
+                canAct
+                  ? `<button class="btn btn-ghost-danger" type="button" data-action="cancel" data-id="${a.id}">Bekor qilish</button>
+                ${a.status === 'pending' ? `<button class="btn btn-success" type="button" data-action="confirm" data-id="${a.id}">Tasdiqlash</button>` : ''}`
+                  : `<button class="btn btn-secondary" type="button" data-action="close">Yopish</button>`
+              }</div>`
+          } else {
+            const reasons = [
+              "Mijoz qo'ng'iroq qilib bekor qildi",
+              'Usta ishlay olmaydi',
+              'Xato yozilish',
+            ]
+            html = `${head('Yozilishni bekor qilish')}<div class="modal-body">${kv}
+                <div class="field"><span>Sabab <small>(ixtiyoriy)</small></span>
+                  <div class="chips">${reasons.map((r) => `<button class="chip" type="button" data-action="reason" data-text="${esc(r)}" aria-pressed="${m.reason === r}">${esc(r)}</button>`).join('')}</div>
+                  <textarea class="input" data-modal="reason" maxlength="200" placeholder="Yoki o'zingiz yozing">${esc(m.reason || '')}</textarea>
+                  <div class="counter">${(m.reason || '').length}/200</div></div>
+                <div class="hint-box">Bekor qilingan vaqt darhol boshqa mijozlar uchun bo'shaydi. Mijozga o'zingiz xabar bering.</div></div>
+              <div class="modal-foot"><button class="btn btn-secondary" type="button" data-action="close">Ortga</button>
+                <button class="btn btn-danger" type="button" data-action="cancel-do" data-id="${a.id}">Bekor qilish</button></div>`
+          }
+        }
+        if (m.type === 'new') html = modalNew(head)
+        if (m.type === 'service') html = modalService(head)
+        $('modalRoot').innerHTML =
+          `<div class="overlay" data-action="overlay"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle">${html}</div></div>`
+      }
+
+      // free slots for the manual-booking dialog (working hours, existing bookings, notice ignored for admin)
+      function freeSlots(staffId, serviceId, off) {
+        const dur = svc(serviceId).dur,
+          dow = dayOf(off).dow,
+          out = []
+        for (const [f, t] of HOURS[staffId][dow])
+          for (let m = f; m + dur <= t; m += SETTINGS.step) {
+            if (off === 0 && m < NOW) continue
+            const clash = APPTS.some(
+              (a) =>
+                a.staff === staffId &&
+                a.off === off &&
+                a.status !== 'cancelled' &&
+                m < endOf(a) &&
+                m + dur > a.start,
+            )
+            if (!clash) out.push(m)
+          }
+        return out
+      }
+      function modalNew(head) {
+        const f = S.modal
+        const staffList = isOwner()
+          ? STAFF.filter((s) => s.active && s.services.includes(f.service))
+          : [stf(ME_STAFF)]
+        if (!staffList.some((s) => s.id === f.staff)) f.staff = staffList[0]?.id
+        const slots = f.staff ? freeSlots(f.staff, f.service, f.off) : []
+        const dur = svc(f.service).dur
+        const t = f.custom ? f.customTime : f.time
+        let warn = ''
+        if (t != null && f.staff) {
+          const inHours = HOURS[f.staff][dayOf(f.off).dow].some(([a, b]) => t >= a && t + dur <= b)
+          const clash = APPTS.some(
+            (a) =>
+              a.staff === f.staff &&
+              a.off === f.off &&
+              a.status !== 'cancelled' &&
+              t < endOf(a) &&
+              t + dur > a.start,
+          )
+          if (clash)
+            warn = `<div class="hint-box err">⛔ Bu vaqtda ${stf(f.staff).name}da boshqa yozilish bor. Boshqa vaqt tanlang.</div>`
+          else if (!inHours)
+            warn = `<div class="hint-box warn">⚠️ Bu vaqt ${stf(f.staff).name}ning ish vaqtidan tashqarida. Admin sifatida baribir qo'shishingiz mumkin.</div>`
+        }
+        const days = Array.from({ length: 7 }, (_, i) => i)
+        return `${head('Yangi yozilish')}<div class="modal-body">
+            <div class="grid-2">
+              <label class="field"><span>Xizmat</span><select class="input" data-modal="service">${SERVICES.filter(
+                (s) => s.active,
+              )
+                .map(
+                  (s) =>
+                    `<option value="${s.id}" ${f.service === s.id ? 'selected' : ''}>${s.name} · ${s.dur} daq</option>`,
+                )
+                .join('')}</select></label>
+              <label class="field"><span>Usta</span><select class="input" data-modal="staff" ${isOwner() ? '' : 'disabled'}>${staffList.map((s) => `<option value="${s.id}" ${f.staff === s.id ? 'selected' : ''}>${s.name}</option>`).join('')}</select></label>
+            </div>
+            <div class="field"><span>Kun</span><div class="chips">${days
+              .map((o) => {
+                const d = dayOf(o)
+                return `<button class="chip" type="button" data-action="new-day" data-off="${o}" aria-pressed="${f.off === o}">${o === 0 ? 'Bugun' : o === 1 ? 'Ertaga' : WD_SHORT[d.dow] + ' ' + d.day}</button>`
+              })
+              .join('')}</div></div>
+            <div class="field"><span>Vaqt <small>· bo'sh vaqtlar</small></span>
+              ${
+                slots.length
+                  ? `<div class="slot-grid">${slots.map((m) => `<button class="chip" type="button" data-action="new-time" data-m="${m}" aria-pressed="${!f.custom && f.time === m}">${hhmm(m)}</button>`).join('')}</div>`
+                  : `<div class="hint-box">Bu kunda bo'sh vaqt yo'q${dayOf(f.off).dow === 0 ? ' (dam olish kuni)' : ''}.</div>`
+              }
+              <label class="check-inline"><input type="checkbox" data-modal="custom" ${f.custom ? 'checked' : ''}/> Boshqa vaqt (qo'lda kiritish)</label>
+              ${f.custom ? `<input class="input num" type="time" step="300" data-modal="customTime" value="${f.customTime != null ? hhmm(f.customTime) : ''}" style="max-width:160px"/>` : ''}
+            </div>
+            ${warn}
+            <div class="grid-2">
+              <label class="field"><span>Mijoz ismi</span><input class="input" data-modal="name" value="${esc(f.name)}" maxlength="80" placeholder="Ism"/></label>
+              <label class="field"><span>Telefon</span><div class="phone-wrap"><span>+998</span><input type="tel" inputmode="numeric" data-modal="phone" value="${esc(f.phone)}" placeholder="90 123 45 67"/></div></label>
+            </div>
+            <label class="field"><span>Izoh <small>(ixtiyoriy)</small></span><input class="input" data-modal="note" value="${esc(f.note)}" maxlength="300"/></label>
+            ${f.error ? `<div class="hint-box err" role="alert">${f.error}</div>` : ''}
+            <div class="hint-box">Admin qo'shgan yozilish darhol <b>«Tasdiqlangan»</b> bo'ladi. Narx: <b>${money(svc(f.service).price)}</b>.</div>
+          </div>
+          <div class="modal-foot"><button class="btn btn-secondary" type="button" data-action="close">Bekor</button>
+            <button class="btn btn-primary" type="button" data-action="new-save">Qo'shish</button></div>`
+      }
+      function modalService(head) {
+        const m = S.modal
+        const durs = [10, 15, 20, 30, 40, 45, 50, 60, 75, 90, 120, 180]
+        return `${head(m.id ? 'Xizmatni tahrirlash' : 'Yangi xizmat')}<div class="modal-body">
+            <label class="field"><span>Nomi</span><input class="input" data-modal="name" value="${esc(m.name)}" maxlength="80" placeholder="Masalan: Soch olish"/></label>
+            <label class="field"><span>Tavsif <small>(ixtiyoriy)</small></span><input class="input" data-modal="desc" value="${esc(m.desc)}" maxlength="300"/></label>
+            <div class="grid-2">
+              <label class="field"><span>Davomiyligi</span><select class="input" data-modal="dur">${durs.map((d) => `<option value="${d}" ${+m.dur === d ? 'selected' : ''}>${d} daqiqa</option>`).join('')}</select></label>
+              <label class="field"><span>Narxi (so'm)</span><input class="input num" inputmode="numeric" data-modal="price" value="${m.price ? Number(m.price).toLocaleString('ru-RU') : ''}" placeholder="80 000"/>
+                <small>${m.price ? money(m.price) : '—'}</small></label>
+            </div>
+            <label class="row" style="cursor:pointer"><div class="grow"><div class="title">Faol</div><div class="sub">Nofaol xizmat bron sahifasida ko'rinmaydi.</div></div>
+              <span class="switch"><input type="checkbox" data-modal="active" ${m.active ? 'checked' : ''}/><i></i></span></label>
+            ${m.id ? `<div class="hint-box">ℹ️ Narx o'zgarsa, <b>eski yozilishlar eski narxda</b> qoladi.</div>` : ''}
+            ${m.error ? `<div class="hint-box err" role="alert">${m.error}</div>` : ''}
+          </div>
+          <div class="modal-foot"><button class="btn btn-secondary" type="button" data-action="close">Bekor</button>
+            <button class="btn btn-primary" type="button" data-action="svc-save">Saqlash</button></div>`
+      }
+
+      /* =========================== Mockup control panel =========================== */
+      function renderMock() {
+        $('mockPanel').hidden = !S.mockOpen
+        $('mockBtn').setAttribute('aria-expanded', S.mockOpen)
+        if (!S.mockOpen) return
+        $('mockPanel').innerHTML = `<h3>Kim sifatida ko'rish</h3>
+          <div class="seg" role="group" style="width:100%"><button type="button" data-action="role" data-id="owner" aria-pressed="${S.role === 'owner'}" style="flex:1">Salon egasi</button>
+            <button type="button" data-action="role" data-id="staff" aria-pressed="${S.role === 'staff'}" style="flex:1">Usta (Jasur)</button></div>
+          <h3>Ekranlar</h3>
+          <div class="chips"><button class="chip" type="button" data-action="show-login">Kirish ekrani</button>
+            <button class="chip" type="button" data-action="show-login-error">Kirish xatosi</button>
+            <button class="chip" type="button" data-action="demo-cancel">Bekor qilish oynasi</button>
+            <button class="chip" type="button" data-action="demo-new">Yangi yozilish</button></div>
+          <h3>Nimalarga e'tibor bering</h3>
+          <ul>
+            <li><b>Egasi</b> hamma narsani ko'radi; <b>usta</b> faqat 2 bo'lim va o'z yozilishlarini (RLS bilan bir xil).</li>
+            <li><b>Kutilmoqda</b> — terrakota chiziq va banner; tasdiqlash bir bosishda.</li>
+            <li><b>Bekor qilish</b> — sabab (tayyor variantlar yoki matn, ≤200).</li>
+            <li><b>Kalendar</b>: ustunlar = ustalar; tushlik va ish vaqtidan tashqari — shtrix; qizil chiziq = hozir. Bo'sh joyni bosing → yangi yozilish shu vaqtga.</li>
+            <li><b>Qo'lda yozilish</b>: bo'sh vaqtlar yoki istalgan vaqt; ish vaqtidan tashqarida — ogohlantirish, ustma-ust — xato (bazadagi qoida bilan bir xil).</li>
+            <li><b>Ish vaqti</b> muharriri ustma-ust oraliqlarga yo'l qo'ymaydi.</li>
+            <li>Xizmat va ustani <b>o'chirib bo'lmaydi</b> — faqat nofaol.</li>
+            <li>Sozlamalar: slug va vaqt mintaqasi faqat o'qish uchun; salon telefoni uchun ogohlantirish.</li>
+            <li>Mijozlar ma'lumotlari — <b>soxta</b> (Test mijoz, +998 90 000 00 XX).</li>
+          </ul>`
+      }
+
+      /* =========================== Toast =========================== */
+      let toastTimer
+      function toast(text) {
+        $('toast').textContent = text
+        $('toast').classList.add('show')
+        clearTimeout(toastTimer)
+        toastTimer = setTimeout(() => $('toast').classList.remove('show'), 2600)
+      }
+
+      /* =========================== Actions =========================== */
+      function openNew(prefill = {}) {
+        S.modal = {
+          type: 'new',
+          service: 'b1',
+          staff: isOwner() ? 'a1' : ME_STAFF,
+          off: S.view === 'calendar' ? S.calOff : 0,
+          time: null,
+          custom: false,
+          customTime: null,
+          name: '',
+          phone: '',
+          note: '',
+          error: '',
+          ...prefill,
+        }
+        if (S.modal.off < 0) S.modal.off = 0
+        render()
+      }
+      const ACTIONS = {
+        nav: (el) => {
+          S.view = el.dataset.id
+          S.staffId = null
+          S.modal = null
+          render()
+          window.scrollTo(0, 0)
+        },
+        logout: () => {
+          S.loggedIn = false
+          S.loginError = false
+          S.modal = null
+          render()
+        },
+        'toggle-pw': () => {
+          S.pwVisible = !S.pwVisible
+          render()
+        },
+        toast: (el) => toast(el.dataset.text),
+        set: (el) => {
+          S[el.dataset.key] = el.dataset.val
+          render()
+        },
+        'show-pending': () => {
+          S.status = 'pending'
+          S.period = 'all'
+          render()
+        },
+        confirm: (el) => {
+          const a = APPTS.find((x) => x.id === el.dataset.id)
+          a.status = 'confirmed'
+          S.modal = null
+          render()
+          toast('Tasdiqlandi ✓  ' + a.name + ', ' + hhmm(a.start))
+        },
+        cancel: (el) => {
+          S.modal = { type: 'cancel', id: el.dataset.id, reason: '' }
+          render()
+        },
+        reason: (el) => {
+          S.modal.reason = el.dataset.text
+          renderModal()
+        },
+        'cancel-do': (el) => {
+          const a = APPTS.find((x) => x.id === el.dataset.id)
+          a.status = 'cancelled'
+          a.reason = (S.modal.reason || '').trim()
+          S.modal = null
+          render()
+          toast("Yozilish bekor qilindi — vaqt bo'shadi")
+        },
+        detail: (el) => {
+          S.modal = { type: 'detail', id: el.dataset.id }
+          render()
+        },
+        close: () => {
+          S.modal = null
+          render()
+        },
+        overlay: (el, e) => {
+          if (e.target === el) {
+            S.modal = null
+            render()
+          }
+        },
+        new: () => openNew(),
+        'new-day': (el) => {
+          S.modal.off = +el.dataset.off
+          S.modal.time = null
+          renderModal()
+        },
+        'new-time': (el) => {
+          S.modal.time = +el.dataset.m
+          S.modal.custom = false
+          renderModal()
+        },
+        'new-save': () => {
+          const f = S.modal,
+            t = f.custom ? f.customTime : f.time,
+            dur = svc(f.service).dur
+          const name = f.name.trim().replace(/\s+/g, ' '),
+            digits = f.phone.replace(/\D/g, '')
+          f.error =
+            t == null
+              ? 'Vaqtni tanlang.'
+              : name.length < 2
+                ? 'Mijoz ismini kiriting (kamida 2 harf).'
+                : digits.length !== 9
+                  ? "Telefon raqamini to'liq kiriting: 9 ta raqam."
+                  : ''
+          if (
+            !f.error &&
+            APPTS.some(
+              (a) =>
+                a.staff === f.staff &&
+                a.off === f.off &&
+                a.status !== 'cancelled' &&
+                t < endOf(a) &&
+                t + dur > a.start,
+            )
+          )
+            f.error = '⛔ SLOT_TAKEN — bu vaqt band. Boshqa vaqt tanlang.'
+          if (f.error) return renderModal()
+          seq++
+          APPTS.push({
+            id: 'ap' + seq,
+            off: f.off,
+            staff: f.staff,
+            service: f.service,
+            start: t,
+            status: 'confirmed',
+            source: 'admin',
+            note: f.note.trim(),
+            reason: '',
+            name,
+            phone: fmtPhone(digits),
+            price: svc(f.service).price,
+          })
+          S.modal = null
+          render()
+          toast(`Qo'shildi ✓  ${name}, ${dayLabel(f.off)} ${hhmm(t)}`)
+        },
+        'cal-prev': () => {
+          S.calOff--
+          render()
+        },
+        'cal-next': () => {
+          S.calOff++
+          render()
+        },
+        'cal-today': () => {
+          S.calOff = 0
+          render()
+        },
+        'cal-new': (el, e) => {
+          if (e.target !== el) return // clicked on an event or a grey "off" area
+          const rect = el.getBoundingClientRect()
+          const grid = (e.clientY - rect.top) / PX
+          const firstHour =
+            +el.parentElement.querySelector('.cal-axis div').textContent.split(':')[0] * 60
+          const m = Math.max(0, Math.floor((firstHour + grid) / 15) * 15)
+          openNew({
+            staff: el.dataset.staff,
+            custom: true,
+            customTime: m,
+            service: stf(el.dataset.staff).services[0],
+            off: S.calOff,
+          })
+        },
+        'svc-edit': (el) => {
+          const s = svc(el.dataset.id)
+          S.modal = s
+            ? { type: 'service', ...s, error: '' }
+            : {
+                type: 'service',
+                id: '',
+                name: '',
+                desc: '',
+                dur: 30,
+                price: '',
+                active: true,
+                error: '',
+              }
+          render()
+        },
+        'svc-save': () => {
+          const m = S.modal
+          m.error =
+            m.name.trim().length < 2
+              ? 'Nomini kiriting (kamida 2 harf).'
+              : !(+m.price >= 0) || m.price === ''
+                ? 'Narxni kiriting.'
+                : ''
+          if (m.error) return renderModal()
+          const data = {
+            name: m.name.trim(),
+            desc: m.desc.trim(),
+            dur: +m.dur,
+            price: +m.price,
+            active: m.active,
+          }
+          if (m.id) Object.assign(svc(m.id), data)
+          else SERVICES.push({ id: 'b' + (SERVICES.length + 1), ...data })
+          S.modal = null
+          render()
+          toast('Saqlandi ✓')
+        },
+        'staff-open': (el) => {
+          S.staffId = el.dataset.id
+          S.staffTab = 'hours'
+          S.hoursDraft = structuredClone(HOURS[el.dataset.id])
+          render()
+          window.scrollTo(0, 0)
+        },
+        'staff-back': () => {
+          S.staffId = null
+          render()
+        },
+        'staff-tab': (el) => {
+          S.staffTab = el.dataset.id
+          render()
+        },
+        'wh-add': (el) => {
+          const ints = S.hoursDraft[el.dataset.dow]
+          const last = ints[ints.length - 1]
+          ints.push(
+            last
+              ? [Math.min(last[1] + 60, 22 * 60), Math.min(last[1] + 180, 23 * 60)]
+              : [540, 1200],
+          )
+          render()
+        },
+        'wh-del': (el) => {
+          S.hoursDraft[el.dataset.dow].splice(+el.dataset.i, 1)
+          render()
+        },
+        'wh-copy': () => {
+          for (const d of [2, 3, 4, 5, 6]) S.hoursDraft[d] = structuredClone(S.hoursDraft[1])
+          render()
+          toast('Dushanba jadvali Se–Sh kunlariga nusxalandi')
+        },
+        'wh-save': () => {
+          const bad = Object.values(S.hoursDraft).some((ints) => overlapError(ints))
+          if (bad) return toast('⚠️ Avval xatolarni tuzating')
+          HOURS[S.staffId] = structuredClone(S.hoursDraft)
+          toast('Ish vaqti saqlandi ✓')
+        },
+        'off-add': () => {
+          const from = $('offFrom').value,
+            to = $('offTo').value || from
+          if (!from) return toast('Boshlanish sanasini tanlang')
+          const o = (v) => Math.round((Date.parse(v) - TODAY) / 864e5)
+          TIME_OFF[S.staffId].push({
+            from: o(from),
+            to: o(to),
+            reason: $('offReason').value.trim(),
+          })
+          render()
+          toast("Dam olish qo'shildi ✓")
+        },
+        'off-del': (el) => {
+          TIME_OFF[S.staffId].splice(+el.dataset.i, 1)
+          render()
+        },
+        'closed-add': () => {
+          const v = $('closedDate').value
+          if (!v) return toast('Sanani tanlang')
+          const off = Math.round((Date.parse(v) - TODAY) / 864e5)
+          CLOSED_DAYS.push({ label: dayLabel(off), reason: $('closedReason').value.trim() })
+          render()
+          toast("Yopiq kun qo'shildi ✓")
+        },
+        'closed-del': (el) => {
+          CLOSED_DAYS.splice(+el.dataset.i, 1)
+          render()
+        },
+        'copy-link': () => toast('Havola nusxalandi: navbatly.uz/b/demo'),
+        'tg-test': () => {
+          SETTINGS.tgLastError = !/^-?\d{5,20}$/.test(SETTINGS.tgChat)
+            ? "Chat ID noto'g'ri. Faqat raqamlar, masalan 123456789."
+            : false
+          render()
+        },
+        role: (el) => {
+          S.role = el.dataset.id
+          S.staffFilter = 'all'
+          S.staffId = null
+          S.modal = null
+          render()
+          toast(
+            S.role === 'owner'
+              ? "Salon egasi sifatida ko'ryapsiz"
+              : "Usta (Jasur) sifatida ko'ryapsiz",
+          )
+        },
+        'show-login': () => {
+          S.loggedIn = false
+          S.loginError = false
+          S.mockOpen = false
+          render()
+        },
+        'show-login-error': () => {
+          S.loggedIn = false
+          S.loginError = true
+          S.mockOpen = false
+          render()
+        },
+        'demo-cancel': () => {
+          S.loggedIn = true
+          S.mockOpen = false
+          const a = visibleAppts().find((x) => x.status === 'pending' && !isPast(x))
+          if (a) S.modal = { type: 'cancel', id: a.id, reason: '' }
+          render()
+        },
+        'demo-new': () => {
+          S.loggedIn = true
+          S.mockOpen = false
+          openNew()
+        },
+      }
+
+      document.addEventListener('click', (e) => {
+        if (e.target.closest('[data-stop]') && !e.target.matches('input')) return
+        const el = e.target.closest('[data-action]')
+        if (!el) return
+        if (el.matches('input[type=checkbox]')) return // handled in "change"
+        const fn = ACTIONS[el.dataset.action]
+        if (fn) fn(el, e)
+      })
+      document.addEventListener('change', (e) => {
+        const el = e.target
+        if (el.dataset.action === 'svc-toggle') {
+          const s = svc(el.dataset.id)
+          s.active = el.checked
+          render()
+          return toast(
+            s.active ? `«${s.name}» faol` : `«${s.name}» nofaol — bron sahifasida ko'rinmaydi`,
+          )
+        }
+        if (el.dataset.action === 'wh-day') {
+          S.hoursDraft[el.dataset.dow] = el.checked ? structuredClone(STD) : []
+          return render()
+        }
+        if (el.dataset.action === 'staff-svc') {
+          const s = stf(S.staffId)
+          s.services = el.checked
+            ? [...s.services, el.dataset.id]
+            : s.services.filter((x) => x !== el.dataset.id)
+          return toast('Saqlandi ✓')
+        }
+        if (el.dataset.model === 'showCancelled') {
+          S.showCancelled = el.checked
+          return render()
+        }
+        if (el.dataset.model === 'staffFilter') {
+          S.staffFilter = el.value
+          return render()
+        }
+        if (el.dataset.wh) {
+          const [dow, i, k] = el.dataset.wh.split(':').map(Number)
+          if (el.value)
+            S.hoursDraft[dow][i] = S.hoursDraft[dow][i].map((v, j) =>
+              j === k ? toMin(el.value) : v,
+            )
+          return render()
+        }
+        if (el.dataset.set) {
+          const k = el.dataset.set
+          SETTINGS[k] =
+            el.type === 'checkbox' ? el.checked : el.tagName === 'SELECT' ? +el.value : el.value
+          if (k === 'tgChat') SETTINGS.tgLastError = null
+          return
+        }
+        if (el.dataset.modal && S.modal) {
+          const k = el.dataset.modal
+          if (el.type === 'checkbox') S.modal[k] = el.checked
+          else if (k === 'customTime') S.modal.customTime = el.value ? toMin(el.value) : null
+          else if (k === 'service' || k === 'staff' || k === 'dur') {
+            S.modal[k] = el.value
+            if (S.modal.type === 'new') S.modal.time = null
+          } else return
+          renderModal()
+        }
+      })
+      document.addEventListener('input', (e) => {
+        const el = e.target
+        if (el.dataset.modal && S.modal) {
+          const k = el.dataset.modal
+          if (k === 'phone') {
+            let d = el.value.replace(/\D/g, '')
+            if (d.length > 9 && d.startsWith('998')) d = d.slice(3)
+            el.value = S.modal.phone = fmtPhone(d.slice(0, 9))
+          } else if (k === 'price') {
+            const d = el.value.replace(/\D/g, '').slice(0, 9)
+            S.modal.price = d
+            el.value = d ? Number(d).toLocaleString('ru-RU') : ''
+            el.nextElementSibling.textContent = d ? money(d) : '—'
+          } else if (k === 'reason') {
+            S.modal.reason = el.value
+            const c = el.parentElement.querySelector('.counter')
+            if (c) c.textContent = el.value.length + '/200'
+            el.parentElement
+              .querySelectorAll('.chip')
+              .forEach((b) => b.setAttribute('aria-pressed', b.dataset.text === el.value))
+          } else if (['name', 'note', 'desc'].includes(k)) S.modal[k] = el.value
+        }
+        if (el.dataset.set === 'phone') {
+          let d = el.value.replace(/\D/g, '')
+          if (d.length > 9 && d.startsWith('998')) d = d.slice(3)
+          el.value = SETTINGS.phone = fmtPhone(d.slice(0, 9))
+        } else if (el.dataset.set && el.type !== 'checkbox' && el.tagName !== 'SELECT')
+          SETTINGS[el.dataset.set] = el.value
+      })
+      document.addEventListener('submit', (e) => {
+        if (e.target.dataset.form !== 'login') return
+        e.preventDefault()
+        const fd = new FormData(e.target)
+        const ok = /.+@.+\..+/.test(fd.get('email')) && String(fd.get('password')).length >= 6
+        S.loginError = !ok
+        if (ok) S.loggedIn = true
+        render()
+        if (ok) toast('Xush kelibsiz!')
+      })
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && S.modal) {
+          S.modal = null
+          render()
+        }
+        if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('.row[role=button]')) {
+          e.preventDefault()
+          e.target.click()
+        }
+      })
+      $('mockBtn').addEventListener('click', () => {
+        S.mockOpen = !S.mockOpen
+        renderMock()
+      })
+
+      render()
+    </script>
+  </body>
+</html>
