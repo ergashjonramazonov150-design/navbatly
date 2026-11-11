@@ -116,11 +116,11 @@ navbatly/
 ├── supabase/
 │   ├── config.toml
 │   ├── migrations/              ← every DB change, in order (SQL files)
-│   │   ├── 0001_extensions_and_types.sql
-│   │   ├── 0002_core_tables.sql
-│   │   ├── 0003_constraints_indexes.sql
-│   │   ├── 0004_rls_helpers_and_policies.sql
-│   │   └── 0005_booking_functions.sql
+│   │   ├── <timestamp>_extensions_and_types.sql
+│   │   ├── <timestamp>_core_tables.sql
+│   │   ├── <timestamp>_constraints_indexes.sql
+│   │   ├── <timestamp>_rls_helpers_and_policies.sql
+│   │   └── <timestamp>_booking_functions.sql
 │   ├── functions/               ← Edge Functions (Deno/TypeScript)
 │   │   ├── _shared/             ← cors.ts, telegram.ts, turnstile.ts, supabaseAdmin.ts
 │   │   ├── create-booking/
@@ -705,8 +705,8 @@ All other items use the defaults in §1.2.
 ### Dev environment notes (cloud-only, no Docker)
 
 - Two Supabase projects in the end: `navbatly-dev` (now) and `navbatly-prod` (M9). The free plan allows 2 active projects.
-- Migrations are still written as files in `supabase/migrations/` and applied with `supabase db push` to the linked project — the cloud dashboard SQL editor is used only for **reading**, never for schema changes.
-- pgTAP tests run against the dev project (`supabase test db --linked`).
+- Migrations are still written as files in `supabase/migrations/` and applied with `npm run db:push` (`supabase db push --remote`) to the linked project. File names must be `<timestamp>_name.sql` (created with `npx supabase migration new name`) — the cloud dashboard SQL editor is used only for **reading**, never for schema changes.
+- pgTAP tests run against the dev project (`npm run db:test` → `supabase test db --remote`).
 - Edge Functions are deployed to dev with `supabase functions deploy`; secrets set with `supabase secrets set`.
 - Free projects pause after ~1 week without activity — just "Restore" in the dashboard.
 - Never put real customer data in the dev project; use `seed.sql` demo data only.
