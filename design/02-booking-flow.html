@@ -1,0 +1,1716 @@
+<!doctype html>
+<html lang="uz">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Navbatly — bron qilish oqimi (maket)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,500;7..72,600;7..72,700&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* ============================ Tokens — Direction A «Usta» ============================ */
+      :root {
+        --bg: #f6f1ea;
+        --surface: #fffdf9;
+        --ink: #1f1b16;
+        --ink-soft: #3a3129;
+        --muted: #6f655a;
+        --line: #e6dccf;
+        --line-strong: #c9b9a5;
+        --accent: #b4532a;
+        --accent-soft: #f6e4d8;
+        --success: #3f7d4e;
+        --success-soft: #e3efe5;
+        --danger: #b3261e;
+        --danger-soft: #fbe9e7;
+        --chip-bg: #f1e6d8;
+        --chip-ink: #6b4a2e;
+        --disabled-ink: #a99c8c;
+        --focus: #b4532a;
+
+        /* Selected state — strong contrast borrowed from direction B:
+           solid dark fill + light text + terracotta check */
+        --sel-bg: #1f1b16;
+        --sel-ink: #fffdf9;
+        --sel-muted: #d9cfc3;
+
+        --font-display: Literata, Georgia, serif;
+        --font-body: Inter, system-ui, sans-serif;
+        --radius-card: 16px;
+        --radius-chip: 12px;
+        --radius-btn: 999px;
+
+        --page-bg: #e9e4dc;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+      html {
+        -webkit-text-size-adjust: 100%;
+      }
+      body {
+        margin: 0;
+        background: var(--page-bg);
+        color: var(--ink);
+        font: 15px/1.5 var(--font-body);
+      }
+      button,
+      input,
+      textarea {
+        font: inherit;
+        color: inherit;
+      }
+      button {
+        -webkit-tap-highlight-color: transparent;
+      }
+      :focus-visible {
+        outline: 3px solid var(--focus);
+        outline-offset: 2px;
+      }
+
+      /* ============================ Page layout ============================ */
+      .page {
+        max-width: 1120px;
+        margin: 0 auto;
+        padding: 24px 16px 56px;
+        display: grid;
+        gap: 28px;
+        grid-template-columns: 1fr;
+        align-items: start;
+      }
+      @media (min-width: 900px) {
+        .page {
+          grid-template-columns: 400px 1fr;
+        }
+      }
+
+      /* phone frame (desktop) */
+      .phone {
+        width: 100%;
+        max-width: 400px;
+        margin: 0 auto;
+        border-radius: 44px;
+        padding: 12px;
+        background: #2a241e;
+        box-shadow: 0 30px 60px rgba(40, 25, 10, 0.25);
+      }
+      .screen {
+        position: relative;
+        height: 780px;
+        border-radius: 34px;
+        overflow: hidden;
+        background: var(--bg);
+        display: flex;
+        flex-direction: column;
+      }
+      .inapp-bar {
+        flex: none;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 0 16px;
+        background: var(--surface);
+        border-bottom: 1px solid var(--line);
+        font: 600 12.5px/1 var(--font-body);
+        color: var(--muted);
+      }
+      .inapp-bar .x {
+        font-size: 17px;
+        color: var(--ink);
+      }
+      .inapp-bar .url {
+        flex: 1;
+        text-align: center;
+      }
+
+      /* On a real phone: the mockup becomes the full screen (no frame) */
+      @media (max-width: 520px) {
+        .page {
+          padding: 0 0 40px;
+          gap: 0;
+        }
+        .phone {
+          max-width: none;
+          border-radius: 0;
+          padding: 0;
+          background: none;
+          box-shadow: none;
+        }
+        .screen {
+          height: 100dvh;
+          border-radius: 0;
+        }
+        .inapp-bar {
+          display: none;
+        }
+        .panel {
+          padding: 24px 16px 0;
+        }
+      }
+
+      /* ============================ App header ============================ */
+      .app-head {
+        flex: none;
+        padding: 14px 16px 10px;
+        background: var(--bg);
+      }
+      .biz {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .biz-logo {
+        width: 44px;
+        height: 44px;
+        border-radius: 14px;
+        background: var(--accent);
+        color: #fff;
+        display: grid;
+        place-items: center;
+        font: 700 20px/1 var(--font-display);
+        flex: none;
+      }
+      .biz-text {
+        flex: 1;
+        min-width: 0;
+      }
+      .biz-name {
+        font-weight: 700;
+        font-size: 15.5px;
+        line-height: 1.2;
+      }
+      .biz-addr {
+        font-size: 12.5px;
+        color: var(--muted);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .call {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        border: 1.5px solid var(--line-strong);
+        display: grid;
+        place-items: center;
+        text-decoration: none;
+        color: var(--ink);
+        flex: none;
+      }
+      .topline {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 16px;
+      }
+      .back {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        border: 0;
+        background: var(--surface);
+        box-shadow: inset 0 0 0 1.5px var(--line);
+        display: grid;
+        place-items: center;
+        cursor: pointer;
+        flex: none;
+      }
+      .back[hidden] {
+        display: none;
+      }
+      .progress {
+        flex: 1;
+        display: flex;
+        gap: 5px;
+      }
+      .progress i {
+        flex: 1;
+        height: 5px;
+        border-radius: 5px;
+        background: var(--line);
+        transition: background 0.25s;
+      }
+      .progress i.on {
+        background: var(--accent);
+      }
+      .step-label {
+        margin-top: 12px;
+        font-size: 12.5px;
+        font-weight: 600;
+        color: var(--muted);
+        letter-spacing: 0.02em;
+      }
+      .step-title {
+        margin: 2px 0 0;
+        font: 600 26px/1.12 var(--font-display);
+        letter-spacing: -0.015em;
+      }
+
+      /* ============================ Body + bottom bar ============================ */
+      .app-body {
+        flex: 1;
+        overflow-y: auto;
+        padding: 10px 16px 20px;
+        -webkit-overflow-scrolling: touch;
+      }
+      .bottom {
+        flex: none;
+        padding: 12px 16px calc(14px + env(safe-area-inset-bottom));
+        background: var(--surface);
+        border-top: 1px solid var(--line);
+        display: flex;
+        gap: 12px;
+        align-items: center;
+      }
+      .bottom .sum {
+        flex: 1;
+        min-width: 0;
+      }
+      .bottom .sum b {
+        display: block;
+        font-size: 15px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .bottom .sum span {
+        font-size: 12.5px;
+        color: var(--muted);
+      }
+      .bottom[hidden] {
+        display: none;
+      }
+
+      .btn {
+        min-height: 54px;
+        padding: 0 24px;
+        border: 0;
+        border-radius: var(--radius-btn);
+        font-weight: 600;
+        font-size: 16px;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        transition:
+          background 0.15s,
+          transform 0.08s,
+          opacity 0.15s;
+      }
+      .btn:active:not(:disabled) {
+        transform: translateY(1px) scale(0.99);
+      }
+      .btn-primary {
+        background: var(--ink);
+        color: var(--sel-ink);
+      }
+      .btn-primary:hover:not(:disabled) {
+        background: var(--ink-soft);
+      }
+      .btn-primary:disabled {
+        background: #e7ded2;
+        color: var(--disabled-ink);
+        cursor: not-allowed;
+      }
+      .btn-secondary {
+        background: transparent;
+        color: var(--ink);
+        box-shadow: inset 0 0 0 1.5px var(--line-strong);
+      }
+      .btn-block {
+        width: 100%;
+      }
+      .spinner {
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        border: 2.5px solid rgba(255, 255, 255, 0.35);
+        border-top-color: #fff;
+        animation: spin 0.7s linear infinite;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* ============================ Selectable cards ============================ */
+      .list {
+        display: grid;
+        gap: 10px;
+      }
+      .card {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        width: 100%;
+        min-height: 78px;
+        padding: 14px 16px;
+        text-align: left;
+        border-radius: var(--radius-card);
+        background: var(--surface);
+        border: 1.5px solid var(--line);
+        cursor: pointer;
+        transition:
+          background 0.15s,
+          border-color 0.15s,
+          color 0.15s,
+          transform 0.08s;
+      }
+      .card:hover {
+        border-color: var(--line-strong);
+      }
+      .card:active {
+        transform: scale(0.995);
+      }
+      .card .grow {
+        flex: 1;
+        min-width: 0;
+      }
+      .card .title {
+        display: block;
+        font-weight: 650;
+        font-size: 16.5px;
+        line-height: 1.25;
+      }
+      .card .sub {
+        display: block;
+        color: var(--muted);
+        font-size: 13.5px;
+        margin-top: 2px;
+      }
+      .card .meta {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+        margin-top: 7px;
+      }
+      .pill {
+        font-size: 12px;
+        font-weight: 600;
+        padding: 3px 9px;
+        border-radius: 999px;
+        background: var(--chip-bg);
+        color: var(--chip-ink);
+      }
+      .pill.free {
+        background: var(--success-soft);
+        color: var(--success);
+      }
+      .card .price {
+        font-weight: 700;
+        font-size: 16px;
+        white-space: nowrap;
+      }
+      .check {
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        border: 2px solid var(--line-strong);
+        flex: none;
+        display: grid;
+        place-items: center;
+        transition: all 0.15s;
+      }
+      .avatar {
+        width: 54px;
+        height: 54px;
+        border-radius: 50%;
+        flex: none;
+        display: grid;
+        place-items: center;
+        font: 700 21px/1 var(--font-display);
+        background: #e9d8c4;
+        color: #7a3d1e;
+        transition: all 0.15s;
+      }
+
+      /* SELECTED — strong contrast */
+      .card[aria-pressed='true'] {
+        background: var(--sel-bg);
+        border-color: var(--sel-bg);
+        color: var(--sel-ink);
+      }
+      .card[aria-pressed='true'] .sub {
+        color: var(--sel-muted);
+      }
+      .card[aria-pressed='true'] .pill {
+        background: rgba(255, 255, 255, 0.12);
+        color: var(--sel-ink);
+      }
+      .card[aria-pressed='true'] .pill.free {
+        background: rgba(127, 196, 141, 0.2);
+        color: #a8dcb3;
+      }
+      .card[aria-pressed='true'] .check {
+        background: var(--accent);
+        border-color: var(--accent);
+      }
+      .card[aria-pressed='true'] .check::after {
+        content: '';
+        width: 10px;
+        height: 5.5px;
+        border-left: 2.5px solid #fff;
+        border-bottom: 2.5px solid #fff;
+        transform: rotate(-45deg) translate(1px, -1px);
+      }
+      .card[aria-pressed='true'] .avatar {
+        background: var(--accent);
+        color: #fff;
+      }
+
+      /* ============================ Dates + slots ============================ */
+      .month {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--muted);
+        margin: 6px 0 8px;
+      }
+      .dates {
+        display: flex;
+        gap: 8px;
+        overflow-x: auto;
+        margin: 0 -16px;
+        padding: 2px 16px 8px;
+        scroll-snap-type: x proximity;
+        scrollbar-width: none;
+      }
+      .dates::-webkit-scrollbar {
+        display: none;
+      }
+      .date {
+        flex: none;
+        width: 64px;
+        min-height: 76px;
+        border-radius: var(--radius-chip);
+        border: 1.5px solid var(--line);
+        background: var(--surface);
+        display: grid;
+        place-content: center;
+        gap: 2px;
+        text-align: center;
+        cursor: pointer;
+        scroll-snap-align: start;
+        transition: all 0.15s;
+      }
+      .date small {
+        font-size: 11.5px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: var(--muted);
+      }
+      .date b {
+        font: 600 21px/1.1 var(--font-display);
+      }
+      .date em {
+        font-style: normal;
+        font-size: 10.5px;
+        color: var(--accent);
+        font-weight: 600;
+      }
+      .date[aria-pressed='true'] {
+        background: var(--sel-bg);
+        border-color: var(--sel-bg);
+        color: var(--sel-ink);
+        box-shadow: 0 0 0 3px rgba(180, 83, 42, 0.35);
+      }
+      .date[aria-pressed='true'] small,
+      .date[aria-pressed='true'] em {
+        color: var(--sel-muted);
+      }
+      .date:disabled {
+        opacity: 0.45;
+        cursor: not-allowed;
+      }
+      .group-title {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--muted);
+        margin: 18px 0 8px;
+        display: flex;
+        justify-content: space-between;
+      }
+      .slots {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 8px;
+      }
+      .slot {
+        min-height: 50px;
+        border-radius: var(--radius-chip);
+        border: 1.5px solid var(--line);
+        background: var(--surface);
+        font-weight: 600;
+        font-size: 15.5px;
+        cursor: pointer;
+        font-variant-numeric: tabular-nums;
+        transition: all 0.15s;
+      }
+      .slot:hover {
+        border-color: var(--line-strong);
+      }
+      .slot[aria-pressed='true'] {
+        background: var(--sel-bg);
+        border-color: var(--sel-bg);
+        color: var(--sel-ink);
+        box-shadow: 0 0 0 3px rgba(180, 83, 42, 0.35);
+      }
+      .slot.just-taken {
+        text-decoration: line-through;
+        color: var(--disabled-ink);
+        background: transparent;
+        border-style: dashed;
+        cursor: not-allowed;
+      }
+      .empty {
+        text-align: center;
+        padding: 28px 12px;
+        color: var(--muted);
+        background: var(--surface);
+        border-radius: var(--radius-card);
+        border: 1.5px dashed var(--line);
+        margin-top: 14px;
+      }
+      .empty b {
+        display: block;
+        color: var(--ink);
+        font-size: 16px;
+        margin-bottom: 4px;
+      }
+
+      /* ============================ Contact form ============================ */
+      .summary {
+        background: var(--surface);
+        border: 1.5px solid var(--line);
+        border-radius: var(--radius-card);
+        padding: 4px 16px;
+      }
+      .summary-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 11px 0;
+        border-bottom: 1px solid var(--line);
+      }
+      .summary-row:last-child {
+        border-bottom: 0;
+      }
+      .summary-row .k {
+        font-size: 12.5px;
+        color: var(--muted);
+      }
+      .summary-row .v {
+        font-weight: 600;
+        font-size: 15px;
+      }
+      .summary-row .grow {
+        flex: 1;
+        min-width: 0;
+      }
+      .link {
+        background: none;
+        border: 0;
+        color: var(--accent);
+        font-weight: 600;
+        font-size: 14px;
+        cursor: pointer;
+        padding: 10px 4px;
+        min-height: 44px;
+      }
+      .total {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        padding: 12px 0 10px;
+      }
+      .total b {
+        font: 700 20px/1 var(--font-display);
+      }
+      .field {
+        margin-top: 16px;
+      }
+      .field label {
+        display: block;
+        font-weight: 600;
+        font-size: 14px;
+        margin-bottom: 6px;
+      }
+      .field .hint {
+        font-weight: 400;
+        color: var(--muted);
+      }
+      .input {
+        width: 100%;
+        min-height: 54px;
+        padding: 0 16px;
+        border-radius: 14px;
+        border: 1.5px solid var(--line-strong);
+        background: var(--surface);
+        font-size: 17px;
+        transition:
+          border-color 0.15s,
+          box-shadow 0.15s;
+      }
+      .input:focus {
+        outline: none;
+        border-color: var(--ink);
+        box-shadow: 0 0 0 3px rgba(31, 27, 22, 0.1);
+      }
+      textarea.input {
+        padding: 14px 16px;
+        min-height: 84px;
+        resize: vertical;
+        font-size: 16px;
+      }
+      .phone-input {
+        display: flex;
+        align-items: stretch;
+        border-radius: 14px;
+        border: 1.5px solid var(--line-strong);
+        background: var(--surface);
+        overflow: hidden;
+        transition:
+          border-color 0.15s,
+          box-shadow 0.15s;
+      }
+      .phone-input:focus-within {
+        border-color: var(--ink);
+        box-shadow: 0 0 0 3px rgba(31, 27, 22, 0.1);
+      }
+      .phone-input .cc {
+        display: grid;
+        place-items: center;
+        padding: 0 12px 0 16px;
+        font-weight: 600;
+        font-size: 17px;
+        color: var(--muted);
+        border-right: 1px solid var(--line);
+      }
+      .phone-input input {
+        flex: 1;
+        min-width: 0;
+        border: 0;
+        outline: none;
+        background: transparent;
+        min-height: 54px;
+        padding: 0 14px;
+        font-size: 17px;
+        letter-spacing: 0.02em;
+        font-variant-numeric: tabular-nums;
+      }
+      .invalid .input,
+      .invalid.phone-input {
+        border-color: var(--danger);
+      }
+      .err {
+        color: var(--danger);
+        font-size: 13px;
+        margin-top: 6px;
+        display: none;
+      }
+      .invalid + .err,
+      .field.invalid .err {
+        display: block;
+      }
+      .consent {
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+        margin-top: 18px;
+        font-size: 13.5px;
+        color: var(--muted);
+        cursor: pointer;
+      }
+      .consent input {
+        width: 22px;
+        height: 22px;
+        margin: 1px 0 0;
+        accent-color: var(--ink);
+        flex: none;
+      }
+      .captcha {
+        margin-top: 16px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 14px;
+        border-radius: 12px;
+        background: var(--surface);
+        border: 1.5px solid var(--line);
+        font-size: 13.5px;
+      }
+      .captcha .ok {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background: var(--success);
+        color: #fff;
+        display: grid;
+        place-items: center;
+        font-size: 14px;
+      }
+      .captcha small {
+        margin-left: auto;
+        color: var(--muted);
+        font-size: 11px;
+      }
+
+      /* ============================ Success ============================ */
+      .success {
+        text-align: center;
+        padding: 24px 4px 8px;
+      }
+      .success-icon {
+        width: 84px;
+        height: 84px;
+        border-radius: 50%;
+        background: var(--success-soft);
+        margin: 8px auto 18px;
+        display: grid;
+        place-items: center;
+        animation: pop 0.45s cubic-bezier(0.2, 1.4, 0.4, 1);
+      }
+      .success-icon::after {
+        content: '';
+        width: 30px;
+        height: 16px;
+        border-left: 4.5px solid var(--success);
+        border-bottom: 4.5px solid var(--success);
+        transform: rotate(-45deg) translate(2px, -3px);
+      }
+      @keyframes pop {
+        from {
+          transform: scale(0.4);
+          opacity: 0;
+        }
+        to {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+      .success h2 {
+        font: 600 28px/1.15 var(--font-display);
+        margin: 0 0 8px;
+        letter-spacing: -0.015em;
+      }
+      .success p {
+        color: var(--muted);
+        margin: 0 auto 20px;
+        max-width: 30ch;
+      }
+      .status-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        font-size: 13px;
+        font-weight: 600;
+        padding: 6px 12px;
+        border-radius: 999px;
+        background: var(--accent-soft);
+        color: var(--accent);
+        margin-bottom: 18px;
+      }
+      .status-pill::before {
+        content: '';
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--accent);
+      }
+      .success .summary {
+        text-align: left;
+      }
+      .actions {
+        display: grid;
+        gap: 10px;
+        margin-top: 18px;
+      }
+      .fineprint {
+        font-size: 12.5px;
+        color: var(--muted);
+        margin-top: 14px;
+        text-align: center;
+      }
+
+      /* ============================ SLOT_TAKEN sheet ============================ */
+      .overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(31, 27, 22, 0.45);
+        display: flex;
+        align-items: flex-end;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.2s;
+        z-index: 10;
+      }
+      .overlay.open {
+        opacity: 1;
+        pointer-events: auto;
+      }
+      .sheet {
+        width: 100%;
+        background: var(--surface);
+        border-radius: 26px 26px 0 0;
+        padding: 10px 20px calc(22px + env(safe-area-inset-bottom));
+        transform: translateY(100%);
+        transition: transform 0.28s cubic-bezier(0.2, 0.9, 0.3, 1);
+      }
+      .overlay.open .sheet {
+        transform: translateY(0);
+      }
+      .grabber {
+        width: 40px;
+        height: 5px;
+        border-radius: 5px;
+        background: var(--line-strong);
+        margin: 0 auto 16px;
+      }
+      .sheet-icon {
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        background: var(--danger-soft);
+        color: var(--danger);
+        display: grid;
+        place-items: center;
+        font: 700 26px/1 var(--font-display);
+        margin-bottom: 12px;
+      }
+      .sheet h3 {
+        font: 600 23px/1.2 var(--font-display);
+        margin: 0 0 6px;
+      }
+      .sheet p {
+        margin: 0 0 16px;
+        color: var(--muted);
+      }
+      .sheet .slots {
+        margin-bottom: 18px;
+      }
+      .sheet .actions {
+        margin-top: 0;
+      }
+
+      /* ============================ Side panel ============================ */
+      .panel h1 {
+        font: 600 28px/1.15 var(--font-display);
+        margin: 0 0 8px;
+        letter-spacing: -0.015em;
+      }
+      .panel > p {
+        color: var(--muted);
+        margin: 0 0 20px;
+        max-width: 60ch;
+      }
+      .box {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 16px 18px;
+        margin-bottom: 16px;
+      }
+      .box h2 {
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: var(--muted);
+        margin: 0 0 12px;
+      }
+      .jump {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .jump button {
+        min-height: 40px;
+        padding: 0 14px;
+        border-radius: 999px;
+        border: 1.5px solid var(--line-strong);
+        background: transparent;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 13.5px;
+      }
+      .jump button.active {
+        background: var(--ink);
+        color: var(--sel-ink);
+        border-color: var(--ink);
+      }
+      .jump button.danger {
+        border-color: var(--danger);
+        color: var(--danger);
+      }
+      .toggle {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        font-size: 14px;
+        cursor: pointer;
+        margin-top: 12px;
+      }
+      .toggle input {
+        width: 20px;
+        height: 20px;
+        accent-color: var(--danger);
+      }
+      .notes {
+        margin: 0;
+        padding-left: 18px;
+        color: var(--muted);
+        font-size: 14px;
+      }
+      .notes li {
+        margin: 5px 0;
+      }
+      .notes b {
+        color: var(--ink);
+      }
+      .cyr .d {
+        font: 600 26px/1.2 var(--font-display);
+        margin: 0;
+      }
+      .cyr .b {
+        margin: 4px 0 0;
+        color: var(--muted);
+      }
+      .cyr .src {
+        font-size: 12px;
+        color: var(--muted);
+        margin-top: 8px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <!-- ============================ The phone ============================ -->
+      <div class="phone">
+        <div class="screen" id="screen">
+          <div class="inapp-bar" aria-hidden="true">
+            <span class="x">✕</span><span class="url">navbatly.uz/b/demo</span><span>⋯</span>
+          </div>
+
+          <header class="app-head">
+            <div class="biz">
+              <div class="biz-logo" aria-hidden="true">N</div>
+              <div class="biz-text">
+                <div class="biz-name">Navbatly Demo Barbershop</div>
+                <div class="biz-addr">Toshkent sh., Namuna ko'chasi, 1-uy</div>
+              </div>
+              <a class="call" href="tel:+998900000000" aria-label="Salonga qo'ng'iroq qilish">
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"
+                  />
+                </svg>
+              </a>
+            </div>
+            <div id="stepHead">
+              <div class="topline">
+                <button class="back" id="back" type="button" aria-label="Orqaga" hidden>
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M15 18l-6-6 6-6" />
+                  </svg>
+                </button>
+                <div class="progress" id="progress" aria-hidden="true">
+                  <i></i><i></i><i></i><i></i>
+                </div>
+              </div>
+              <div class="step-label" id="stepLabel"></div>
+              <h1 class="step-title" id="stepTitle"></h1>
+            </div>
+          </header>
+
+          <main class="app-body" id="body"></main>
+
+          <div class="bottom" id="bottom">
+            <div class="sum" id="sum"></div>
+            <button class="btn btn-primary" id="next" type="button">Davom etish</button>
+          </div>
+
+          <!-- SLOT_TAKEN bottom sheet -->
+          <div
+            class="overlay"
+            id="overlay"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="takenTitle"
+          >
+            <div class="sheet">
+              <div class="grabber"></div>
+              <div class="sheet-icon" aria-hidden="true">!</div>
+              <h3 id="takenTitle">Bu vaqt band bo'lib qoldi</h3>
+              <p id="takenText"></p>
+              <div class="group-title" style="margin-top: 0"><span>Yaqin bo'sh vaqtlar</span></div>
+              <div class="slots" id="altSlots"></div>
+              <div class="actions">
+                <button class="btn btn-secondary btn-block" id="otherTime" type="button">
+                  Boshqa kun yoki vaqt
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================ Review panel ============================ -->
+      <aside class="panel">
+        <h1>Bron qilish oqimi</h1>
+        <p>
+          Bu jonli maket: telefondagi hamma narsa bosiladi. Mijoz Instagram yoki Telegram'dagi
+          havoladan kiradi va 4 qadamda yoziladi. Ma'lumotlar — demo salondan.
+        </p>
+
+        <div class="box">
+          <h2>Ekranlarga o'tish</h2>
+          <div class="jump" id="jump">
+            <button type="button" data-jump="1">1 · Xizmat</button>
+            <button type="button" data-jump="2">2 · Usta</button>
+            <button type="button" data-jump="3">3 · Kun va vaqt</button>
+            <button type="button" data-jump="4">4 · Ma'lumotlar</button>
+            <button type="button" data-jump="5">✓ Tasdiq</button>
+            <button type="button" data-jump="taken" class="danger">⚠ SLOT_TAKEN</button>
+          </div>
+          <label class="toggle">
+            <input type="checkbox" id="simTaken" />
+            Keyingi «Band qilish» bosilganda: <b>vaqt band bo'lib qolgan</b> holatini ko'rsatish
+          </label>
+        </div>
+
+        <div class="box">
+          <h2>Dizayn qarorlari</h2>
+          <ul class="notes">
+            <li>
+              <b>Tanlangan holat</b> — B yo'nalishidagidek kuchli kontrast: to'q to'liq fon, och
+              matn, terrakota belgi (karta, kun va vaqt uchun bir xil).
+            </li>
+            <li>
+              <b>Pastki panel</b> doim ko'rinadi: tanlov xulosasi va asosiy tugma — bosh barmoq
+              yetadigan joyda.
+            </li>
+            <li>
+              <b>Faqat bo'sh vaqtlar</b> ko'rsatiladi; ertalab / kunduzi / kechqurun guruhlari
+              bilan.
+            </li>
+            <li>
+              <b>Telefon</b>: «+998» qotirilgan, raqam avtomatik «90 123 45 67» ko'rinishiga keladi;
+              raqamli klaviatura ochiladi.
+            </li>
+            <li>
+              <b>Band bo'lib qolsa</b> — ma'lumotlar saqlanadi, eng yaqin bo'sh vaqtlar bir bosishda
+              taklif qilinadi.
+            </li>
+            <li>
+              <b>Tasdiq</b> ekrani halol: «so'rov yuborildi, salon tasdiqlaydi» (avto-tasdiq
+              o'chiq).
+            </li>
+            <li>Barcha bosiladigan elementlar ≥ 44 px; tugmalar 54 px.</li>
+          </ul>
+        </div>
+
+        <div class="box cyr">
+          <h2>Kirill alifbosi tekshiruvi (rus tili uchun)</h2>
+          <p class="d">Запись к мастеру — 15:30</p>
+          <p class="b">Выберите удобное время. Стрижка — 80&nbsp;000 сум.</p>
+          <p class="src">
+            Fraunces kirill harflarini qo'llamaydi (Google Fonts: faqat lotin va vyetnam). O'rniga
+            <b>Literata</b> (sarlavhalar) + <b>Inter</b> (matn) — ikkalasi ham kirillni to'liq
+            qo'llaydi.
+          </p>
+        </div>
+      </aside>
+    </div>
+
+    <script>
+      /* =========================== Demo data (from the seed) =========================== */
+      const SERVICES = [
+        { id: 'b1', name: 'Soch olish', desc: 'Yuvish va ukladka bilan', dur: 30, price: 80000 },
+        {
+          id: 'b2',
+          name: 'Soqol olish',
+          desc: 'Shakl berish va issiq sochiq',
+          dur: 20,
+          price: 50000,
+        },
+        { id: 'b3', name: 'Soch + soqol', desc: 'Kompleks xizmat', dur: 50, price: 120000 },
+        { id: 'b4', name: 'Bolalar soch turmagi', desc: '12 yoshgacha', dur: 30, price: 60000 },
+        { id: 'b5', name: 'Ukladka', desc: 'Bayram yoki tadbir uchun', dur: 20, price: 40000 },
+      ]
+      const STAFF = [
+        {
+          id: 'a1',
+          name: 'Jasur',
+          bio: 'Klassik va zamonaviy soch turmaklari. 8 yillik tajriba.',
+          services: ['b1', 'b2', 'b3', 'b4', 'b5'],
+        },
+        {
+          id: 'a2',
+          name: 'Bobur',
+          bio: "Soqol va fade bo'yicha mutaxassis.",
+          services: ['b1', 'b2', 'b3'],
+        },
+        {
+          id: 'a3',
+          name: 'Akmal',
+          bio: 'Bolalar soch turmaklari va ukladka.',
+          services: ['b1', 'b4', 'b5'],
+        },
+      ]
+      const WEEKDAY_SHORT = ['Ya', 'Du', 'Se', 'Ch', 'Pa', 'Ju', 'Sh']
+      const WEEKDAY_LONG = [
+        'yakshanba',
+        'dushanba',
+        'seshanba',
+        'chorshanba',
+        'payshanba',
+        'juma',
+        'shanba',
+      ]
+      const MONTHS = [
+        'yanvar',
+        'fevral',
+        'mart',
+        'aprel',
+        'may',
+        'iyun',
+        'iyul',
+        'avgust',
+        'sentabr',
+        'oktabr',
+        'noyabr',
+        'dekabr',
+      ]
+      const WINDOWS = [
+        [9 * 60, 13 * 60],
+        [14 * 60, 20 * 60],
+      ] // Mon–Sat, Sunday off
+      const STEP = 15,
+        MIN_NOTICE = 60,
+        HORIZON = 14
+
+      /* =========================== Helpers =========================== */
+      const $ = (id) => document.getElementById(id)
+      const esc = (s) =>
+        String(s).replace(
+          /[&<>"']/g,
+          (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c],
+        )
+      const money = (n) => n.toLocaleString('ru-RU').replace(/\s/g, ' ') + " so'm"
+      const hhmm = (m) =>
+        String(Math.floor(m / 60)).padStart(2, '0') + ':' + String(m % 60).padStart(2, '0')
+
+      // "Today" and "now" in Asia/Tashkent, regardless of the viewer's timezone
+      const tzParts = Object.fromEntries(
+        new Intl.DateTimeFormat('en-GB', {
+          timeZone: 'Asia/Tashkent',
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+          hour: '2-digit',
+          minute: '2-digit',
+          hourCycle: 'h23',
+        })
+          .formatToParts(new Date())
+          .map((p) => [p.type, p.value]),
+      )
+      const TODAY = Date.UTC(+tzParts.year, +tzParts.month - 1, +tzParts.day)
+      const NOW_MIN = +tzParts.hour * 60 + +tzParts.minute
+      const DAYS = Array.from({ length: HORIZON }, (_, i) => {
+        const d = new Date(TODAY + i * 864e5)
+        return {
+          i,
+          key: d.toISOString().slice(0, 10),
+          dow: d.getUTCDay(),
+          day: d.getUTCDate(),
+          month: d.getUTCMonth(),
+        }
+      })
+      const dayLabel = (d) =>
+        (d.i === 0
+          ? 'Bugun'
+          : d.i === 1
+            ? 'Ertaga'
+            : WEEKDAY_LONG[d.dow][0].toUpperCase() + WEEKDAY_LONG[d.dow].slice(1)) +
+        ', ' +
+        d.day +
+        '-' +
+        MONTHS[d.month]
+
+      // deterministic "already booked" pattern so the demo looks realistic
+      const hash = (s) => [...s].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7)
+      const justTaken = new Set() // slots lost to SLOT_TAKEN in this session
+
+      function slotsFor(staffId, serviceId, day) {
+        if (!day || day.dow === 0) return []
+        const dur = SERVICES.find((s) => s.id === serviceId).dur
+        const out = []
+        for (const [from, to] of WINDOWS) {
+          for (let m = from; m + dur <= to; m += STEP) {
+            if (day.i === 0 && m < NOW_MIN + MIN_NOTICE) continue
+            if (hash(staffId + day.key + m) % 4 === 0) continue // booked by someone
+            out.push(m)
+          }
+        }
+        return out
+      }
+      const nextFree = (staffId, serviceId) => {
+        for (const d of DAYS) {
+          const s = slotsFor(staffId, serviceId, d).filter((m) => !justTaken.has(d.key + m))
+          if (s.length)
+            return (
+              (d.i === 0 ? 'bugun' : d.i === 1 ? 'ertaga' : d.day + '-' + MONTHS[d.month]) +
+              ' ' +
+              hhmm(s[0])
+            )
+        }
+        return null
+      }
+
+      /* =========================== State =========================== */
+      const state = {
+        step: 1,
+        service: null,
+        staff: null,
+        day: null,
+        time: null,
+        name: '',
+        phone: '',
+        note: '',
+        consent: false,
+        submitting: false,
+        touched: false,
+      }
+      const service = () => SERVICES.find((s) => s.id === state.service)
+      const staff = () => STAFF.find((s) => s.id === state.staff)
+      const day = () => DAYS.find((d) => d.key === state.day)
+
+      const TITLES = {
+        1: 'Xizmatni tanlang',
+        2: 'Ustani tanlang',
+        3: 'Kun va vaqtni tanlang',
+        4: "Ma'lumotlaringiz",
+      }
+
+      /* =========================== Rendering =========================== */
+      function render() {
+        const s = state.step
+        $('stepHead').hidden = s === 5
+        $('back').hidden = s === 1 || s === 5
+        $('progress')
+          .querySelectorAll('i')
+          .forEach((el, idx) => el.classList.toggle('on', idx < s))
+        $('stepLabel').textContent = s <= 4 ? s + '-qadam / 4' : ''
+        $('stepTitle').textContent = TITLES[s] || ''
+        $('body').innerHTML = [null, viewService, viewStaff, viewTime, viewContact, viewSuccess][
+          s
+        ]()
+        $('body').scrollTop = 0
+        renderBottom()
+        document
+          .querySelectorAll('#jump [data-jump]')
+          .forEach((b) => b.classList.toggle('active', b.dataset.jump == s))
+        if (s === 4) bindContact()
+      }
+
+      function renderBottom() {
+        const s = state.step
+        $('bottom').hidden = s === 5
+        const sv = service(),
+          st = staff(),
+          d = day()
+        let sum = '',
+          label = 'Davom etish',
+          enabled = false
+        if (s === 1) {
+          sum = sv
+            ? `<b>${sv.name}</b><span>${sv.dur} daq · ${money(sv.price)}</span>`
+            : `<b>Xizmat tanlanmagan</b><span>Ro'yxatdan bittasini tanlang</span>`
+          enabled = !!sv
+        }
+        if (s === 2) {
+          sum = `<b>${sv.name}${st ? ' · ' + st.name : ''}</b><span>${money(sv.price)}</span>`
+          enabled = !!st
+        }
+        if (s === 3) {
+          sum =
+            state.time != null
+              ? `<b>${dayLabel(d)}, ${hhmm(state.time)}</b><span>${st.name} · ${sv.name}</span>`
+              : `<b>${st.name} · ${sv.name}</b><span>Vaqtni tanlang</span>`
+          enabled = state.time != null
+        }
+        if (s === 4) {
+          sum = `<b>${money(sv.price)}</b><span>To'lov salonda</span>`
+          label = state.submitting ? '<span class="spinner"></span> Yuborilmoqda…' : 'Band qilish'
+          enabled = !state.submitting
+        }
+        $('sum').innerHTML = sum
+        $('next').innerHTML = label
+        $('next').disabled = !enabled
+      }
+
+      const viewService = () =>
+        `<div class="list" role="list">${SERVICES.map(
+          (s) => `
+        <button class="card" type="button" data-pick="service" data-id="${s.id}" aria-pressed="${state.service === s.id}">
+          <span class="grow"><span class="title">${s.name}</span><span class="sub">${s.desc}</span>
+            <span class="meta"><span class="pill">${s.dur} daq</span></span></span>
+          <span class="price">${money(s.price)}</span>
+          <span class="check" aria-hidden="true"></span>
+        </button>`,
+        ).join('')}</div>`
+
+      const viewStaff = () => {
+        const list = STAFF.filter((st) => st.services.includes(state.service))
+        return `<div class="list">${list
+          .map((st) => {
+            const nf = nextFree(st.id, state.service)
+            return `<button class="card" type="button" data-pick="staff" data-id="${st.id}" aria-pressed="${state.staff === st.id}">
+            <span class="avatar" aria-hidden="true">${st.name[0]}</span>
+            <span class="grow"><span class="title">${st.name}</span><span class="sub">${st.bio}</span>
+              <span class="meta">${nf ? `<span class="pill free">Eng yaqin: ${nf}</span>` : '<span class="pill">Bo\'sh vaqt yo\'q</span>'}</span></span>
+            <span class="check" aria-hidden="true"></span>
+          </button>`
+          })
+          .join('')}</div>`
+      }
+
+      const viewTime = () => {
+        const d = day()
+        const dates = DAYS.map(
+          (
+            x,
+          ) => `<button class="date" type="button" data-pick="day" data-id="${x.key}" aria-pressed="${state.day === x.key}" ${x.dow === 0 ? 'disabled aria-label="Yakshanba — dam olish kuni"' : ''}>
+            <small>${x.i === 0 ? 'Bugun' : WEEKDAY_SHORT[x.dow]}</small><b>${x.day}</b>${x.dow === 0 ? '<em>dam</em>' : ''}</button>`,
+        ).join('')
+        const all = slotsFor(state.staff, state.service, d)
+        const groups = [
+          ['Ertalab', (m) => m < 12 * 60],
+          ['Kunduzi', (m) => m >= 12 * 60 && m < 17 * 60],
+          ['Kechqurun', (m) => m >= 17 * 60],
+        ]
+        const slotHtml = all.length
+          ? groups
+              .map(([name, fn]) => {
+                const g = all.filter(fn)
+                if (!g.length) return ''
+                return `<div class="group-title"><span>${name}</span><span>${g.filter((m) => !justTaken.has(d.key + m)).length} ta bo'sh</span></div>
+                <div class="slots">${g
+                  .map((m) =>
+                    justTaken.has(d.key + m)
+                      ? `<button class="slot just-taken" type="button" disabled aria-label="${hhmm(m)} — band">${hhmm(m)}</button>`
+                      : `<button class="slot" type="button" data-pick="time" data-id="${m}" aria-pressed="${state.time === m}">${hhmm(m)}</button>`,
+                  )
+                  .join('')}</div>`
+              })
+              .join('')
+          : `<div class="empty"><b>Bu kunda bo'sh vaqt yo'q</b>Boshqa kunni tanlang yoki boshqa ustani ko'ring.</div>`
+        return `<div class="month">${MONTHS[d.month][0].toUpperCase() + MONTHS[d.month].slice(1)} · ${staff().name}</div>
+          <div class="dates">${dates}</div>${slotHtml}`
+      }
+
+      const summaryRows = (withEdit) => {
+        const sv = service(),
+          st = staff(),
+          d = day()
+        const edit = (step) =>
+          withEdit
+            ? `<button class="link" type="button" data-goto="${step}">O'zgartirish</button>`
+            : ''
+        return `<div class="summary">
+          <div class="summary-row"><div class="grow"><div class="k">Xizmat</div><div class="v">${sv.name} · ${sv.dur} daq</div></div>${edit(1)}</div>
+          <div class="summary-row"><div class="grow"><div class="k">Usta</div><div class="v">${st.name}</div></div>${edit(2)}</div>
+          <div class="summary-row"><div class="grow"><div class="k">Vaqt</div><div class="v">${dayLabel(d)}, ${hhmm(state.time)}–${hhmm(state.time + sv.dur)}</div></div>${edit(3)}</div>
+          <div class="total"><span class="k">Narxi</span><b>${money(sv.price)}</b></div>
+        </div>`
+      }
+
+      const viewContact = () => `${summaryRows(true)}
+        <div class="field" id="fName">
+          <label for="name">Ismingiz</label>
+          <input class="input" id="name" autocomplete="given-name" enterkeyhint="next" value="${esc(state.name)}" placeholder="Masalan: Aziz" />
+          <div class="err">Ismingizni kiriting (kamida 2 ta harf).</div>
+        </div>
+        <div class="field" id="fPhone">
+          <label for="phone">Telefon raqamingiz</label>
+          <div class="phone-input"><span class="cc">+998</span>
+            <input id="phone" type="tel" inputmode="numeric" autocomplete="tel-national" enterkeyhint="done" value="${esc(state.phone)}" placeholder="90 123 45 67" aria-describedby="phoneErr" />
+          </div>
+          <div class="err" id="phoneErr">Raqamni to'liq kiriting: 9 ta raqam, masalan 90 123 45 67.</div>
+        </div>
+        <div class="field">
+          <label for="note">Izoh <span class="hint">(ixtiyoriy)</span></label>
+          <textarea class="input" id="note" maxlength="300" placeholder="Masalan: biroz kechikishim mumkin">${esc(state.note)}</textarea>
+        </div>
+        <label class="consent"><input type="checkbox" id="consent" ${state.consent ? 'checked' : ''} />
+          <span>Shaxsiy ma'lumotlarim (ism va telefon) faqat shu yozilish uchun ishlatilishiga roziman.</span></label>
+        <div class="field invalid" id="fConsent" style="margin-top:4px" hidden><div class="err">Davom etish uchun rozilik belgisini qo'ying.</div></div>
+        <div class="captcha"><span class="ok">✓</span> Siz robot emassiz <small>Cloudflare</small></div>`
+
+      const viewSuccess = () => `<div class="success">
+          <div class="success-icon" aria-hidden="true"></div>
+          <h2>So'rovingiz yuborildi!</h2>
+          <p>Rahmat, ${esc(state.name || 'mehmon')}. Salon yozilishingizni tez orada tasdiqlaydi.</p>
+          <span class="status-pill">Tasdiqlash kutilmoqda</span>
+          ${summaryRows(false)}
+          <div class="actions">
+            <a class="btn btn-secondary btn-block" href="tel:+998900000000" style="text-decoration:none">Salonga qo'ng'iroq qilish</a>
+            <button class="btn btn-primary btn-block" type="button" data-restart>Yana yozilish</button>
+          </div>
+          <p class="fineprint">Bekor qilish yoki vaqtni o'zgartirish uchun salonga qo'ng'iroq qiling.<br/>To'lov xizmatdan so'ng salonda amalga oshiriladi.</p>
+        </div>`
+
+      /* =========================== Contact form logic =========================== */
+      const fmtPhone = (digits) =>
+        [digits.slice(0, 2), digits.slice(2, 5), digits.slice(5, 7), digits.slice(7, 9)]
+          .filter(Boolean)
+          .join(' ')
+      function bindContact() {
+        const name = $('name'),
+          phone = $('phone'),
+          note = $('note'),
+          consent = $('consent')
+        name.addEventListener('input', () => {
+          state.name = name.value
+          if (state.touched) validate()
+        })
+        note.addEventListener('input', () => {
+          state.note = note.value
+        })
+        consent.addEventListener('change', () => {
+          state.consent = consent.checked
+          if (state.touched) validate()
+        })
+        phone.addEventListener('input', () => {
+          // accept "90 123 45 67", "+998901234567", "998901234567" … → keep the last 9 digits
+          let d = phone.value.replace(/\D/g, '')
+          if (d.length > 9 && d.startsWith('998')) d = d.slice(3)
+          d = d.slice(0, 9)
+          phone.value = state.phone = fmtPhone(d)
+          if (state.touched) validate()
+        })
+        if (state.touched) validate()
+      }
+      function validate() {
+        const okName = state.name.trim().replace(/\s+/g, ' ').length >= 2
+        const okPhone = state.phone.replace(/\D/g, '').length === 9
+        $('fName').classList.toggle('invalid', !okName)
+        $('fPhone').classList.toggle('invalid', !okPhone)
+        $('fPhone').querySelector('.phone-input').classList.toggle('invalid', !okPhone)
+        $('fConsent').hidden = state.consent
+        return okName && okPhone && state.consent
+      }
+
+      /* =========================== Actions =========================== */
+      function next() {
+        if (state.step < 4) {
+          if (state.step === 2 && !state.day) {
+            const first = DAYS.find((d) => slotsFor(state.staff, state.service, d).length)
+            state.day = first && first.key
+          }
+          state.step++
+          return render()
+        }
+        if (state.step === 4) {
+          state.touched = true
+          if (!validate()) {
+            const firstBad = document.querySelector(
+              '.field.invalid input, .field.invalid textarea, #consent:not(:checked)',
+            )
+            firstBad && firstBad.focus()
+            return
+          }
+          state.submitting = true
+          renderBottom()
+          setTimeout(() => {
+            state.submitting = false
+            if ($('simTaken').checked) {
+              $('simTaken').checked = false
+              showTaken()
+            } else {
+              state.step = 5
+              render()
+            }
+          }, 900)
+        }
+      }
+
+      function showTaken() {
+        const d = day(),
+          lost = state.time
+        justTaken.add(d.key + lost)
+        state.time = null
+        renderBottom()
+        $('takenText').innerHTML =
+          `Kimdir sizdan biroz oldin <b>${dayLabel(d)}, ${hhmm(lost)}</b> vaqtini band qildi. Ma'lumotlaringiz saqlanib qoldi — boshqa vaqtni tanlang.`
+        const alts = slotsFor(state.staff, state.service, d)
+          .filter((m) => !justTaken.has(d.key + m))
+          .sort((a, b) => Math.abs(a - lost) - Math.abs(b - lost))
+          .slice(0, 4)
+          .sort((a, b) => a - b)
+        $('altSlots').innerHTML = alts.length
+          ? alts
+              .map((m) => `<button class="slot" type="button" data-alt="${m}">${hhmm(m)}</button>`)
+              .join('')
+          : `<div class="empty" style="grid-column:1/-1;margin:0">Bu kunda boshqa bo'sh vaqt qolmadi.</div>`
+        $('overlay').classList.add('open')
+        setTimeout(() => $('otherTime').focus(), 50)
+      }
+      const closeTaken = () => $('overlay').classList.remove('open')
+
+      /* =========================== Events =========================== */
+      $('body').addEventListener('click', (e) => {
+        const pick = e.target.closest('[data-pick]')
+        if (pick && !pick.disabled) {
+          const { pick: what, id } = pick.dataset
+          if (what === 'service') {
+            if (state.service !== id) {
+              state.staff = null
+              state.day = null
+              state.time = null
+            }
+            state.service = id
+          }
+          if (what === 'staff') {
+            if (state.staff !== id) {
+              state.day = null
+              state.time = null
+            }
+            state.staff = id
+          }
+          if (what === 'day') {
+            state.day = id
+            state.time = null
+          }
+          if (what === 'time') state.time = +id
+          const keepScroll = $('body').scrollTop
+          const keepDates = document.querySelector('.dates')?.scrollLeft ?? 0
+          render()
+          $('body').scrollTop = keepScroll
+          const dates = document.querySelector('.dates')
+          if (dates) dates.scrollLeft = keepDates
+          return
+        }
+        const goto = e.target.closest('[data-goto]')
+        if (goto) {
+          state.step = +goto.dataset.goto
+          return render()
+        }
+        if (e.target.closest('[data-restart]')) {
+          Object.assign(state, {
+            step: 1,
+            service: null,
+            staff: null,
+            day: null,
+            time: null,
+            note: '',
+            touched: false,
+          })
+          return render()
+        }
+      })
+      $('next').addEventListener('click', next)
+      $('back').addEventListener('click', () => {
+        if (state.step > 1) {
+          state.step--
+          render()
+        }
+      })
+      $('overlay').addEventListener('click', (e) => {
+        const alt = e.target.closest('[data-alt]')
+        if (alt) {
+          state.time = +alt.dataset.alt
+          closeTaken()
+          renderBottom()
+          $('body').innerHTML = viewContact()
+          bindContact()
+          return
+        }
+        if (e.target === $('overlay') || e.target.closest('#otherTime')) {
+          closeTaken()
+          state.step = 3
+          render()
+        }
+      })
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && $('overlay').classList.contains('open')) {
+          closeTaken()
+          state.step = 3
+          render()
+        }
+      })
+
+      // Review panel: jump straight to any screen with sensible demo choices
+      function prefill() {
+        state.service ??= 'b1'
+        state.staff ??= 'a1'
+        if (!state.day) {
+          const d = DAYS.find((x) => slotsFor(state.staff, state.service, x).length)
+          state.day = d && d.key
+        }
+        if (state.time == null)
+          state.time = slotsFor(state.staff, state.service, day()).find(
+            (m) => !justTaken.has(state.day + m),
+          )
+        if (!state.name) state.name = 'Test mijoz'
+        if (!state.phone) state.phone = '90 000 00 01'
+        state.consent = true
+      }
+      $('jump').addEventListener('click', (e) => {
+        const b = e.target.closest('[data-jump]')
+        if (!b) return
+        closeTaken()
+        const j = b.dataset.jump
+        if (j === 'taken') {
+          prefill()
+          state.step = 4
+          render()
+          showTaken()
+          return
+        }
+        const n = +j
+        if (n >= 2) {
+          state.service ??= 'b1'
+        }
+        if (n >= 3) {
+          state.staff ??= 'a1'
+          if (!state.day) {
+            const d = DAYS.find((x) => slotsFor(state.staff, state.service, x).length)
+            state.day = d && d.key
+          }
+        }
+        if (n >= 4) prefill()
+        state.step = n
+        render()
+      })
+
+      render()
+    </script>
+  </body>
+</html>
