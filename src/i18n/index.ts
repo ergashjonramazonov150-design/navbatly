@@ -1,14 +1,16 @@
 /**
  * i18n setup. To add Russian later:
  *   1. create src/i18n/locales/ru/*.json with the SAME keys as uz/
- *   2. add `ru: { common: ruCommon }` to `resources` below
+ *   2. add `ru: { common: ..., admin: ..., errors: ... }` to `resources` below
  * Components always use t('key') — never hard-coded text.
  */
 import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
 
 import type { AppLanguage } from '@/lib/datetime'
+import uzAdmin from './locales/uz/admin.json'
 import uzCommon from './locales/uz/common.json'
+import uzErrors from './locales/uz/errors.json'
 
 export const SUPPORTED_LANGUAGES: AppLanguage[] = ['uz']
 export const DEFAULT_LANGUAGE: AppLanguage = 'uz'
@@ -26,7 +28,7 @@ function readSavedLanguage(): AppLanguage {
 }
 
 export const resources = {
-  uz: { common: uzCommon },
+  uz: { common: uzCommon, admin: uzAdmin, errors: uzErrors },
 } as const
 
 void i18n.use(initReactI18next).init({
@@ -34,6 +36,7 @@ void i18n.use(initReactI18next).init({
   lng: readSavedLanguage(),
   fallbackLng: DEFAULT_LANGUAGE,
   defaultNS: 'common',
+  ns: ['common', 'admin', 'errors'],
   interpolation: { escapeValue: false }, // React already escapes output
 })
 

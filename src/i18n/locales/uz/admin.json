@@ -1,0 +1,70 @@
+{
+  "panelTitle": "Boshqaruv paneli",
+  "nav": {
+    "appointments": "Yozilishlar",
+    "calendar": "Kalendar",
+    "services": "Xizmatlar",
+    "staff": "Ustalar",
+    "settings": "Sozlamalar",
+    "menu": "Asosiy menyu"
+  },
+  "roles": {
+    "owner": "Egasi",
+    "staff": "Usta"
+  },
+  "logout": "Chiqish",
+  "login": {
+    "title": "Boshqaruv paneli",
+    "subtitle": "Salon egasi va ustalar uchun kirish.",
+    "email": "Email",
+    "emailPlaceholder": "siz@misol.uz",
+    "password": "Parol",
+    "showPassword": "Parolni ko'rsatish",
+    "hidePassword": "Parolni yashirish",
+    "submit": "Kirish",
+    "submitting": "Kirilmoqda…",
+    "forgot": "Parolni unutdingizmi?",
+    "noSignup": "Ro'yxatdan o'tish yo'q — hisobni Navbatly administratori yaratadi."
+  },
+  "forgot": {
+    "title": "Parolni tiklash",
+    "subtitle": "Emailingizni kiriting — parolni tiklash havolasini yuboramiz.",
+    "submit": "Havolani yuborish",
+    "submitting": "Yuborilmoqda…",
+    "sentTitle": "Emailingizni tekshiring",
+    "sent": "Agar {{email}} manzili bilan hisob mavjud bo'lsa, parolni tiklash havolasi yuborildi. Havola bir marta ishlaydi.",
+    "unavailableTitle": "Parolni tiklash hozircha ishlamayapti",
+    "unavailable": "Parolni yangilash uchun Navbatly administratoriga murojaat qiling.",
+    "backToLogin": "Kirish sahifasiga qaytish"
+  },
+  "reset": {
+    "title": "Yangi parol",
+    "subtitle": "Kamida 8 belgidan iborat yangi parol kiriting.",
+    "password": "Yangi parol",
+    "confirm": "Parolni takrorlang",
+    "submit": "Parolni saqlash",
+    "submitting": "Saqlanmoqda…",
+    "success": "Parol yangilandi ✓",
+    "checking": "Havola tekshirilmoqda…",
+    "invalidTitle": "Havola eskirgan yoki noto'g'ri",
+    "invalid": "Parolni tiklash havolasi bir marta va qisqa vaqt ishlaydi. Yangi havola so'rang."
+  },
+  "account": {
+    "loading": "Yuklanmoqda…",
+    "noBusinessTitle": "Hisobingiz hech qaysi salonga ulanmagan",
+    "noBusiness": "Navbatly administratoriga murojaat qiling — u hisobingizni salonga ulaydi.",
+    "inactiveTitle": "Hisobingiz vaqtincha faolsizlantirilgan",
+    "inactive": "Batafsil ma'lumot uchun salon egasiga murojaat qiling.",
+    "loadErrorTitle": "Ma'lumotlarni yuklab bo'lmadi",
+    "loadError": "Internet aloqasini tekshirib, sahifani yangilang.",
+    "retry": "Qayta urinish"
+  },
+  "placeholder": {
+    "comingIn": "Bu bo'lim {{milestone}} bosqichida tayyor bo'ladi.",
+    "appointments": "Bugungi va kelgusi yozilishlar, tasdiqlash va bekor qilish shu yerda bo'ladi.",
+    "calendar": "Kunlik kalendar: ustalar ustunlarda, bo'sh joyni bosib yozilish qo'shish.",
+    "services": "Xizmatlar ro'yxati, narx va davomiylik, faol/nofaol.",
+    "staff": "Ustalar, ish vaqti, xizmatlar va dam olish kunlari.",
+    "settings": "Salon ma'lumotlari, bron qoidalari va Telegram xabarnomalari."
+  }
+}
