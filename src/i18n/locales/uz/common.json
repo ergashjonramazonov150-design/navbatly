@@ -1,0 +1,13 @@
+{
+  "appName": "Navbatly",
+  "hello": {
+    "title": "Salom, Navbatly!",
+    "subtitle": "Sartaroshxona va go'zallik salonlari uchun onlayn navbat tizimi.",
+    "tashkentTime": "Toshkent vaqti: {{time}}",
+    "cta": "Tez orada"
+  },
+  "notFound": {
+    "title": "Sahifa topilmadi",
+    "backHome": "Bosh sahifaga qaytish"
+  }
+}
