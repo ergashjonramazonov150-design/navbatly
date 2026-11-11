@@ -14,7 +14,8 @@
     "db:push": "supabase db push --remote",
     "db:types": "supabase gen types --lang=typescript --remote --schema public > src/types/database.types.ts",
     "db:test": "node scripts/db-test.mjs",
-    "db:test:race": "node scripts/db-concurrency-test.mjs"
+    "db:test:race": "node scripts/db-concurrency-test.mjs",
+    "db:seed": "node scripts/db-seed.mjs"
   },
   "dependencies": {
     "@date-fns/tz": "^1.5.0",
