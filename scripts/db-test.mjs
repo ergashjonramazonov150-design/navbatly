@@ -13,7 +13,7 @@
  * Usage: npm run db:test            (all files)
  *        npm run db:test -- 01      (files whose name contains "01")
  */
-import { execFileSync } from 'node:child_process'
+import { execSync } from 'node:child_process'
 import { mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
@@ -77,11 +77,10 @@ for (const file of files) {
 
   let output = ''
   try {
-    output = execFileSync(
-      'npx',
-      ['supabase', 'db', 'query', '--remote', '--yes', '--output-format', 'json', '-f', tmpFile],
-      { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'], shell: process.platform === 'win32' },
-    )
+    output = execSync(`npx supabase db query --remote --yes --output-format json -f "${tmpFile}"`, {
+      encoding: 'utf8',
+      stdio: ['ignore', 'pipe', 'pipe'],
+    })
   } catch (err) {
     output = `${err.stdout ?? ''}${err.stderr ?? ''}`
   }

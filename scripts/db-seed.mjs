@@ -9,7 +9,7 @@
  *
  * Usage: npm run db:seed
  */
-import { execFileSync } from 'node:child_process'
+import { execSync } from 'node:child_process'
 import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
@@ -50,11 +50,11 @@ writeFileSync(file, sql)
 
 let output = ''
 try {
-  output = execFileSync(
-    'npx',
-    ['supabase', 'db', 'query', '--remote', '--yes', '--output-format', 'json', '-f', file],
-    { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'], shell: process.platform === 'win32' },
-  )
+  // one quoted command string: avoids Node's "args with shell: true" warning on Windows
+  output = execSync(`npx supabase db query --remote --yes --output-format json -f "${file}"`, {
+    encoding: 'utf8',
+    stdio: ['ignore', 'pipe', 'pipe'],
+  })
 } catch (err) {
   output = `${err.stdout ?? ''}${err.stderr ?? ''}`
 } finally {
