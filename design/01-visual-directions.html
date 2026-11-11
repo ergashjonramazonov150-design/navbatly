@@ -1,0 +1,1036 @@
+<!doctype html>
+<html lang="uz">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Navbatly — vizual yo'nalishlar</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=Unbounded:wght@500;600;700&family=Manrope:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* ===================== Page chrome (neutral) ===================== */
+      :root {
+        --page-bg: #eceae6;
+        --page-ink: #1b1b1b;
+        --page-muted: #6b6b6b;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html {
+        -webkit-text-size-adjust: 100%;
+      }
+      body {
+        margin: 0;
+        background: var(--page-bg);
+        color: var(--page-ink);
+        font:
+          15px/1.5 Inter,
+          system-ui,
+          sans-serif;
+      }
+      .page {
+        max-width: 1240px;
+        margin: 0 auto;
+        padding: 24px 16px 64px;
+      }
+      .page h1 {
+        font-size: 24px;
+        margin: 0 0 6px;
+        letter-spacing: -0.01em;
+      }
+      .page > p {
+        margin: 0 0 24px;
+        color: var(--page-muted);
+        max-width: 70ch;
+      }
+      .compare {
+        display: grid;
+        gap: 20px;
+        grid-template-columns: 1fr;
+      }
+      @media (min-width: 980px) {
+        .compare {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+      .label-row {
+        display: flex;
+        align-items: baseline;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-bottom: 4px;
+      }
+      .label-row .tag {
+        font-weight: 700;
+        font-size: 13px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      .note {
+        color: var(--page-muted);
+        font-size: 13px;
+        margin: 0 0 12px;
+      }
+      .pick {
+        margin-top: 28px;
+        padding: 16px 18px;
+        border-radius: 12px;
+        background: #fff;
+        border: 1px dashed #b9b5ad;
+        font-size: 14px;
+      }
+
+      /* ===================== Shared component structure ===================== */
+      .dir {
+        border-radius: 22px;
+        padding: 22px 18px 26px;
+        overflow: hidden;
+        background: var(--bg);
+        color: var(--ink);
+        font-family: var(--font-body);
+      }
+      .dir h2 {
+        font-family: var(--font-display);
+        font-weight: var(--display-weight);
+        font-size: 30px;
+        line-height: 1.05;
+        margin: 0 0 6px;
+        letter-spacing: var(--display-tracking);
+      }
+      .dir .lead {
+        color: var(--muted);
+        margin: 0 0 22px;
+        font-size: 14.5px;
+      }
+      .section {
+        margin-top: 26px;
+      }
+      .section-title {
+        font-size: 11.5px;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin: 0 0 10px;
+      }
+      .swatches {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 8px;
+      }
+      .swatch {
+        border-radius: 12px;
+        height: 58px;
+        position: relative;
+        border: 1px solid var(--line);
+      }
+      .swatch span {
+        position: absolute;
+        left: 6px;
+        bottom: 5px;
+        font:
+          600 10px/1 ui-monospace,
+          monospace;
+        padding: 3px 4px;
+        border-radius: 4px;
+        background: rgba(255, 255, 255, 0.85);
+        color: #111;
+      }
+      .type-sample .display {
+        font-family: var(--font-display);
+        font-weight: var(--display-weight);
+        font-size: 34px;
+        line-height: 1.05;
+        letter-spacing: var(--display-tracking);
+        margin: 0 0 8px;
+      }
+      .type-sample .body {
+        margin: 0;
+        color: var(--muted);
+      }
+      .type-sample .meta {
+        margin-top: 6px;
+        font-size: 12px;
+        color: var(--muted);
+      }
+
+      .btn-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+      .btn {
+        min-height: 52px;
+        padding: 0 22px;
+        border-radius: var(--btn-radius);
+        border: 0;
+        font: 600 16px/1 var(--font-body);
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        transition:
+          transform 0.08s ease,
+          background-color 0.15s ease,
+          box-shadow 0.15s ease;
+      }
+      .btn:active {
+        transform: translateY(1px) scale(0.99);
+      }
+      .btn-primary {
+        background: var(--primary);
+        color: var(--on-primary);
+        box-shadow: var(--btn-shadow);
+      }
+      .btn-primary:hover {
+        background: var(--primary-hover);
+      }
+      .btn-secondary {
+        background: transparent;
+        color: var(--ink);
+        border: 1.5px solid var(--line-strong);
+      }
+      .btn-disabled {
+        background: var(--disabled-bg);
+        color: var(--disabled-ink);
+        cursor: not-allowed;
+      }
+      .btn:focus-visible,
+      .card:focus-visible,
+      .chip:focus-visible,
+      .date:focus-visible {
+        outline: 3px solid var(--focus);
+        outline-offset: 2px;
+      }
+
+      .stack {
+        display: grid;
+        gap: 10px;
+      }
+      .card {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        width: 100%;
+        text-align: left;
+        min-height: 76px;
+        padding: 14px 16px;
+        border-radius: var(--card-radius);
+        background: var(--surface);
+        color: var(--ink);
+        border: 1.5px solid var(--line);
+        cursor: pointer;
+        font: inherit;
+        transition:
+          border-color 0.15s,
+          background-color 0.15s,
+          box-shadow 0.15s;
+      }
+      .card:hover {
+        border-color: var(--line-strong);
+      }
+      .card[aria-pressed='true'] {
+        border-color: var(--primary);
+        box-shadow: var(--selected-ring);
+        background: var(--surface-selected);
+      }
+      .card .grow {
+        flex: 1;
+        min-width: 0;
+      }
+      .card .title {
+        font-weight: 650;
+        font-size: 16.5px;
+        line-height: 1.25;
+      }
+      .card .sub {
+        color: var(--muted);
+        font-size: 13.5px;
+        margin-top: 2px;
+      }
+      .card .price {
+        font-weight: 700;
+        font-size: 16px;
+        white-space: nowrap;
+      }
+      .card .dur {
+        display: inline-block;
+        font-size: 12px;
+        font-weight: 600;
+        padding: 3px 8px;
+        border-radius: 999px;
+        background: var(--chip-bg);
+        color: var(--chip-ink);
+        margin-top: 6px;
+      }
+      .check {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        border: 2px solid var(--line-strong);
+        flex: none;
+        display: grid;
+        place-items: center;
+        transition: all 0.15s;
+      }
+      .card[aria-pressed='true'] .check {
+        background: var(--primary);
+        border-color: var(--primary);
+      }
+      .card[aria-pressed='true'] .check::after {
+        content: '';
+        width: 9px;
+        height: 5px;
+        border-left: 2.5px solid var(--on-primary);
+        border-bottom: 2.5px solid var(--on-primary);
+        transform: rotate(-45deg) translate(1px, -1px);
+      }
+      .avatar {
+        width: 52px;
+        height: 52px;
+        border-radius: var(--avatar-radius);
+        flex: none;
+        display: grid;
+        place-items: center;
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 20px;
+        background: var(--avatar-bg);
+        color: var(--avatar-ink);
+      }
+      .badge-free {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--success);
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        margin-top: 4px;
+      }
+      .badge-free::before {
+        content: '';
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--success);
+      }
+
+      .dates {
+        display: flex;
+        gap: 8px;
+        overflow-x: auto;
+        padding-bottom: 4px;
+        scrollbar-width: none;
+      }
+      .date {
+        flex: none;
+        width: 62px;
+        min-height: 72px;
+        border-radius: var(--chip-radius);
+        border: 1.5px solid var(--line);
+        background: var(--surface);
+        color: var(--ink);
+        display: grid;
+        place-content: center;
+        text-align: center;
+        cursor: pointer;
+        font: inherit;
+        gap: 2px;
+      }
+      .date small {
+        font-size: 11.5px;
+        color: var(--muted);
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+      }
+      .date b {
+        font-size: 20px;
+        font-family: var(--font-display);
+        font-weight: var(--display-weight);
+      }
+      .date[aria-pressed='true'] {
+        background: var(--primary);
+        border-color: var(--primary);
+        color: var(--on-primary);
+      }
+      .date[aria-pressed='true'] small {
+        color: inherit;
+        opacity: 0.8;
+      }
+      .date[disabled] {
+        opacity: 0.4;
+        cursor: not-allowed;
+      }
+      .slots {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 8px;
+        margin-top: 12px;
+      }
+      .chip {
+        min-height: 48px;
+        border-radius: var(--chip-radius);
+        border: 1.5px solid var(--line);
+        background: var(--surface);
+        color: var(--ink);
+        font: 600 15px/1 var(--font-body);
+        cursor: pointer;
+        font-variant-numeric: tabular-nums;
+      }
+      .chip:hover:not([disabled]) {
+        border-color: var(--line-strong);
+      }
+      .chip[aria-pressed='true'] {
+        background: var(--primary);
+        border-color: var(--primary);
+        color: var(--on-primary);
+      }
+      .chip[disabled] {
+        color: var(--disabled-ink);
+        background: var(--disabled-bg);
+        text-decoration: line-through;
+        cursor: not-allowed;
+        border-color: transparent;
+      }
+      .slot-legend {
+        font-size: 12px;
+        color: var(--muted);
+        margin-top: 8px;
+      }
+
+      /* Phone preview */
+      .phone-wrap {
+        display: flex;
+        justify-content: center;
+      }
+      .phone {
+        width: 100%;
+        max-width: 360px;
+        border-radius: 36px;
+        padding: 10px;
+        background: var(--phone-frame);
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.18);
+      }
+      .screen {
+        border-radius: 28px;
+        overflow: hidden;
+        background: var(--bg);
+        position: relative;
+        height: 640px;
+        display: flex;
+        flex-direction: column;
+      }
+      .ig-bar {
+        height: 38px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 0 14px;
+        font:
+          600 12px/1 Inter,
+          sans-serif;
+        color: var(--muted);
+        border-bottom: 1px solid var(--line);
+        background: var(--surface);
+      }
+      .ig-bar .x {
+        font-size: 16px;
+      }
+      .screen-head {
+        padding: 16px 16px 8px;
+      }
+      .biz {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .biz-logo {
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+        background: var(--primary);
+        color: var(--on-primary);
+        display: grid;
+        place-items: center;
+        font-family: var(--font-display);
+        font-weight: 700;
+      }
+      .biz-name {
+        font-weight: 700;
+        font-size: 15px;
+        line-height: 1.2;
+      }
+      .biz-addr {
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .progress {
+        display: flex;
+        gap: 5px;
+        margin: 16px 0 10px;
+      }
+      .progress i {
+        flex: 1;
+        height: 4px;
+        border-radius: 4px;
+        background: var(--line);
+      }
+      .progress i.on {
+        background: var(--primary);
+      }
+      .step-label {
+        font-size: 12px;
+        color: var(--muted);
+        font-weight: 600;
+      }
+      .step-title {
+        font-family: var(--font-display);
+        font-weight: var(--display-weight);
+        letter-spacing: var(--display-tracking);
+        font-size: 24px;
+        line-height: 1.1;
+        margin: 2px 0 0;
+      }
+      .screen-body {
+        flex: 1;
+        overflow-y: auto;
+        padding: 8px 16px 16px;
+      }
+      .screen-body .card {
+        min-height: 68px;
+        padding: 12px 14px;
+      }
+      .bottom-bar {
+        padding: 12px 16px 16px;
+        background: var(--surface);
+        border-top: 1px solid var(--line);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .bottom-bar .sum {
+        flex: 1;
+        min-width: 0;
+      }
+      .bottom-bar .sum b {
+        display: block;
+        font-size: 15px;
+      }
+      .bottom-bar .sum span {
+        font-size: 12.5px;
+        color: var(--muted);
+      }
+      .bottom-bar .btn {
+        min-height: 50px;
+        padding: 0 18px;
+      }
+
+      /* ===================== Direction A — "Usta" ===================== */
+      .dir-a {
+        --bg: #f6f1ea;
+        --surface: #fffdf9;
+        --surface-selected: #fff6ee;
+        --ink: #1f1b16;
+        --muted: #6f655a;
+        --line: #e6dccf;
+        --line-strong: #c9b9a5;
+        --primary: #1f1b16;
+        --primary-hover: #3a3129;
+        --on-primary: #fffdf9;
+        --accent: #b4532a;
+        --success: #3f7d4e;
+        --chip-bg: #f1e6d8;
+        --chip-ink: #6b4a2e;
+        --avatar-bg: #e9d8c4;
+        --avatar-ink: #7a3d1e;
+        --disabled-bg: #efe8de;
+        --disabled-ink: #a99c8c;
+        --focus: #b4532a;
+        --phone-frame: #2a241e;
+        --selected-ring: 0 0 0 3px rgba(180, 83, 42, 0.14);
+        --btn-shadow: 0 1px 0 rgba(0, 0, 0, 0.05);
+        --font-display: Fraunces, Georgia, serif;
+        --font-body: Inter, system-ui, sans-serif;
+        --display-weight: 600;
+        --display-tracking: -0.02em;
+        --btn-radius: 999px;
+        --card-radius: 16px;
+        --chip-radius: 12px;
+        --avatar-radius: 50%;
+      }
+      .dir-a .card[aria-pressed='true'] {
+        border-color: var(--accent);
+      }
+      .dir-a .card[aria-pressed='true'] .check {
+        background: var(--accent);
+        border-color: var(--accent);
+      }
+      .dir-a .date[aria-pressed='true'],
+      .dir-a .chip[aria-pressed='true'] {
+        background: var(--accent);
+        border-color: var(--accent);
+      }
+      .dir-a .progress i.on {
+        background: var(--accent);
+      }
+      .dir-a .biz-logo {
+        background: var(--accent);
+      }
+      .dir-a .price {
+        color: var(--ink);
+      }
+      .dir-a .eyebrow {
+        color: var(--accent);
+      }
+
+      /* ===================== Direction B — "Ritm" ===================== */
+      .dir-b {
+        --bg: #0f1012;
+        --surface: #1a1c20;
+        --surface-selected: #1f2318;
+        --ink: #f4f5f2;
+        --muted: #9a9ea6;
+        --line: #2a2d33;
+        --line-strong: #444a53;
+        --primary: #c8f53c;
+        --primary-hover: #d6ff5c;
+        --on-primary: #0f1012;
+        --success: #c8f53c;
+        --chip-bg: #262a30;
+        --chip-ink: #d6d9de;
+        --avatar-bg: #2a2f36;
+        --avatar-ink: #c8f53c;
+        --disabled-bg: #17181b;
+        --disabled-ink: #4f545c;
+        --focus: #c8f53c;
+        --phone-frame: #000;
+        --selected-ring: 0 0 0 3px rgba(200, 245, 60, 0.16);
+        --btn-shadow: 0 6px 20px rgba(200, 245, 60, 0.18);
+        --font-display: Unbounded, system-ui, sans-serif;
+        --font-body: Manrope, system-ui, sans-serif;
+        --display-weight: 600;
+        --display-tracking: -0.03em;
+        --btn-radius: 14px;
+        --card-radius: 20px;
+        --chip-radius: 14px;
+        --avatar-radius: 16px;
+      }
+      .dir-b .swatch span {
+        background: rgba(0, 0, 0, 0.6);
+        color: #fff;
+      }
+      .dir-b .price {
+        color: var(--primary);
+      }
+      .dir-b .eyebrow {
+        color: var(--primary);
+      }
+      .dir-b .ig-bar {
+        background: #15161a;
+      }
+
+      .eyebrow {
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        margin: 0 0 8px;
+      }
+      .pros {
+        margin: 10px 0 0;
+        padding-left: 18px;
+        color: var(--muted);
+        font-size: 13.5px;
+      }
+      .pros li {
+        margin: 2px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <h1>Navbatly — ikki vizual yo'nalish</h1>
+      <p>
+        Ikkala yo'nalishni solishtiring va bittasini tanlang. Kartalar, kunlar va vaqt tugmalarini
+        bosib ko'ring — ular ishlaydi. Ma'lumotlar demo salondan olingan. Telefonda ochsangiz,
+        yo'nalishlar ketma-ket ko'rinadi.
+      </p>
+
+      <div class="compare">
+        <!-- ===================================================== A ===================================================== -->
+        <section class="dir dir-a" aria-labelledby="a-title">
+          <p class="eyebrow">Yo'nalish A</p>
+          <h2 id="a-title">«Usta» — iliq va nafis</h2>
+          <p class="lead">
+            Klassik sartaroshxona ruhi: krem fon, to'q siyoh rang, mis-terrakota aksent, jurnal
+            uslubidagi serif sarlavhalar. Ishonchli, premium, xotirjam.
+          </p>
+
+          <div class="section">
+            <p class="section-title">Ranglar</p>
+            <div class="swatches">
+              <div class="swatch" style="background: #f6f1ea"><span>#F6F1EA</span></div>
+              <div class="swatch" style="background: #fffdf9"><span>#FFFDF9</span></div>
+              <div class="swatch" style="background: #1f1b16"><span>#1F1B16</span></div>
+              <div class="swatch" style="background: #b4532a"><span>#B4532A</span></div>
+              <div class="swatch" style="background: #3f7d4e"><span>#3F7D4E</span></div>
+            </div>
+          </div>
+
+          <div class="section type-sample">
+            <p class="section-title">Shriftlar</p>
+            <p class="display">Soch olish — 15:30</p>
+            <p class="body">Oddiy matn: ustani tanlang, so'ng sizga qulay vaqtni belgilang.</p>
+            <p class="meta">Sarlavhalar: Fraunces · Matn: Inter</p>
+          </div>
+
+          <div class="section">
+            <p class="section-title">Tugmalar</p>
+            <div class="btn-row">
+              <button class="btn btn-primary" type="button">Davom etish</button>
+              <button class="btn btn-secondary" type="button">Orqaga</button>
+              <button class="btn btn-disabled" type="button" disabled>Vaqtni tanlang</button>
+            </div>
+          </div>
+
+          <div class="section">
+            <p class="section-title">Xizmat kartasi</p>
+            <div class="stack" data-group="a-service">
+              <button class="card" type="button" aria-pressed="true">
+                <span class="check" aria-hidden="true"></span>
+                <span class="grow">
+                  <span class="title">Soch olish</span>
+                  <span class="sub">Yuvish va ukladka bilan</span><br />
+                  <span class="dur">30 daq</span>
+                </span>
+                <span class="price">80&nbsp;000 so'm</span>
+              </button>
+              <button class="card" type="button" aria-pressed="false">
+                <span class="check" aria-hidden="true"></span>
+                <span class="grow">
+                  <span class="title">Soch + soqol</span>
+                  <span class="sub">Kompleks xizmat</span><br />
+                  <span class="dur">50 daq</span>
+                </span>
+                <span class="price">120&nbsp;000 so'm</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="section">
+            <p class="section-title">Usta kartasi</p>
+            <div class="stack" data-group="a-barber">
+              <button class="card" type="button" aria-pressed="false">
+                <span class="avatar" aria-hidden="true">J</span>
+                <span class="grow">
+                  <span class="title">Jasur</span>
+                  <span class="sub">Klassik va zamonaviy soch turmaklari. 8 yillik tajriba.</span>
+                  <span class="badge-free">Bugun bo'sh vaqti bor</span>
+                </span>
+                <span class="check" aria-hidden="true"></span>
+              </button>
+            </div>
+          </div>
+
+          <div class="section">
+            <p class="section-title">Kun va vaqt</p>
+            <div class="dates" data-group="a-date">
+              <button class="date" type="button" aria-pressed="false">
+                <small>Pay</small><b>12</b>
+              </button>
+              <button class="date" type="button" aria-pressed="true">
+                <small>Jum</small><b>13</b>
+              </button>
+              <button class="date" type="button" aria-pressed="false">
+                <small>Shan</small><b>14</b>
+              </button>
+              <button class="date" type="button" disabled><small>Yak</small><b>15</b></button>
+              <button class="date" type="button" aria-pressed="false">
+                <small>Dush</small><b>16</b>
+              </button>
+            </div>
+            <div class="slots" data-group="a-slot">
+              <button class="chip" type="button" aria-pressed="false">09:00</button>
+              <button class="chip" type="button" aria-pressed="false">09:15</button>
+              <button class="chip" type="button" disabled>09:30</button>
+              <button class="chip" type="button" aria-pressed="true">09:45</button>
+              <button class="chip" type="button" aria-pressed="false">10:00</button>
+              <button class="chip" type="button" disabled>10:15</button>
+              <button class="chip" type="button" aria-pressed="false">10:30</button>
+              <button class="chip" type="button" aria-pressed="false">10:45</button>
+            </div>
+            <p class="slot-legend">Chizilgan vaqtlar — band.</p>
+          </div>
+
+          <div class="section">
+            <p class="section-title">Telefonda (Instagram ichida)</p>
+            <div class="phone-wrap">
+              <div class="phone">
+                <div class="screen">
+                  <div class="ig-bar"><span class="x">✕</span> navbatly.uz/b/demo</div>
+                  <div class="screen-head">
+                    <div class="biz">
+                      <div class="biz-logo">N</div>
+                      <div>
+                        <div class="biz-name">Navbatly Demo Barbershop</div>
+                        <div class="biz-addr">Toshkent, Namuna ko'chasi, 1</div>
+                      </div>
+                    </div>
+                    <div class="progress"><i class="on"></i><i></i><i></i><i></i></div>
+                    <div class="step-label">1-qadam / 4</div>
+                    <h3 class="step-title">Xizmatni tanlang</h3>
+                  </div>
+                  <div class="screen-body stack" data-group="a-phone">
+                    <button class="card" type="button" aria-pressed="true">
+                      <span class="grow"
+                        ><span class="title">Soch olish</span><span class="sub">30 daq</span></span
+                      >
+                      <span class="price">80&nbsp;000 so'm</span>
+                    </button>
+                    <button class="card" type="button" aria-pressed="false">
+                      <span class="grow"
+                        ><span class="title">Soqol olish</span><span class="sub">20 daq</span></span
+                      >
+                      <span class="price">50&nbsp;000 so'm</span>
+                    </button>
+                    <button class="card" type="button" aria-pressed="false">
+                      <span class="grow"
+                        ><span class="title">Soch + soqol</span
+                        ><span class="sub">50 daq</span></span
+                      >
+                      <span class="price">120&nbsp;000 so'm</span>
+                    </button>
+                    <button class="card" type="button" aria-pressed="false">
+                      <span class="grow"
+                        ><span class="title">Bolalar soch turmagi</span
+                        ><span class="sub">30 daq</span></span
+                      >
+                      <span class="price">60&nbsp;000 so'm</span>
+                    </button>
+                    <button class="card" type="button" aria-pressed="false">
+                      <span class="grow"
+                        ><span class="title">Ukladka</span><span class="sub">20 daq</span></span
+                      >
+                      <span class="price">40&nbsp;000 so'm</span>
+                    </button>
+                  </div>
+                  <div class="bottom-bar">
+                    <div class="sum"><b>Soch olish</b><span>30 daq · 80&nbsp;000 so'm</span></div>
+                    <button class="btn btn-primary" type="button">Davom etish</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <ul class="pros">
+            <li>➕ Premium va ishonchli ko'rinadi; ayollar salonlariga ham mos.</li>
+            <li>➕ Yorug' fon — kunduzi, quyosh ostida yaxshi o'qiladi.</li>
+            <li>➖ Instagram lentasida kamroq «baqiradi».</li>
+          </ul>
+        </section>
+
+        <!-- ===================================================== B ===================================================== -->
+        <section class="dir dir-b" aria-labelledby="b-title">
+          <p class="eyebrow">Yo'nalish B</p>
+          <h2 id="b-title">«Ritm» — zamonaviy va jasur</h2>
+          <p class="lead">
+            To'q grafit fon, yorqin laym aksent, keng geometrik sarlavhalar. Energiyali, yosh,
+            Instagram va Telegram avlodiga mo'ljallangan.
+          </p>
+
+          <div class="section">
+            <p class="section-title">Ranglar</p>
+            <div class="swatches">
+              <div class="swatch" style="background: #0f1012"><span>#0F1012</span></div>
+              <div class="swatch" style="background: #1a1c20"><span>#1A1C20</span></div>
+              <div class="swatch" style="background: #f4f5f2"><span>#F4F5F2</span></div>
+              <div class="swatch" style="background: #c8f53c"><span>#C8F53C</span></div>
+              <div class="swatch" style="background: #9a9ea6"><span>#9A9EA6</span></div>
+            </div>
+          </div>
+
+          <div class="section type-sample">
+            <p class="section-title">Shriftlar</p>
+            <p class="display">Soch olish — 15:30</p>
+            <p class="body">Oddiy matn: ustani tanlang, so'ng sizga qulay vaqtni belgilang.</p>
+            <p class="meta">Sarlavhalar: Unbounded · Matn: Manrope</p>
+          </div>
+
+          <div class="section">
+            <p class="section-title">Tugmalar</p>
+            <div class="btn-row">
+              <button class="btn btn-primary" type="button">Davom etish</button>
+              <button class="btn btn-secondary" type="button">Orqaga</button>
+              <button class="btn btn-disabled" type="button" disabled>Vaqtni tanlang</button>
+            </div>
+          </div>
+
+          <div class="section">
+            <p class="section-title">Xizmat kartasi</p>
+            <div class="stack" data-group="b-service">
+              <button class="card" type="button" aria-pressed="true">
+                <span class="check" aria-hidden="true"></span>
+                <span class="grow">
+                  <span class="title">Soch olish</span>
+                  <span class="sub">Yuvish va ukladka bilan</span><br />
+                  <span class="dur">30 daq</span>
+                </span>
+                <span class="price">80&nbsp;000 so'm</span>
+              </button>
+              <button class="card" type="button" aria-pressed="false">
+                <span class="check" aria-hidden="true"></span>
+                <span class="grow">
+                  <span class="title">Soch + soqol</span>
+                  <span class="sub">Kompleks xizmat</span><br />
+                  <span class="dur">50 daq</span>
+                </span>
+                <span class="price">120&nbsp;000 so'm</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="section">
+            <p class="section-title">Usta kartasi</p>
+            <div class="stack" data-group="b-barber">
+              <button class="card" type="button" aria-pressed="false">
+                <span class="avatar" aria-hidden="true">B</span>
+                <span class="grow">
+                  <span class="title">Bobur</span>
+                  <span class="sub">Soqol va fade bo'yicha mutaxassis.</span>
+                  <span class="badge-free">Bugun bo'sh vaqti bor</span>
+                </span>
+                <span class="check" aria-hidden="true"></span>
+              </button>
+            </div>
+          </div>
+
+          <div class="section">
+            <p class="section-title">Kun va vaqt</p>
+            <div class="dates" data-group="b-date">
+              <button class="date" type="button" aria-pressed="false">
+                <small>Pay</small><b>12</b>
+              </button>
+              <button class="date" type="button" aria-pressed="true">
+                <small>Jum</small><b>13</b>
+              </button>
+              <button class="date" type="button" aria-pressed="false">
+                <small>Shan</small><b>14</b>
+              </button>
+              <button class="date" type="button" disabled><small>Yak</small><b>15</b></button>
+              <button class="date" type="button" aria-pressed="false">
+                <small>Dush</small><b>16</b>
+              </button>
+            </div>
+            <div class="slots" data-group="b-slot">
+              <button class="chip" type="button" aria-pressed="false">09:00</button>
+              <button class="chip" type="button" aria-pressed="false">09:15</button>
+              <button class="chip" type="button" disabled>09:30</button>
+              <button class="chip" type="button" aria-pressed="true">09:45</button>
+              <button class="chip" type="button" aria-pressed="false">10:00</button>
+              <button class="chip" type="button" disabled>10:15</button>
+              <button class="chip" type="button" aria-pressed="false">10:30</button>
+              <button class="chip" type="button" aria-pressed="false">10:45</button>
+            </div>
+            <p class="slot-legend">Chizilgan vaqtlar — band.</p>
+          </div>
+
+          <div class="section">
+            <p class="section-title">Telefonda (Instagram ichida)</p>
+            <div class="phone-wrap">
+              <div class="phone">
+                <div class="screen">
+                  <div class="ig-bar"><span class="x">✕</span> navbatly.uz/b/demo</div>
+                  <div class="screen-head">
+                    <div class="biz">
+                      <div class="biz-logo">N</div>
+                      <div>
+                        <div class="biz-name">Navbatly Demo Barbershop</div>
+                        <div class="biz-addr">Toshkent, Namuna ko'chasi, 1</div>
+                      </div>
+                    </div>
+                    <div class="progress"><i class="on"></i><i></i><i></i><i></i></div>
+                    <div class="step-label">1-qadam / 4</div>
+                    <h3 class="step-title">Xizmatni tanlang</h3>
+                  </div>
+                  <div class="screen-body stack" data-group="b-phone">
+                    <button class="card" type="button" aria-pressed="true">
+                      <span class="grow"
+                        ><span class="title">Soch olish</span><span class="sub">30 daq</span></span
+                      >
+                      <span class="price">80&nbsp;000 so'm</span>
+                    </button>
+                    <button class="card" type="button" aria-pressed="false">
+                      <span class="grow"
+                        ><span class="title">Soqol olish</span><span class="sub">20 daq</span></span
+                      >
+                      <span class="price">50&nbsp;000 so'm</span>
+                    </button>
+                    <button class="card" type="button" aria-pressed="false">
+                      <span class="grow"
+                        ><span class="title">Soch + soqol</span
+                        ><span class="sub">50 daq</span></span
+                      >
+                      <span class="price">120&nbsp;000 so'm</span>
+                    </button>
+                    <button class="card" type="button" aria-pressed="false">
+                      <span class="grow"
+                        ><span class="title">Bolalar soch turmagi</span
+                        ><span class="sub">30 daq</span></span
+                      >
+                      <span class="price">60&nbsp;000 so'm</span>
+                    </button>
+                    <button class="card" type="button" aria-pressed="false">
+                      <span class="grow"
+                        ><span class="title">Ukladka</span><span class="sub">20 daq</span></span
+                      >
+                      <span class="price">40&nbsp;000 so'm</span>
+                    </button>
+                  </div>
+                  <div class="bottom-bar">
+                    <div class="sum"><b>Soch olish</b><span>30 daq · 80&nbsp;000 so'm</span></div>
+                    <button class="btn btn-primary" type="button">Davom etish</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <ul class="pros">
+            <li>
+              ➕ Esda qoladi, Instagram uslubiga juda mos; erkaklar barbershoplari uchun kuchli.
+            </li>
+            <li>➕ To'q fon kechqurun ko'zni charchatmaydi.</li>
+            <li>➖ Ayollar go'zallik salonlari uchun haddan tashqari «qattiq» bo'lishi mumkin.</li>
+          </ul>
+        </section>
+      </div>
+
+      <div class="pick">
+        <strong>Tanlovingiz:</strong> «A», «B» yoki aralash (masalan: «A ranglari + B shriftlari»).
+        Shu tanlov asosida to'liq bron qilish oqimi (xizmat → usta → kun/vaqt → aloqa → tasdiq va
+        «vaqt band bo'lib qoldi» xatosi) chiziladi.
+      </div>
+    </div>
+
+    <script>
+      // Single-choice groups: clicking a card/chip selects it and unselects its siblings.
+      document.querySelectorAll('[data-group]').forEach((group) => {
+        group.addEventListener('click', (e) => {
+          const btn = e.target.closest('button[aria-pressed]')
+          if (!btn || btn.disabled || !group.contains(btn)) return
+          group
+            .querySelectorAll('button[aria-pressed]')
+            .forEach((b) => b.setAttribute('aria-pressed', 'false'))
+          btn.setAttribute('aria-pressed', 'true')
+        })
+      })
+    </script>
+  </body>
+</html>
