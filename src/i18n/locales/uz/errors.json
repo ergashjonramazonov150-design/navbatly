@@ -1,0 +1,20 @@
+{
+  "validation": {
+    "emailRequired": "Emailni kiriting.",
+    "emailInvalid": "Email noto'g'ri ko'rinishda (masalan: siz@misol.uz).",
+    "passwordRequired": "Parolni kiriting.",
+    "passwordMin": "Parol kamida 8 belgidan iborat bo'lsin.",
+    "passwordMismatch": "Parollar bir xil emas."
+  },
+  "auth": {
+    "invalidCredentials": "Email yoki parol noto'g'ri. Qayta urinib ko'ring.",
+    "tooManyAttempts": "Juda ko'p urinish. Bir necha daqiqadan so'ng qayta urinib ko'ring.",
+    "emailNotConfirmed": "Email hali tasdiqlanmagan. Administratorga murojaat qiling.",
+    "resetUnavailable": "Parolni tiklash hozircha ishlamayapti — administratorga murojaat qiling.",
+    "weakPassword": "Bu parol juda oddiy. Uzunroq yoki murakkabroq parol tanlang.",
+    "samePassword": "Yangi parol eskisidan farq qilishi kerak.",
+    "sessionExpired": "Sessiya tugagan. Qaytadan kiring.",
+    "network": "Internet aloqasi yo'q yoki server javob bermayapti.",
+    "unknown": "Kutilmagan xatolik yuz berdi. Qayta urinib ko'ring."
+  }
+}
