@@ -17,7 +17,8 @@
     "db:test:race": "node scripts/db-concurrency-test.mjs",
     "db:seed": "node scripts/db-seed.mjs",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "check:live": "node scripts/live-check.mjs"
   },
   "dependencies": {
     "@date-fns/tz": "^1.5.0",
@@ -53,6 +54,7 @@
     "@vitejs/plugin-react": "^6.1.2",
     "jsdom": "^31.0.0",
     "oxlint": "^1.90.0",
+    "playwright": "^1.65.0",
     "prettier": "^3.9.10",
     "prettier-plugin-tailwindcss": "^0.8.1",
     "shadcn": "^4.23.0",
