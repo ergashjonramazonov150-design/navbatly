@@ -13,7 +13,8 @@
     "format:check": "prettier --check .",
     "db:push": "supabase db push --remote",
     "db:types": "supabase gen types --lang=typescript --remote --schema public > src/types/database.types.ts",
-    "db:test": "supabase test db --remote"
+    "db:test": "node scripts/db-test.mjs",
+    "db:test:race": "node scripts/db-concurrency-test.mjs"
   },
   "dependencies": {
     "@date-fns/tz": "^1.5.0",
