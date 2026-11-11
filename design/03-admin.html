@@ -748,6 +748,61 @@
       }
 
       /* ============================ Calendar ============================ */
+      .cal-switch {
+        display: flex;
+        width: 100%;
+        margin-bottom: 12px;
+      }
+      .cal-switch button {
+        flex: 1;
+        min-height: 44px;
+      }
+      .search {
+        position: relative;
+        flex: 1 1 260px;
+        max-width: 360px;
+      }
+      .search svg {
+        position: absolute;
+        left: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 18px;
+        height: 18px;
+        color: var(--muted);
+        pointer-events: none;
+      }
+      .search .input {
+        min-height: 44px;
+        border-radius: 999px;
+        padding-left: 42px;
+      }
+      @media (max-width: 599px) {
+        .search {
+          max-width: none;
+          flex-basis: 100%;
+        }
+      }
+      .spin {
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        border: 2.5px solid var(--line-strong);
+        border-top-color: var(--accent);
+        animation: spin 0.8s linear infinite;
+        flex: none;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      .steps {
+        margin: 0;
+        padding-left: 20px;
+        display: grid;
+        gap: 6px;
+      }
       .cal-bar {
         display: flex;
         align-items: center;
@@ -1487,6 +1542,10 @@
           '<rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>',
         ),
         send: ic('<path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/>'),
+        search: ic('<circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/>'),
+        tg: ic(
+          '<path d="M21.5 4.5 2.5 11.8l6 2.2 2.3 6.5 3.4-4.1 5 3.6z"/><path d="m8.5 14 11-8.5-7.6 10"/>',
+        ),
       }
 
       /* =========================== Demo data (from the seed) =========================== */
@@ -1576,8 +1635,9 @@
         maxPerPhone: 3,
         autoConfirm: false,
         tgChat: '',
-        tgEnabled: false,
-        tgLastError: null,
+        tg: 'none', // 'none' | 'waiting' | 'linked' — "Botni ulash" flow (M6)
+        tgEnabled: true,
+        tgTestSent: false,
       }
       const CLOSED_DAYS = [] // business-wide time_off (staff_id = null)
       const TIME_OFF = { a1: [], a2: [{ from: 6, to: 8, reason: "Ta'til" }], a3: [] } // day offsets
@@ -1707,6 +1767,8 @@
         status: 'all',
         staffFilter: 'all',
         calOff: WORKDAYS[0],
+        calStaff: 'a1', // phone calendar: which barber is shown
+        q: '', // appointments search
         showCancelled: false,
         staffId: null,
         staffTab: 'hours',
@@ -1718,6 +1780,8 @@
       }
       const ME_STAFF = 'a1' // the barber login is linked to Jasur (seed)
       const isOwner = () => S.role === 'owner'
+      const PHONE_MQ = window.matchMedia('(max-width: 899px)')
+      const isPhone = () => PHONE_MQ.matches
       const visibleAppts = () => APPTS.filter((a) => isOwner() || a.staff === ME_STAFF)
       const pendingCount = () => visibleAppts().filter((a) => a.status === 'pending').length
 
@@ -1833,9 +1897,18 @@
       }
 
       function viewAppointments() {
+        // Search by customer name or phone digits. While searching, ignore the period filter
+        // so a customer can be found on any day.
+        const q = S.q.trim().toLowerCase()
+        const qDigits = q.replace(/\D/g, '').replace(/^998/, '')
+        const matchesQuery = (a) =>
+          !q ||
+          a.name.toLowerCase().includes(q) ||
+          (qDigits.length >= 2 && a.phone.replace(/\D/g, '').includes(qDigits))
         const base = visibleAppts()
           .filter((a) => S.staffFilter === 'all' || a.staff === S.staffFilter)
-          .filter(periodMatch)
+          .filter((a) => (q ? true : periodMatch(a)))
+          .filter(matchesQuery)
         const count = (st) => base.filter((a) => st === 'all' || a.status === st).length
         const list = base
           .filter((a) => S.status === 'all' || a.status === S.status)
@@ -1854,12 +1927,18 @@
               : ''
           }
           <div class="filters">
-            ${seg('period', [
-              ['today', 'Bugun'],
-              ['tomorrow', 'Ertaga'],
-              ['week', '7 kun'],
-              ['all', 'Hammasi'],
-            ])}
+            <label class="search">${ICON.search}<input class="input" type="search" data-model="q" value="${esc(S.q)}"
+              placeholder="Ism yoki telefon bo'yicha qidirish" aria-label="Mijozni ism yoki telefon bo'yicha qidirish" autocomplete="off" enterkeyhint="search"/></label>
+            ${
+              q
+                ? `<span style="font-size:13px;color:var(--muted)">Barcha kunlar bo'yicha qidirilmoqda</span>`
+                : seg('period', [
+                    ['today', 'Bugun'],
+                    ['tomorrow', 'Ertaga'],
+                    ['week', '7 kun'],
+                    ['all', 'Hammasi'],
+                  ])
+            }
             ${seg('status', [
               ['all', 'Hammasi', count('all')],
               ['pending', 'Kutilmoqda', count('pending')],
@@ -1877,7 +1956,9 @@
                 <div class="appt-list">${items.map(apptCard).join('')}</div></section>`
                   })
                   .join('')
-              : `<div class="empty"><b>${S.period === 'today' && dayOf(0).dow === 0 ? 'Bugun dam olish kuni' : "Yozilishlar yo'q"}</b>Tanlangan filtrlar bo'yicha hech narsa topilmadi.</div>`
+              : q
+                ? `<div class="empty"><b>«${esc(S.q.trim())}» topilmadi</b>Ismni yoki telefon raqamining bir qismini tekshiring.</div>`
+                : `<div class="empty"><b>${S.period === 'today' && dayOf(0).dow === 0 ? 'Bugun dam olish kuni' : "Yozilishlar yo'q"}</b>Tanlangan filtrlar bo'yicha hech narsa topilmadi.</div>`
           }`
       }
 
@@ -1886,7 +1967,21 @@
       function viewCalendar() {
         const off = S.calOff,
           d = dayOf(off)
-        const cols = isOwner() ? STAFF.filter((s) => s.active) : [stf(ME_STAFF)]
+        const allCols = isOwner() ? STAFF.filter((s) => s.active) : [stf(ME_STAFF)]
+        // Phones: one barber at a time + switcher on top. Desktop: all barbers side by side.
+        const onePerScreen = isOwner() && isPhone()
+        if (!allCols.some((c) => c.id === S.calStaff)) S.calStaff = allCols[0].id
+        const cols = onePerScreen ? allCols.filter((c) => c.id === S.calStaff) : allCols
+        const dayCount = (c) =>
+          APPTS.filter((a) => a.off === off && a.staff === c.id && a.status !== 'cancelled').length
+        const switcher = onePerScreen
+          ? `<div class="seg cal-switch" role="group" aria-label="Usta">${allCols
+              .map(
+                (c) =>
+                  `<button type="button" data-action="cal-staff" data-id="${c.id}" aria-pressed="${S.calStaff === c.id}">${c.name}<span class="n">${dayCount(c)}</span></button>`,
+              )
+              .join('')}</div>`
+          : ''
         const items = APPTS.filter(
           (a) =>
             a.off === off &&
@@ -1908,7 +2003,7 @@
         to = Math.ceil(to / 60) * 60
         const H = (to - from) * PX
         const y = (m) => (m - from) * PX
-        const colW = isOwner() ? 'minmax(170px, 1fr)' : 'minmax(220px, 1fr)'
+        const colW = cols.length === 1 ? 'minmax(220px, 1fr)' : 'minmax(170px, 1fr)'
         const closedDay = d.dow === 0
         const hourLines = Array.from({ length: (to - from) / 60 + 1 }, (_, i) => from + i * 60)
 
@@ -1958,6 +2053,7 @@
           <div class="legend" style="margin-bottom:12px"><span><i style="background:var(--sel-bg)"></i>Tasdiqlangan</span>
             <span><i style="background:var(--accent-soft);box-shadow:inset 0 0 0 1.5px var(--accent)"></i>Kutilmoqda</span>
             <span><i style="background:repeating-linear-gradient(135deg,#f3ece2 0 3px,#e3d8c9 3px 6px)"></i>Ish vaqtidan tashqari</span></div>
+          ${switcher}
           ${
             closedDay && !items.length
               ? `<div class="empty"><b>Yakshanba — dam olish kuni</b>Bu kunda hech kim ishlamaydi.</div>`
@@ -1993,14 +2089,18 @@
             <button class="btn btn-primary" type="button" data-action="toast" data-text="Maket: yangi usta formasi 3-bosqichda (M3)">${ICON.plus} Yangi usta</button></div>
           <div class="rows">${STAFF.map((s) => {
             const today = HOURS[s.id][dayOf(0).dow]
-            return `<button class="row" type="button" data-action="staff-open" data-id="${s.id}">
+            return `<div class="row ${s.active ? '' : 'inactive'}" role="button" tabindex="0" data-action="staff-open" data-id="${s.id}">
               <div class="av">${s.name[0]}</div>
               <div class="grow"><div class="title">${s.name}</div>
                 <div class="sub"><span>Bugun: ${today.length ? today.map(([f, t]) => hhmm(f) + '–' + hhmm(t)).join(', ') : 'dam olish'}</span>
                   <span class="tag">${s.services.length} ta xizmat</span>
-                  <span class="badge ${s.login ? 'b-confirmed' : 'b-cancelled'}">${s.login ? 'Kirish bor' : "Kirish yo'q"}</span></div></div>
-              <span style="color:var(--muted)">${ICON.right}</span></button>`
-          }).join('')}</div>`
+                  <span class="badge ${s.login ? 'b-confirmed' : 'b-cancelled'}">${s.login ? 'Kirish bor' : "Kirish yo'q"}</span>
+                  ${s.active ? '' : '<span class="badge b-cancelled">Nofaol</span>'}</div></div>
+              <label class="switch" title="${s.active ? 'Faol' : 'Nofaol'}" data-stop><input type="checkbox" data-action="staff-toggle" data-id="${s.id}" ${s.active ? 'checked' : ''} aria-label="${s.name} — faol"/><i></i></label>
+            </div>`
+          }).join('')}</div>
+          <div class="hint-box" style="margin-top:16px">ℹ️ Ustani o'chirib bo'lmaydi — <b>nofaol</b> qiling. Nofaol usta bron sahifasida ko'rinmaydi, eski yozilishlari saqlanadi.</div>
+          <div class="hint-box" style="margin-top:8px">🔑 Login platforma administratori orqali beriladi.</div>`
       }
 
       function viewStaffDetail() {
@@ -2072,9 +2172,9 @@
           body = `<div class="panel-card"><div class="stack">
             <label class="field"><span>Ism</span><input class="input" value="${esc(s.name)}" maxlength="80"/></label>
             <label class="field"><span>Qisqacha ma'lumot</span><textarea class="input" maxlength="300">${esc(s.bio)}</textarea><small>Mijozlar bron sahifasida ko'radi.</small></label>
-            <div class="hint-box">${s.login ? "🔑 Bu ustaning <b>kirish hisobi bor</b> — u faqat o'z yozilishlarini ko'radi." : "🔑 Kirish hisobi yo'q. Ustaga kirish kerak bo'lsa, Navbatly administratori yaratadi."}</div>
+            <div class="hint-box"><div>${s.login ? "🔑 Bu ustaning <b>kirish hisobi bor</b> — u faqat o'z yozilishlarini ko'radi." : "🔑 Bu ustaning kirish hisobi yo'q."}<br/>Login platforma administratori orqali beriladi.</div></div>
             <div style="display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap">
-              <label class="check-inline"><span class="switch"><input type="checkbox" ${s.active ? 'checked' : ''}/><i></i></span> Faol (mijozlarga ko'rinadi)</label>
+              <label class="check-inline"><span class="switch"><input type="checkbox" data-action="staff-toggle" data-id="${s.id}" ${s.active ? 'checked' : ''}/><i></i></span> Faol (mijozlarga ko'rinadi)</label>
               <button class="btn btn-primary" type="button" data-action="toast" data-text="Saqlandi ✓">Saqlash</button></div></div></div>`
         }
         return `<button class="back-link" type="button" data-action="staff-back">${ICON.left} Ustalar</button>
@@ -2140,13 +2240,26 @@
               <label class="field"><span>Sabab <small>(ixtiyoriy)</small></span><input class="input" id="closedReason" placeholder="Masalan: Mustaqillik kuni" maxlength="200"/></label></div>
             <div style="margin-top:14px"><button class="btn btn-secondary" type="button" data-action="closed-add">${ICON.plus} Yopiq kun qo'shish</button></div></div>
 
-          <div class="panel-card"><h2>Telegram xabarnomalari</h2><p>Yangi onlayn yozilish bo'lganda Telegram'ga xabar keladi.</p><div class="stack">
-            <div class="hint-box"><div><b>Chat ID ni qanday topish mumkin:</b><br/>1) Telegram'da <b>@NavbatlyBot</b> ni oching va «Start» ni bosing.<br/>2) <b>@userinfobot</b> ga yozing — u sizning ID raqamingizni yuboradi.<br/>3) Raqamni pastga kiriting va «Sinov xabari» ni bosing.</div></div>
-            <label class="field"><span>Chat ID</span><input class="input num" inputmode="numeric" data-set="tgChat" value="${esc(SETTINGS.tgChat)}" placeholder="Masalan: 123456789"/></label>
-            <label class="row" style="cursor:pointer"><div class="grow"><div class="title">Xabarnomalar yoqilgan</div></div>
-              <span class="switch"><input type="checkbox" data-set="tgEnabled" ${SETTINGS.tgEnabled ? 'checked' : ''}/><i></i></span></label>
-            ${SETTINGS.tgLastError === false ? `<div class="hint-box ok">✅ Sinov xabari yuborildi. Telegram'ni tekshiring.</div>` : SETTINGS.tgLastError ? `<div class="hint-box err">⚠️ ${esc(SETTINGS.tgLastError)}</div>` : ''}
-            <div><button class="btn btn-secondary" type="button" data-action="tg-test">${ICON.send} Sinov xabarini yuborish</button></div>
+          <div class="panel-card"><h2 style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">Telegram xabarnomalari <span class="tag">M6 da quriladi</span></h2>
+            <p>Yangi onlayn yozilish bo'lganda Telegram'ga xabar keladi. Chat ID qo'lda kiritilmaydi — bot o'zi ulanadi.</p><div class="stack">
+            ${
+              SETTINGS.tg === 'none'
+                ? `<ol class="steps"><li><b>«Botni ulash»</b> ni bosing — Telegram'da @NavbatlyBot ochiladi.</li>
+                    <li>Botda <b>«Start»</b> ni bosing.</li>
+                    <li>Shu sahifaga qayting — salon <b>avtomatik ulanadi</b>.</li></ol>
+                  <div><button class="btn btn-primary" type="button" data-action="tg-link">${ICON.tg} Botni ulash</button></div>
+                  <div class="hint-box">🔒 Havolada bir martalik maxfiy kod bor (10 daqiqa amal qiladi). Bot shu kod orqali chatni aynan sizning saloningizga bog'laydi.</div>`
+                : SETTINGS.tg === 'waiting'
+                  ? `<div class="hint-box warn" style="align-items:center"><span class="spin"></span><div>Telegram'da <b>«Start»</b> bosilishi kutilmoqda… Havola 10 daqiqa amal qiladi.</div></div>
+                    <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn btn-secondary" type="button" data-action="tg-link">${ICON.tg} Telegram'ni qayta ochish</button>
+                      <button class="btn btn-secondary" type="button" data-action="tg-cancel">Bekor qilish</button></div>`
+                  : `<div class="hint-box ok">✅ Ulangan: <b>Salon egasi</b> (Telegram, shaxsiy chat)</div>
+                    <label class="row" style="cursor:pointer"><div class="grow"><div class="title">Xabarnomalar yoqilgan</div><div class="sub">O'chirsangiz, ulanish saqlanadi, lekin xabar kelmaydi.</div></div>
+                      <span class="switch"><input type="checkbox" data-set="tgEnabled" ${SETTINGS.tgEnabled ? 'checked' : ''}/><i></i></span></label>
+                    ${SETTINGS.tgTestSent ? `<div class="hint-box ok">📨 Sinov xabari yuborildi. Telegram'ni tekshiring.</div>` : ''}
+                    <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn btn-secondary" type="button" data-action="tg-test">${ICON.send} Sinov xabarini yuborish</button>
+                      <button class="btn btn-ghost-danger" type="button" data-action="tg-unlink">Uzish</button></div>`
+            }
           </div></div>
           <div style="display:flex;justify-content:flex-end"><button class="btn btn-primary" type="button" data-action="toast" data-text="Sozlamalar saqlandi ✓" style="min-height:50px;padding:0 28px">O'zgarishlarni saqlash</button></div>`
       }
@@ -2328,6 +2441,10 @@
             <li><b>Ish vaqti</b> muharriri ustma-ust oraliqlarga yo'l qo'ymaydi.</li>
             <li>Xizmat va ustani <b>o'chirib bo'lmaydi</b> — faqat nofaol.</li>
             <li>Sozlamalar: slug va vaqt mintaqasi faqat o'qish uchun; salon telefoni uchun ogohlantirish.</li>
+            <li><b>Telefonda kalendar</b>: bir vaqtda bitta usta, tepada almashtirgich (oynani toraytirib ko'ring).</li>
+            <li><b>Qidiruv</b>: ism yoki telefon raqamining bir qismi bo'yicha, barcha kunlar ichida.</li>
+            <li><b>Ustalar</b>: o'chirish yo'q — faqat faol/nofaol; login platforma administratori orqali.</li>
+            <li><b>Telegram</b>: «Botni ulash» → Start → avtomatik ulanadi (M6). Maketda 3 soniyadan so'ng «ulanadi».</li>
             <li>Mijozlar ma'lumotlari — <b>soxta</b> (Test mijoz, +998 90 000 00 XX).</li>
           </ul>`
       }
@@ -2617,10 +2734,37 @@
           render()
         },
         'copy-link': () => toast('Havola nusxalandi: navbatly.uz/b/demo'),
+        // Simulation: real app opens t.me/NavbatlyBot?start=<one-time code>; the bot's webhook
+        // links the chat and the page sees it (polling/realtime). Here: "linked" after 3 s.
+        'tg-link': () => {
+          SETTINGS.tg = 'waiting'
+          render()
+          toast('Telegram ochildi — botda «Start» ni bosing (maket)')
+          clearTimeout(window.tgTimer)
+          window.tgTimer = setTimeout(() => {
+            if (SETTINGS.tg !== 'waiting') return
+            SETTINGS.tg = 'linked'
+            if (S.view === 'settings') render()
+            toast('✅ Telegram ulandi')
+          }, 3000)
+        },
+        'tg-cancel': () => {
+          clearTimeout(window.tgTimer)
+          SETTINGS.tg = 'none'
+          render()
+        },
+        'tg-unlink': () => {
+          SETTINGS.tg = 'none'
+          SETTINGS.tgTestSent = false
+          render()
+          toast('Telegram uzildi')
+        },
         'tg-test': () => {
-          SETTINGS.tgLastError = !/^-?\d{5,20}$/.test(SETTINGS.tgChat)
-            ? "Chat ID noto'g'ri. Faqat raqamlar, masalan 123456789."
-            : false
+          SETTINGS.tgTestSent = true
+          render()
+        },
+        'cal-staff': (el) => {
+          S.calStaff = el.dataset.id
           render()
         },
         role: (el) => {
@@ -2679,6 +2823,14 @@
             s.active ? `«${s.name}» faol` : `«${s.name}» nofaol — bron sahifasida ko'rinmaydi`,
           )
         }
+        if (el.dataset.action === 'staff-toggle') {
+          const s = stf(el.dataset.id)
+          s.active = el.checked
+          render()
+          return toast(
+            s.active ? `${s.name} faol` : `${s.name} nofaol — bron sahifasida ko'rinmaydi`,
+          )
+        }
         if (el.dataset.action === 'wh-day') {
           S.hoursDraft[el.dataset.dow] = el.checked ? structuredClone(STD) : []
           return render()
@@ -2710,7 +2862,6 @@
           const k = el.dataset.set
           SETTINGS[k] =
             el.type === 'checkbox' ? el.checked : el.tagName === 'SELECT' ? +el.value : el.value
-          if (k === 'tgChat') SETTINGS.tgLastError = null
           return
         }
         if (el.dataset.modal && S.modal) {
@@ -2726,6 +2877,16 @@
       })
       document.addEventListener('input', (e) => {
         const el = e.target
+        if (el.dataset.model === 'q') {
+          // re-render the list, then put the cursor back into the search box
+          S.q = el.value
+          const pos = el.selectionStart
+          render()
+          const box = document.querySelector('[data-model="q"]')
+          box.focus()
+          box.setSelectionRange(pos, pos)
+          return
+        }
         if (el.dataset.modal && S.modal) {
           const k = el.dataset.modal
           if (k === 'phone') {
@@ -2773,6 +2934,8 @@
           e.target.click()
         }
       })
+      // re-render when crossing the phone/desktop breakpoint (calendar layout differs)
+      PHONE_MQ.addEventListener('change', render)
       $('mockBtn').addEventListener('click', () => {
         S.mockOpen = !S.mockOpen
         renderMock()
