@@ -29,11 +29,16 @@ begin
   -- marker is built from two halves so it never appears literally in the SQL text
   -- (Postgres echoes the SQL in error context; only the real report must match)
   raise exception using message = '@@TA' || 'P@@' || E'\\n' || (
-    -- compact: the API truncates long error messages (~1000 chars), so we send
-    -- totals + full text of FAILING tests only
+    -- compact: the API truncates long error messages (~1000 chars), so we send totals
+    -- + for each FAILING test only its first line and the have/want (or caught/wanted)
     select 'TOTAL ' || count(*) || ' FAILED ' || count(*) filter (where t.line like 'not ok%')
-      || coalesce(E'\\n' || string_agg(t.line, E'\\n' order by t.at)
-                  filter (where t.line like 'not ok%'), '')
+      || coalesce(E'\\n' || string_agg(
+           split_part(t.line, E'\\n', 1)
+           || coalesce(' ⟶ ' || nullif(regexp_replace(
+                (select string_agg(btrim(x), ' ') from regexp_split_to_table(t.line, E'\\n') x
+                 where x ~ '^#\\s+(have|want|caught|wanted):'),
+                '#\\s+', '', 'g'), ''), ''),
+           E'\\n' order by t.at) filter (where t.line like 'not ok%'), '')
     from tests.tap t
   ) || E'\\n' || '@@TA' || 'P@@';
 end
@@ -88,7 +93,10 @@ for (const file of files) {
   // The report travels inside the (JSON-escaped) error message.
   const decoded = output.replace(/\\\\n/g, '\n').replace(/\\n/g, '\n').replace(/\\"/g, '"')
   const start = decoded.indexOf(REPORT_MARKER)
-  const end = decoded.indexOf(REPORT_MARKER, start + 1)
+  let end = decoded.indexOf(REPORT_MARKER, start + 1)
+  // Many failures can still exceed the API's message limit: use what arrived, and say so.
+  const truncated = start !== -1 && end === -1 && /TOTAL \d+ FAILED \d+/.test(decoded)
+  if (truncated) end = decoded.length
 
   console.log(`\n# ${file}`)
   if (start === -1 || end === -1) {
@@ -116,7 +124,9 @@ for (const file of files) {
   totalFail += failed
   console.log(`${total - failed}/${total} passed`)
   // failing tests + pgTAP diagnostics ("#   have: ...  want: ...")
-  for (const line of lines.slice(1)) console.log(line)
+  for (const line of lines.slice(1))
+    if (!line.startsWith('"}') && line !== 'Target:') console.log(line)
+  if (truncated) console.log('# (report truncated by the API — totals above are exact)')
   if (total === 0) {
     console.log('not ok - no assertions ran')
     crashed++
