@@ -395,7 +395,7 @@ A lunch break = two rows for the same day. A day off = no rows for that day.
 
 > Kept out of `businesses` because `businesses` is publicly readable. RLS works by **row**, not by column, so private fields go in a separate table.
 
-#### `booking_attempts` (service-role only, for rate limiting)
+#### `private.booking_attempts` (for rate limiting — in the `private` schema, unreachable from the API)
 
 | Column      | Type        | Rules                                                |
 | ----------- | ----------- | ---------------------------------------------------- |
@@ -449,7 +449,7 @@ alter table appointments
 | `staff_services(service_id)`                           | "which staff can do this service"                            |
 | `working_hours(staff_id, weekday)`                     | slot calculation                                             |
 | `time_off(business_id, starts_at)`                     | slot calculation                                             |
-| `booking_attempts(ip_hash, created_at)`                | rate limiting                                                |
+| `private.booking_attempts(ip_hash, created_at)`        | rate limiting                                                |
 
 Plus an index on every foreign key column (Supabase's advisor warns about unindexed FKs).
 
@@ -490,7 +490,7 @@ They are `SECURITY DEFINER`, `STABLE`, with `search_path = ''`, and use `(select
 | `time_off`                   | ❌                                      | SELECT                                                       | ALL                                                            |
 | `appointments`               | ❌ (create only via Edge Function)      | SELECT where `staff_id = my_staff_id`; status change via RPC | SELECT all in business; status change & manual booking via RPC |
 | `business_telegram_settings` | ❌                                      | ❌                                                           | ALL                                                            |
-| `booking_attempts`           | ❌                                      | ❌                                                           | ❌ (server only)                                               |
+| `private.booking_attempts`   | ❌                                      | ❌                                                           | ❌ (server only)                                               |
 
 **Default deny:** RLS is enabled on **every** table. No policy = no access.
 
@@ -579,7 +579,7 @@ Frontend validation (zod) is for **friendly messages**; database checks are for 
   6. return a list of `timestamptz`. **Returns only times — never customer data.**
 - **`create_booking`**: loads service (active, same business) → computes `ends_at` and price snapshot → checks staff active + does this service → checks the slot is a valid slot (same rules as above) → checks max active bookings per phone → inserts. Catches exclusion violation → raises `SLOT_TAKEN`. Status = `confirmed` if `auto_confirm`, else `pending`.
 - **`admin_create_appointment`**, **`set_appointment_status`**: permission check inside the function + controlled updates.
-- **`pg_cron` job:** delete `booking_attempts` older than 24 h.
+- **`pg_cron` job:** delete `private.booking_attempts` older than 24 h.
 
 ### 6.3 Edge Functions
 
