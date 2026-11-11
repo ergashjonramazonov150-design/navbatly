@@ -154,6 +154,95 @@
       }
 
       /* ============================ App header ============================ */
+      /* Step 1: full salon header (address + hours). Other steps: compact (name only). */
+      .biz-hours {
+        font-size: 12.5px;
+        color: var(--muted);
+        margin-top: 3px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px 8px;
+        align-items: center;
+      }
+      .biz-hours .open {
+        font-weight: 600;
+        color: var(--success);
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+      }
+      .biz-hours .open::before {
+        content: '';
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: currentColor;
+      }
+      .biz-hours .closed {
+        font-weight: 600;
+        color: var(--accent);
+      }
+      .app-head.compact .biz-addr,
+      .app-head.compact .biz-hours {
+        display: none;
+      }
+      .app-head.compact .biz-logo {
+        width: 36px;
+        height: 36px;
+        border-radius: 11px;
+        font-size: 17px;
+      }
+      .app-head.compact .call {
+        width: 40px;
+        height: 40px;
+      }
+      /* UZ / RU switch — reserved, RU inactive for now */
+      .lang {
+        display: inline-flex;
+        flex: none;
+        padding: 3px;
+        border-radius: 999px;
+        background: var(--surface);
+        box-shadow: inset 0 0 0 1.5px var(--line);
+      }
+      .lang button {
+        min-width: 40px;
+        min-height: 34px;
+        border: 0;
+        border-radius: 999px;
+        background: transparent;
+        font-weight: 700;
+        font-size: 12.5px;
+        letter-spacing: 0.04em;
+        cursor: pointer;
+      }
+      .lang button[aria-pressed='true'] {
+        background: var(--ink);
+        color: var(--sel-ink);
+      }
+      .lang button:disabled {
+        color: var(--disabled-ink);
+        cursor: not-allowed;
+      }
+      /* "Istalgan usta" — Phase 2, shown but not selectable */
+      .card.soon {
+        border-style: dashed;
+        background: transparent;
+        cursor: not-allowed;
+        opacity: 0.7;
+      }
+      .card.soon:active {
+        transform: none;
+      }
+      .card.soon .avatar {
+        background: var(--chip-bg);
+        color: var(--muted);
+        font-size: 22px;
+      }
+      .pill.soon {
+        background: var(--accent-soft);
+        color: var(--accent);
+      }
       .app-head {
         flex: none;
         padding: 14px 16px 10px;
@@ -997,12 +1086,13 @@
             <span class="x">✕</span><span class="url">navbatly.uz/b/demo</span><span>⋯</span>
           </div>
 
-          <header class="app-head">
+          <header class="app-head" id="appHead">
             <div class="biz">
               <div class="biz-logo" aria-hidden="true">N</div>
               <div class="biz-text">
                 <div class="biz-name">Navbatly Demo Barbershop</div>
                 <div class="biz-addr">Toshkent sh., Namuna ko'chasi, 1-uy</div>
+                <div class="biz-hours" id="bizHours"></div>
               </div>
               <a class="call" href="tel:+998900000000" aria-label="Salonga qo'ng'iroq qilish">
                 <svg
@@ -1041,6 +1131,10 @@
                 </button>
                 <div class="progress" id="progress" aria-hidden="true">
                   <i></i><i></i><i></i><i></i>
+                </div>
+                <div class="lang" role="group" aria-label="Til / Язык">
+                  <button type="button" aria-pressed="true">UZ</button>
+                  <button type="button" disabled title="Rus tili tez orada">RU</button>
                 </div>
               </div>
               <div class="step-label" id="stepLabel"></div>
@@ -1132,6 +1226,22 @@
               o'chiq).
             </li>
             <li>Barcha bosiladigan elementlar ≥ 44 px; tugmalar 54 px.</li>
+            <li>
+              <b>Orqaga tugmasi</b> (telefon yoki brauzer) — oldingi qadamga qaytaradi, sahifadan
+              chiqarib yubormaydi. Tasdiqdan keyin «Orqaga» yangi yozilishni boshlaydi (formani
+              qayta yuborib bo'lmaydi).
+            </li>
+            <li>
+              <b>1-qadam</b>: to'liq salon sarlavhasi — manzil, ish vaqti, «hozir ochiq/yopiq»
+              holati, qo'ng'iroq tugmasi. Keyingi qadamlarda sarlavha ixcham.
+            </li>
+            <li><b>UZ / RU</b> almashtirgich joyi ajratilgan; RU hozircha nofaol.</li>
+            <li>
+              <b>«Istalgan usta»</b> —
+              <span style="color: var(--accent); font-weight: 600">2-bosqich (Phase 2)</span>:
+              backend qo'llab-quvvatlashi kerak (birinchi bo'sh ustani tanlash). Maketda ko'rinadi,
+              lekin tanlab bo'lmaydi.
+            </li>
           </ul>
         </div>
 
@@ -1319,8 +1429,64 @@
       }
 
       /* =========================== Rendering =========================== */
+      // Salon hours + live open/closed status (Tashkent time). Mon–Sat 09–20, lunch 13–14, Sun off.
+      function hoursHtml() {
+        const dow = new Date(TODAY).getUTCDay()
+        const inWindow = WINDOWS.find(([f, t]) => NOW_MIN >= f && NOW_MIN < t)
+        let status
+        if (dow !== 0 && inWindow)
+          status = `<span class="open">Hozir ochiq · ${hhmm(inWindow[1])} gacha</span>`
+        else if (dow !== 0 && NOW_MIN >= 13 * 60 && NOW_MIN < 14 * 60)
+          status = `<span class="closed">Tushlik · 14:00 da ochiladi</span>`
+        else {
+          const tomorrowOff = (dow + 1) % 7 === 0
+          const when = dow !== 0 && NOW_MIN < 9 * 60 ? 'bugun' : tomorrowOff ? 'dushanba' : 'ertaga'
+          status = `<span class="closed">Yopiq · ${when} 09:00 da ochiladi</span>`
+        }
+        return `${status}<span>Du–Sh 09:00–20:00 · Yak dam olish</span>`
+      }
+
+      /* ---------- Navigation through browser history ----------
+         Every step change is a history entry, so the phone's Back button / browser back
+         goes to the previous step instead of leaving the page. */
+      function go(step, mode = 'push') {
+        state.step = step
+        if (mode === 'push') history.pushState({ step }, '')
+        if (mode === 'replace') history.replaceState({ step }, '')
+        render()
+      }
+      // the furthest step whose data is filled in (protects against "forward" into empty steps)
+      const maxReachable = () =>
+        !state.service ? 1 : !state.staff ? 2 : state.time == null ? 3 : 4
+      function resetFlow() {
+        Object.assign(state, {
+          service: null,
+          staff: null,
+          day: null,
+          time: null,
+          note: '',
+          touched: false,
+        })
+      }
+      window.addEventListener('popstate', (e) => {
+        closeTaken() // Back while the SLOT_TAKEN sheet is open → close it (lands on step 3)
+        if (state.step === 5) {
+          // After booking, Back must not reopen the submitted form: start a new booking.
+          resetFlow()
+          return go(1, 'replace')
+        }
+        const target = e.state?.step ?? 1
+        // Old entry for a step whose data was reset (e.g. after "new booking"): skip it,
+        // so the user never has to press Back on a screen that doesn't change.
+        if (target > maxReachable()) return history.back()
+        state.step = target
+        render()
+      })
+
       function render() {
         const s = state.step
+        $('appHead').classList.toggle('compact', s !== 1)
+        $('bizHours').innerHTML = hoursHtml()
         $('stepHead').hidden = s === 5
         $('back').hidden = s === 1 || s === 5
         $('progress')
@@ -1388,7 +1554,14 @@
 
       const viewStaff = () => {
         const list = STAFF.filter((st) => st.services.includes(state.service))
-        return `<div class="list">${list
+        // Phase 2: needs backend support (pick the first free barber) — shown, not selectable
+        const anyBarber = `<div class="card soon" aria-disabled="true">
+            <span class="avatar" aria-hidden="true">✦</span>
+            <span class="grow"><span class="title">Istalgan usta</span>
+              <span class="sub">Eng yaqin bo'sh vaqtga — qaysi usta bo'sh bo'lsa</span>
+              <span class="meta"><span class="pill soon">Tez orada</span></span></span>
+          </div>`
+        return `<div class="list">${anyBarber}${list
           .map((st) => {
             const nf = nextFree(st.id, state.service)
             return `<button class="card" type="button" data-pick="staff" data-id="${st.id}" aria-pressed="${state.staff === st.id}">
@@ -1402,6 +1575,11 @@
       }
 
       const viewTime = () => {
+        // Arriving here by any route (Next, Back, browser Forward): make sure a day is selected
+        if (!day()) {
+          const first = DAYS.find((x) => slotsFor(state.staff, state.service, x).length)
+          state.day = first && first.key
+        }
         const d = day()
         const dates = DAYS.map(
           (
@@ -1534,8 +1712,7 @@
             const first = DAYS.find((d) => slotsFor(state.staff, state.service, d).length)
             state.day = first && first.key
           }
-          state.step++
-          return render()
+          return go(state.step + 1)
         }
         if (state.step === 4) {
           state.touched = true
@@ -1554,8 +1731,7 @@
               $('simTaken').checked = false
               showTaken()
             } else {
-              state.step = 5
-              render()
+              go(5)
             }
           }, 900)
         }
@@ -1618,30 +1794,15 @@
           return
         }
         const goto = e.target.closest('[data-goto]')
-        if (goto) {
-          state.step = +goto.dataset.goto
-          return render()
-        }
+        if (goto) return go(+goto.dataset.goto)
         if (e.target.closest('[data-restart]')) {
-          Object.assign(state, {
-            step: 1,
-            service: null,
-            staff: null,
-            day: null,
-            time: null,
-            note: '',
-            touched: false,
-          })
-          return render()
+          resetFlow()
+          return go(1)
         }
       })
       $('next').addEventListener('click', next)
-      $('back').addEventListener('click', () => {
-        if (state.step > 1) {
-          state.step--
-          render()
-        }
-      })
+      // The on-screen back arrow behaves exactly like the phone's Back button
+      $('back').addEventListener('click', () => history.back())
       $('overlay').addEventListener('click', (e) => {
         const alt = e.target.closest('[data-alt]')
         if (alt) {
@@ -1652,18 +1813,11 @@
           bindContact()
           return
         }
-        if (e.target === $('overlay') || e.target.closest('#otherTime')) {
-          closeTaken()
-          state.step = 3
-          render()
-        }
+        // "Other time" / tap outside = same as Back: return to step 3 (the previous history entry)
+        if (e.target === $('overlay') || e.target.closest('#otherTime')) history.back()
       })
       document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && $('overlay').classList.contains('open')) {
-          closeTaken()
-          state.step = 3
-          render()
-        }
+        if (e.key === 'Escape' && $('overlay').classList.contains('open')) history.back()
       })
 
       // Review panel: jump straight to any screen with sensible demo choices
@@ -1687,8 +1841,14 @@
         if (!b) return
         closeTaken()
         const j = b.dataset.jump
+        // Panel jumps rebuild a realistic history (1 → … → n) so Back works from there too
+        const rebuild = (n) => {
+          history.replaceState({ step: 1 }, '')
+          for (let i = 2; i <= n; i++) history.pushState({ step: i }, '')
+        }
         if (j === 'taken') {
           prefill()
+          rebuild(4)
           state.step = 4
           render()
           showTaken()
@@ -1706,10 +1866,12 @@
           }
         }
         if (n >= 4) prefill()
+        rebuild(n)
         state.step = n
         render()
       })
 
+      history.replaceState({ step: 1 }, '')
       render()
     </script>
   </body>

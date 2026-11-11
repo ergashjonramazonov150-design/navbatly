@@ -647,7 +647,8 @@ Holat: tasdiqlash kutilmoqda
 ### 7.4 Admin accounts
 
 - Self-signup **disabled** in Supabase Auth settings.
-- Minimum password length 8+, leaked-password protection on (if available on the plan).
+- Minimum password length 8+.
+- ⚠️ **Known limitation:** leaked-password protection (HaveIBeenPwned check) is **not available on the Supabase free plan**, so it is OFF in `navbatly-dev`. The Security Advisor will keep showing `auth_leaked_password_protection` (WARN). Turn it on as soon as the project moves to a paid plan; until then rely on min length + invite-only accounts.
 - Email confirmation on; invite-only accounts.
 - Auth redirect URLs restricted to our domains.
 
@@ -686,7 +687,7 @@ Each milestone ends with something you can **see and test**. Estimates assume a 
 | **Phone verification** (OTP via Telegram or SMS before a booking is accepted) | Phones are not verified in MVP, so a bot using random fake numbers bypasses the per-phone limit; captcha + IP limit are the main defence until then. The demo salon is seeded with `auto_confirm = false` so fake bookings never appear as confirmed. |
 | **`completed` / `no_show` statuses**                                          | Visit history and no-show tracking; extend `appointment_status` enum + allowed transitions in `set_appointment_status`.                                                                                                                               |
 | **Customer self-cancel link** (secret token per appointment)                  | Customers have no accounts; today they must call the salon.                                                                                                                                                                                           |
-| "Any available master"                                                        | Book the first free barber for a service.                                                                                                                                                                                                             |
+| **"Istalgan usta" (any available barber)**                                    | Book the first free barber for a service. Needs backend support: a slots function across all staff of a service + `create_booking` choosing the staff server-side. Already **shown (not selectable)** in the booking mockup, marked "Tez orada".      |
 | Reschedule (drag & drop)                                                      | Today: cancel + create new.                                                                                                                                                                                                                           |
 | Telegram one-click linking + confirm/cancel buttons inside Telegram           | Replaces manual `chat_id` entry.                                                                                                                                                                                                                      |
 | Russian translation                                                           | UI is already i18n-ready.                                                                                                                                                                                                                             |
@@ -716,11 +717,22 @@ Each milestone ends with something you can **see and test**. Estimates assume a 
 
 All other items use the defaults in §1.2.
 
+### UI design decisions (mockups in `design/`)
+
+| Decision         | Choice                                                                                                                                                              |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Visual direction | **A «Usta»** — cream `#F6F1EA`, ink `#1F1B16`, terracotta accent `#B4532A` (`design/01-visual-directions.html`)                                                     |
+| Fonts            | **Literata** (headings) + **Inter** (body). Fraunces was rejected: no Cyrillic on Google Fonts; both chosen fonts fully support Cyrillic for the future Russian UI. |
+| Selected state   | Strong contrast: solid ink fill + light text + terracotta check (cards, dates, time slots)                                                                          |
+| Booking flow     | Approved (`design/02-booking-flow.html`): 4 steps + success, only free slots shown, SLOT_TAKEN bottom sheet keeps the form and offers nearest times                 |
+| Navigation       | Every step is a browser-history entry: phone/browser **Back** = previous step; after success, Back starts a new booking (no resubmission)                           |
+| Header           | Step 1: full salon header (address, hours, open/closed, call). Steps 2–4: compact. **UZ / RU** switch reserved, RU inactive                                         |
+
 ### Dev environment notes (cloud-only, no Docker)
 
 - Two Supabase projects in the end: `navbatly-dev` (now) and `navbatly-prod` (M9). The free plan allows 2 active projects.
 - Migrations are still written as files in `supabase/migrations/` and applied with `npm run db:push` (`supabase db push --remote`) to the linked project. File names must be `<timestamp>_name.sql` (created with `npx supabase migration new name`) — the cloud dashboard SQL editor is used only for **reading**, never for schema changes.
-- pgTAP tests run against the dev project (`npm run db:test` → `supabase test db --remote`).
+- pgTAP tests run against the dev project with `npm run db:test` (our Docker-free runner, `scripts/db-test.mjs`; every run is forced to roll back). Real parallel booking test: `npm run db:test:race`. Demo data: `npm run db:seed`.
 - Edge Functions are deployed to dev with `supabase functions deploy`; secrets set with `supabase secrets set`.
 - Free projects pause after ~1 week without activity — just "Restore" in the dashboard.
 - Never put real customer data in the dev project; use `seed.sql` demo data only.
