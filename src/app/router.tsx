@@ -3,6 +3,7 @@ import { createBrowserRouter, Navigate, type RouteObject } from 'react-router'
 
 import { AdminLayout } from '@/app/layouts/AdminLayout'
 import { PublicLayout } from '@/app/layouts/PublicLayout'
+import { RouteErrorScreen } from '@/app/RouteErrorScreen'
 import {
   BusinessGate,
   HOME_PATH,
@@ -40,6 +41,7 @@ export const buildAdminRoutes = (gate: ReactNode = <BusinessGate />): RouteObjec
   { path: '/admin/reset-password', element: <ResetPasswordPage /> },
   {
     path: '/admin',
+    errorElement: <RouteErrorScreen />,
     element: <RequireAuth />,
     children: [
       {
@@ -72,6 +74,7 @@ export const router = createBrowserRouter([
   ...buildAdminRoutes(),
   {
     element: <PublicLayout />,
+    errorElement: <RouteErrorScreen />,
     children: [
       { path: '/', element: <LandingPage /> },
       { path: '*', element: <NotFoundPage /> },

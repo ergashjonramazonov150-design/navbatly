@@ -59,6 +59,59 @@
     "loadError": "Internet aloqasini tekshirib, sahifani yangilang.",
     "retry": "Qayta urinish"
   },
+  "crash": {
+    "title": "Nimadir noto'g'ri ketdi",
+    "text": "Sahifani ko'rsatishda xatolik yuz berdi. Sahifani yangilab ko'ring.",
+    "reload": "Sahifani yangilash"
+  },
+  "actions": {
+    "save": "Saqlash",
+    "saving": "Saqlanmoqda…",
+    "cancel": "Bekor",
+    "retry": "Qayta urinish",
+    "saved": "Saqlandi ✓"
+  },
+  "services": {
+    "title": "Xizmatlar",
+    "subtitle": "Mijozlar bron sahifasida faqat faol xizmatlarni ko'radi.",
+    "new": "Yangi xizmat",
+    "minutes": "{{count}} daq",
+    "staffCount": "{{count}} ta usta",
+    "noStaff": "Hech bir usta biriktirilmagan",
+    "noStaffHint": "Mijozlar bu xizmatni tanlay olmaydi, toki «Ustalar» bo'limida usta biriktirilmaguncha.",
+    "inactive": "Nofaol",
+    "activeLabel": "{{name}} — faol",
+    "empty": "Hali xizmat yo'q",
+    "emptyHint": "Birinchi xizmatni qo'shing — masalan, «Soch olish».",
+    "noDeleteHint": "Xizmatni o'chirib bo'lmaydi — nofaol qiling. Eski yozilishlar va narxlar tarixi saqlanib qoladi.",
+    "loadError": "Xizmatlarni yuklab bo'lmadi.",
+    "activated": "«{{name}}» faol — bron sahifasida ko'rinadi",
+    "deactivated": "«{{name}}» nofaol — bron sahifasida ko'rinmaydi",
+    "created": "«{{name}}» qo'shildi ✓",
+    "updated": "«{{name}}» saqlandi ✓",
+    "form": {
+      "createTitle": "Yangi xizmat",
+      "editTitle": "Xizmatni tahrirlash",
+      "name": "Nomi",
+      "namePlaceholder": "Masalan: Soch olish",
+      "description": "Tavsif",
+      "optional": "(ixtiyoriy)",
+      "descriptionPlaceholder": "Masalan: yuvish va ukladka bilan",
+      "duration": "Davomiyligi",
+      "durationOption": "{{count}} daqiqa",
+      "price": "Narxi (so'm)",
+      "active": "Faol",
+      "activeHint": "Nofaol xizmat bron sahifasida ko'rinmaydi.",
+      "priceHistoryHint": "Narx o'zgarsa, eski yozilishlar eski narxda qoladi."
+    },
+    "deactivate": {
+      "title": "«{{name}}» ni nofaol qilasizmi?",
+      "checking": "Kelgusi yozilishlar tekshirilmoqda…",
+      "none": "Bu xizmatga kelgusi yozilishlar yo'q. Mijozlar uni endi tanlay olmaydi.",
+      "some": "Bu xizmatga {{count}} ta kelgusi yozilish bor. Ular o'zgarmaydi va saqlanib qoladi — kerak bo'lsa, bekor qiling yoki mijozlar bilan bog'laning.",
+      "confirm": "Nofaol qilish"
+    }
+  },
   "placeholder": {
     "comingIn": "Bu bo'lim {{milestone}} bosqichida tayyor bo'ladi.",
     "appointments": "Bugungi va kelgusi yozilishlar, tasdiqlash va bekor qilish shu yerda bo'ladi.",

@@ -19,4 +19,13 @@ vi.mock('@/lib/supabase', () => ({
   },
 }))
 
+// jsdom lacks these browser APIs that Radix UI components use
+globalThis.ResizeObserver ??= class {
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+}
+Element.prototype.hasPointerCapture ??= () => false
+Element.prototype.scrollIntoView ??= () => {}
+
 afterEach(() => cleanup())

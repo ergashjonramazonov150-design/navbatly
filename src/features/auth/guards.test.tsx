@@ -1,13 +1,16 @@
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import type { Session, User } from '@supabase/supabase-js'
 import { createMemoryRouter, RouterProvider } from 'react-router'
 import { describe, expect, it, vi } from 'vitest'
 
+import { RouteErrorScreen } from '@/app/RouteErrorScreen'
 import { buildAdminRoutes } from '@/app/router'
 import { AuthContext, type AuthState } from '@/features/auth/auth-context'
 import { RequireBusiness } from '@/features/auth/guards'
 import { BusinessContext, type BusinessContextValue } from '@/features/business/business-context'
+import { supabase } from '@/lib/supabase'
 
 /*
  * Guard tests: real route tree + real guards + real layout.
@@ -27,7 +30,16 @@ const ready = (role: 'owner' | 'staff'): BusinessContextValue => ({
   staffName: role === 'staff' ? 'Jasur' : null,
 })
 
+// Pages now load data; for guard tests every table simply returns an empty list.
+function emptyTable() {
+  const b: Record<string, unknown> = {}
+  for (const m of ['select', 'eq', 'order', 'in', 'gte', 'update', 'insert']) b[m] = () => b
+  b.then = (resolve: (v: unknown) => void) => resolve({ data: [], count: 0, error: null })
+  return b
+}
+
 function renderAt(path: string, auth: AuthState, business: BusinessContextValue) {
+  vi.mocked(supabase.from).mockImplementation(emptyTable as never)
   const signOut = vi.fn(async () => {})
   const gate = (
     <BusinessContext.Provider value={business}>
@@ -35,10 +47,13 @@ function renderAt(path: string, auth: AuthState, business: BusinessContextValue)
     </BusinessContext.Provider>
   )
   const router = createMemoryRouter(buildAdminRoutes(gate), { initialEntries: [path] })
+  const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } })
   render(
-    <AuthContext.Provider value={{ state: auth, recovery: false, signOut }}>
-      <RouterProvider router={router} />
-    </AuthContext.Provider>,
+    <QueryClientProvider client={qc}>
+      <AuthContext.Provider value={{ state: auth, recovery: false, signOut }}>
+        <RouterProvider router={router} />
+      </AuthContext.Provider>
+    </QueryClientProvider>,
   )
   return { router, signOut }
 }
@@ -105,6 +120,30 @@ describe('roles', () => {
     const { router } = renderAt('/admin/nope', signedIn, ready('owner'))
     await heading('Yozilishlar')
     expect(router.state.location.pathname).toBe('/admin/appointments')
+  })
+})
+
+describe('crash screen', () => {
+  function Boom(): never {
+    throw new Error('boom')
+  }
+
+  it("a page that throws shows the Uzbek error screen (not React Router's English page)", async () => {
+    const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {}) // expected noise
+    const router = createMemoryRouter(
+      [{ path: '/x', element: <Boom />, errorElement: <RouteErrorScreen /> }],
+      { initialEntries: ['/x'] },
+    )
+    render(<RouterProvider router={router} />)
+    expect(await heading("Nimadir noto'g'ri ketdi")).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Sahifani yangilash' })).toBeInTheDocument()
+    expect(screen.queryByText(/Unexpected Application Error/)).not.toBeInTheDocument()
+    consoleError.mockRestore()
+  })
+
+  it('the /admin route tree uses that error screen', () => {
+    const admin = buildAdminRoutes().find((r) => r.path === '/admin')
+    expect(admin?.errorElement).toEqual(<RouteErrorScreen />)
   })
 })
 

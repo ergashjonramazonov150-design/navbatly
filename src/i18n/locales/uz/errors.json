@@ -4,7 +4,13 @@
     "emailInvalid": "Email noto'g'ri ko'rinishda (masalan: siz@misol.uz).",
     "passwordRequired": "Parolni kiriting.",
     "passwordMin": "Parol kamida 8 belgidan iborat bo'lsin.",
-    "passwordMismatch": "Parollar bir xil emas."
+    "passwordMismatch": "Parollar bir xil emas.",
+    "nameMin": "Nomini kiriting (kamida 2 harf).",
+    "nameMax": "Nomi 80 belgidan oshmasin.",
+    "descriptionMax": "Tavsif 300 belgidan oshmasin.",
+    "durationInvalid": "Davomiylikni tanlang.",
+    "priceRequired": "Narxni kiriting (faqat raqamlar).",
+    "priceMax": "Narx juda katta."
   },
   "auth": {
     "invalidCredentials": "Email yoki parol noto'g'ri. Qayta urinib ko'ring.",
@@ -16,5 +22,14 @@
     "sessionExpired": "Sessiya tugagan. Qaytadan kiring.",
     "network": "Internet aloqasi yo'q yoki server javob bermayapti.",
     "unknown": "Kutilmagan xatolik yuz berdi. Qayta urinib ko'ring."
+  },
+  "db": {
+    "invalidValue": "Ma'lumot noto'g'ri. Maydonlarni tekshiring.",
+    "overlap": "Vaqtlar ustma-ust tushmoqda.",
+    "duplicate": "Bunday yozuv allaqachon mavjud.",
+    "forbidden": "Sizda bu amal uchun ruxsat yo'q.",
+    "notFound": "Yozuv topilmadi yoki unga ruxsatingiz yo'q.",
+    "network": "Internet aloqasi yo'q yoki server javob bermayapti.",
+    "unknown": "Saqlab bo'lmadi. Qayta urinib ko'ring."
   }
 }
