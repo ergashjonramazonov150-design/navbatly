@@ -34,6 +34,7 @@ then `git log --oneline -20` and `supabase/migrations/`.
 | Regenerate DB types               | `npm run db:types`                                |
 | DB tests (pgTAP, all / one file)  | `npm run db:test` / `npm run db:test -- 04`       |
 | Real parallel double-booking test | `npm run db:test:race`                            |
+| Dry-run an UNAPPLIED migration    | `npm run db:test -- --with-migration <file.sql>`  |
 | Frontend tests / types / lint     | `npm test` · `npm run typecheck` · `npm run lint` |
 | Live site check (after deploy)    | `npm run check:live`                              |
 | Security + performance advisors   | Supabase MCP `get_advisors` (both types)          |
@@ -55,12 +56,14 @@ _Last updated: 2026-11-13_
   (`design/01–03`), M2 (login, roles, shell), **M3 complete** — 3a (migration 7 +
   Xizmatlar), 3b (migration 8 + Ustalar, Ish vaqti, Dam olish), 3c (Sozlamalar, no
   migration, DB test 05); all merged to `main` and deployed 2026-11-13.
-- 🔄 **In progress: M3.5** visual upgrade. Step 1 (mockups `design/02` v3 + `design/04`)
-  **approved** 2026-11-13, on branch `m35-mockups` (not yet merged to `main`). Decisions
-  in ARCHITECTURE.md ("M3.5 decisions"). **Step 2 plan** (Storage, migration 9, admin
-  photo screens) posted — **waiting for the user's OK; no storage work before that.**
-- ⏭ **Next:** M3.5 step 2 (2a migration 9 → 2b admin photo-screen mockup → 2c build),
-  then **M4** (public booking).
+- 🔄 **In progress: M3.5** visual upgrade. Step 1 mockups (`design/02` v3, `design/04`)
+  approved and merged to `main`. Step 2 plan approved (public bucket, owner crops barber
+  photos AND cover, gallery in upload order, `react-easy-crop@6.2.4`). **2a:** migration 9
+  `20261113121720_salon_images.sql` + test 06 written on branch `m35-storage`, dry run
+  191/191 — **NOT applied; waiting for the user's OK to apply.**
+- ⏭ **Next:** 2b admin photo-screen mockup (include the note "Ustaning roziligi bilan
+  yuklang" + easy "remove photo", also when deactivating a barber) → 2c build (incl.
+  `npm run storage:orphans`, real-iPhone HEIC test), then **M4** (public booking).
 - ℹ️ The Vercel MCP connection needs team access re-authorized before it can read deploys.
   Until then, confirm a deploy by finding new UI text in the live `assets/start-*.js`
   file, then run `npm run check:live`.
