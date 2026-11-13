@@ -2,6 +2,7 @@ import { Loader2Icon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { LoadError, PageHeader } from '@/components/common/PageHeader'
+import { SalonPhotosCard } from '@/features/business/SalonPhotosCard'
 import { SettingsForm } from '@/features/business/SettingsForm'
 import { useBusinessSettings } from '@/features/business/settingsApi'
 import { useReadyBusiness } from '@/features/business/useBusiness'
@@ -9,8 +10,8 @@ import { TimeOffPanel } from '@/features/staff/TimeOffPanel'
 
 /*
  * Sozlamalar (owner only, delivery 3c): salon details + booking rules (one Save button),
- * then salon-wide closed days (saved one by one, like a barber's days off).
- * Telegram settings come in M6.
+ * then «Salon rasmlari» (M3.5, each photo saved immediately), then salon-wide closed days
+ * (saved one by one, like a barber's days off). Telegram settings come in M6.
  */
 export function SettingsPage() {
   const { t } = useTranslation('admin')
@@ -34,6 +35,7 @@ export function SettingsPage() {
       ) : (
         <div className="grid gap-4">
           <SettingsForm businessId={businessId} settings={settings.data} />
+          <SalonPhotosCard businessId={businessId} salonName={settings.data.name} />
           <TimeOffPanel
             businessId={businessId}
             staffId={null}

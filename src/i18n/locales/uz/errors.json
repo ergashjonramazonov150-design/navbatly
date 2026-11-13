@@ -30,7 +30,8 @@
   "rpc": {
     "NOT_ALLOWED": "Sizda bu amal uchun ruxsat yo'q.",
     "INVALID_HOURS": "Ish vaqtida xato bor: tugash vaqti boshlanishidan keyin bo'lsin.",
-    "HOURS_OVERLAP": "Bir kundagi oraliqlar ustma-ust tushmasin."
+    "HOURS_OVERLAP": "Bir kundagi oraliqlar ustma-ust tushmasin.",
+    "GALLERY_FULL": "12 ta rasmdan ko'p bo'lmaydi — avval bittasini o'chiring."
   },
   "db": {
     "invalidValue": "Ma'lumot noto'g'ri. Maydonlarni tekshiring.",
@@ -40,5 +41,13 @@
     "notFound": "Yozuv topilmadi yoki unga ruxsatingiz yo'q.",
     "network": "Internet aloqasi yo'q yoki server javob bermayapti.",
     "unknown": "Saqlab bo'lmadi. Qayta urinib ko'ring."
+  },
+  "images": {
+    "tooLarge": "Rasm juda katta — 25 MB dan kichik rasm tanlang.",
+    "unreadable": "Bu rasmni ochib bo'lmadi. JPEG, PNG yoki WebP rasm tanlang.",
+    "tooSmallCover": "Rasm juda kichik ({{w}} × {{h}} px). Muqova uchun eni kamida 1200 px bo'lgan rasm tanlang.",
+    "tooSmall": "Rasm juda kichik ({{w}} × {{h}} px). Kamida {{min}} × {{min}} px bo'lgan rasm tanlang.",
+    "tooSmallLogo": "Logo juda kichik ({{w}} × {{h}} px). Uzun tomoni kamida 400 px bo'lsin.",
+    "uploadFailed": "Rasm saqlanmadi — internet aloqasini tekshiring. Eski rasm joyida qoldi, qayta urinib ko'ring."
   }
 }
