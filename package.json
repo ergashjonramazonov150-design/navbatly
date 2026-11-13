@@ -18,7 +18,8 @@
     "db:seed": "node scripts/db-seed.mjs",
     "test": "vitest run",
     "test:watch": "vitest",
-    "check:live": "node scripts/live-check.mjs"
+    "check:live": "node scripts/live-check.mjs",
+    "check:images": "node scripts/image-check.mjs"
   },
   "dependencies": {
     "@date-fns/tz": "^1.5.0",
