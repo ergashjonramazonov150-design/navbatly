@@ -52,14 +52,16 @@ itself twice. Run it from `C:\Users\user\Documents\Navbatly` (uppercase `C:`) in
 _Last updated: 2026-11-13_
 
 - ✅ **Done and approved:** M0, M1 (migrations 1–6, pgTAP suite), design mockups
-  (`design/01–03`), M2 (login, roles, shell), M3 **3a** (migration 7 + Xizmatlar),
-  M3 **3b** (migration 8 + Ustalar, Ish vaqti, Dam olish; manual checklist passed,
-  merged to `main` and deployed 2026-11-13).
-- 🔄 **In progress: M3 3c** (Sozlamalar) on branch `m3c-settings`: plan approved, built
-  (no migration; DB test `05_business_settings_test.sql`). Waiting for the user's manual
-  checklist and approval.
-- ⏭ **Next:** **M3.5** visual upgrade (mockups first: image-rich booking page +
-  `design/04-landing.html`; then Supabase Storage uploads), then **M4** (public booking).
+  (`design/01–03`), M2 (login, roles, shell), **M3 complete** — 3a (migration 7 +
+  Xizmatlar), 3b (migration 8 + Ustalar, Ish vaqti, Dam olish), 3c (Sozlamalar, no
+  migration, DB test 05); all merged to `main` and deployed 2026-11-13.
+- 🔄 **In progress: M3.5** visual upgrade, step 1 = **mockups only, no code** on branch
+  `m35-mockups`: updated `design/02-booking-flow.html` (cover, logo, barber photos,
+  optional service photos, "Ishlarimiz" gallery) + new `design/04-landing.html`.
+  Free-licensed photos only, sources in `docs/IMAGE_CREDITS.md`. **No upload/storage
+  work until the user approves the mockups.**
+- ⏭ **Next:** M3.5 step 2 (Supabase Storage uploads, after approval), then **M4** (public
+  booking).
 - ℹ️ The Vercel MCP connection needs team access re-authorized before it can read deploys.
   Until then, confirm a deploy by finding new UI text in the live `assets/start-*.js`
   file, then run `npm run check:live`.
