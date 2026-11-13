@@ -153,6 +153,14 @@ insert into tests.tap select is(
 
 select tests.login_as_anon();
 insert into tests.tap select ok(not tests.put(tests.img('A', 'gallery', 9)), 'Visitor: cannot upload');
+-- public bucket = files open by direct link only; listing must stay closed
+insert into tests.tap select is(
+  (select count(*) from storage.objects where bucket_id = 'salon-images'), 0::bigint,
+  'Visitor: cannot list files of an active salon (public link only, no listing)');
+insert into tests.tap select is(
+  (select count(*) from pg_policies where schemaname = 'storage' and tablename = 'objects'
+     and cmd = 'SELECT' and (roles @> array['anon']::name[] or roles @> array['public']::name[])), 0::bigint,
+  'no SELECT rule on storage.objects for anon/public');
 
 -- =============================================================================
 -- OWNER B: cannot see or delete Salon A files
