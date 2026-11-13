@@ -187,10 +187,12 @@ export type Database = {
           address: string | null
           auto_confirm: boolean
           booking_horizon_days: number
+          cover_path: string | null
           created_at: string
           default_locale: string
           id: string
           is_active: boolean
+          logo_path: string | null
           max_active_bookings_per_phone: number
           min_notice_minutes: number
           name: string
@@ -204,10 +206,12 @@ export type Database = {
           address?: string | null
           auto_confirm?: boolean
           booking_horizon_days?: number
+          cover_path?: string | null
           created_at?: string
           default_locale?: string
           id?: string
           is_active?: boolean
+          logo_path?: string | null
           max_active_bookings_per_phone?: number
           min_notice_minutes?: number
           name: string
@@ -221,10 +225,12 @@ export type Database = {
           address?: string | null
           auto_confirm?: boolean
           booking_horizon_days?: number
+          cover_path?: string | null
           created_at?: string
           default_locale?: string
           id?: string
           is_active?: boolean
+          logo_path?: string | null
           max_active_bookings_per_phone?: number
           min_notice_minutes?: number
           name?: string
@@ -236,6 +242,35 @@ export type Database = {
         }
         Relationships: []
       }
+      salon_photos: {
+        Row: {
+          business_id: string
+          created_at: string
+          id: string
+          path: string
+        }
+        Insert: {
+          business_id: string
+          created_at?: string
+          id?: string
+          path: string
+        }
+        Update: {
+          business_id?: string
+          created_at?: string
+          id?: string
+          path?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "salon_photos_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "businesses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       services: {
         Row: {
           business_id: string
@@ -245,6 +280,7 @@ export type Database = {
           id: string
           is_active: boolean
           name: string
+          photo_path: string | null
           price_uzs: number
           sort_order: number
           updated_at: string
@@ -257,6 +293,7 @@ export type Database = {
           id?: string
           is_active?: boolean
           name: string
+          photo_path?: string | null
           price_uzs: number
           sort_order?: number
           updated_at?: string
@@ -269,6 +306,7 @@ export type Database = {
           id?: string
           is_active?: boolean
           name?: string
+          photo_path?: string | null
           price_uzs?: number
           sort_order?: number
           updated_at?: string
@@ -291,7 +329,7 @@ export type Database = {
           full_name: string
           id: string
           is_active: boolean
-          photo_url: string | null
+          photo_path: string | null
           sort_order: number
           updated_at: string
         }
@@ -302,7 +340,7 @@ export type Database = {
           full_name: string
           id?: string
           is_active?: boolean
-          photo_url?: string | null
+          photo_path?: string | null
           sort_order?: number
           updated_at?: string
         }
@@ -313,7 +351,7 @@ export type Database = {
           full_name?: string
           id?: string
           is_active?: boolean
-          photo_url?: string | null
+          photo_path?: string | null
           sort_order?: number
           updated_at?: string
         }
@@ -532,6 +570,13 @@ export type Database = {
           p_staff_id: string
         }
         Returns: string[]
+      }
+      list_orphan_salon_images: {
+        Args: { p_older_than?: string }
+        Returns: {
+          created_at: string
+          name: string
+        }[]
       }
       replace_working_hours: {
         Args: { p_staff_id: string; p_week: Json }
