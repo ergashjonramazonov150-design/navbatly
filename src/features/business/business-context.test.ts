@@ -2,7 +2,13 @@ import { describe, expect, it } from 'vitest'
 
 import { resolveBusinessState, type BusinessRows } from './business-context'
 
-const business = { id: 'biz-1', name: 'Demo', slug: 'demo', is_active: true }
+const business = {
+  id: 'biz-1',
+  name: 'Demo',
+  slug: 'demo',
+  is_active: true,
+  timezone: 'Asia/Tashkent',
+}
 const jasur = { id: 'staff-1', full_name: 'Jasur', is_active: true }
 
 const rows = (over: Partial<BusinessRows>): BusinessRows => ({
@@ -30,6 +36,7 @@ describe('resolveBusinessState', () => {
       businessId: 'biz-1',
       businessName: 'Demo',
       businessSlug: 'demo',
+      timezone: 'Asia/Tashkent',
       staffId: 'staff-1',
       staffName: 'Jasur',
     })

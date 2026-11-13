@@ -23,6 +23,11 @@
     "network": "Internet aloqasi yo'q yoki server javob bermayapti.",
     "unknown": "Kutilmagan xatolik yuz berdi. Qayta urinib ko'ring."
   },
+  "rpc": {
+    "NOT_ALLOWED": "Sizda bu amal uchun ruxsat yo'q.",
+    "INVALID_HOURS": "Ish vaqtida xato bor: tugash vaqti boshlanishidan keyin bo'lsin.",
+    "HOURS_OVERLAP": "Bir kundagi oraliqlar ustma-ust tushmasin."
+  },
   "db": {
     "invalidValue": "Ma'lumot noto'g'ri. Maydonlarni tekshiring.",
     "overlap": "Vaqtlar ustma-ust tushmoqda.",

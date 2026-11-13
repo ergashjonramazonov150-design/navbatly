@@ -29,7 +29,7 @@ async function fetchBusinessRows(userId: string): Promise<BusinessRows> {
   const [businessRes, staffRes] = await Promise.all([
     supabase
       .from('businesses')
-      .select('id, name, slug, is_active')
+      .select('id, name, slug, is_active, timezone')
       .eq('id', membership.business_id)
       .maybeSingle(),
     membership.staff_id

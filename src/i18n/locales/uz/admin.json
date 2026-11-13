@@ -112,6 +112,124 @@
       "confirm": "Nofaol qilish"
     }
   },
+  "impact": {
+    "checking": "Kelgusi yozilishlar tekshirilmoqda…",
+    "keepNote": "Yozilishlar avtomatik o'zgarmaydi — kerak bo'lsa, bekor qiling yoki mijozlar bilan bog'laning.",
+    "continue": "Baribir saqlash"
+  },
+  "weekdays": {
+    "1": "Dushanba",
+    "2": "Seshanba",
+    "3": "Chorshanba",
+    "4": "Payshanba",
+    "5": "Juma",
+    "6": "Shanba",
+    "7": "Yakshanba"
+  },
+  "staff": {
+    "title": "Ustalar",
+    "subtitle": "Ish vaqti, xizmatlar va dam olish kunlari.",
+    "new": "Yangi usta",
+    "back": "Ustalar",
+    "today": "Bugun: {{hours}}",
+    "todayOff": "Bugun: dam olish",
+    "servicesCount": "{{count}} ta xizmat",
+    "hasLogin": "Kirish bor",
+    "noLogin": "Kirish yo'q",
+    "inactive": "Nofaol",
+    "activeLabel": "{{name}} — faol",
+    "empty": "Hali usta yo'q",
+    "emptyHint": "Birinchi ustani qo'shing.",
+    "loadError": "Ustalarni yuklab bo'lmadi.",
+    "notFound": "Usta topilmadi.",
+    "noDeleteHint": "Ustani o'chirib bo'lmaydi — nofaol qiling. Nofaol usta bron sahifasida ko'rinmaydi, eski yozilishlari saqlanadi.",
+    "loginNote": "Login platforma administratori orqali beriladi.",
+    "activated": "{{name}} faol — bron sahifasida ko'rinadi",
+    "deactivated": "{{name}} nofaol — bron sahifasida ko'rinmaydi",
+    "created": "{{name}} qo'shildi ✓ Endi ish vaqtini belgilang.",
+    "tabs": {
+      "hours": "Ish vaqti",
+      "services": "Xizmatlar",
+      "timeOff": "Dam olish",
+      "profile": "Profil"
+    },
+    "form": {
+      "createTitle": "Yangi usta",
+      "name": "Ism",
+      "namePlaceholder": "Masalan: Jasur",
+      "bio": "Qisqacha ma'lumot",
+      "optional": "(ixtiyoriy)",
+      "bioPlaceholder": "Masalan: klassik va zamonaviy soch turmaklari",
+      "bioHint": "Mijozlar bron sahifasida ko'radi.",
+      "active": "Faol (mijozlarga ko'rinadi)",
+      "loginYes": "Bu ustaning kirish hisobi bor — u faqat o'z yozilishlarini ko'radi.",
+      "loginNo": "Bu ustaning kirish hisobi yo'q."
+    },
+    "deactivate": {
+      "title": "{{name}}ni nofaol qilasizmi?",
+      "none": "{{name}}ning kelgusi yozilishlari yo'q. Mijozlar uni endi tanlay olmaydi.",
+      "some": "{{name}}ning {{count}} ta kelgusi yozilishi bor — bekor qiling yoki mijozlar bilan bog'laning.",
+      "loginBlocked": "Uning kirish hisobi ham vaqtincha bloklanadi.",
+      "confirm": "Nofaol qilish"
+    }
+  },
+  "hours": {
+    "title": "Haftalik ish vaqti",
+    "hint": "Tushlik = bir kunda ikkita oraliq. Vaqtlar salon vaqti bo'yicha (Toshkent).",
+    "worksLabel": "{{day}} — ishlaydi",
+    "dayOff": "Dam olish kuni",
+    "from": "{{day}} boshlanishi",
+    "to": "{{day}} tugashi",
+    "addInterval": "Oraliq",
+    "removeInterval": "Oraliqni o'chirish",
+    "copyMonday": "Dushanbani barcha ish kunlariga nusxalash",
+    "copied": "Dushanba jadvali Seshanba–Shanba kunlariga nusxalandi",
+    "reset": "O'zgarishlarni bekor qilish",
+    "unsaved": "Saqlanmagan o'zgarishlar bor",
+    "saved": "Ish vaqti saqlandi ✓",
+    "errors": {
+      "endBeforeStart": "Tugash vaqti boshlanishidan keyin bo'lishi kerak.",
+      "overlap": "Oraliqlar ustma-ust tushmasligi kerak."
+    },
+    "impactTitle": "Ish vaqtini o'zgartirasizmi?",
+    "impact": "Yangi ish vaqtidan tashqarida {{count}} ta yozilish bor.",
+    "leaveTitle": "Saqlanmagan o'zgarishlar",
+    "leaveText": "Ish vaqtidagi o'zgarishlar saqlanmagan. Sahifadan chiqsangiz, ular yo'qoladi.",
+    "leave": "Saqlamasdan chiqish",
+    "stay": "Qolish"
+  },
+  "staffServices": {
+    "title": "{{name}} bajaradigan xizmatlar",
+    "hint": "Mijoz faqat shu xizmatlar uchun {{name}}ni tanlay oladi.",
+    "inactive": "Nofaol",
+    "added": "«{{service}}» qo'shildi",
+    "removed": "«{{service}}» olib tashlandi",
+    "toggleLabel": "{{service}} — {{name}} bajaradi"
+  },
+  "timeOff": {
+    "title": "Dam olish va ta'til",
+    "hint": "Bu kunlarda {{name}}ga onlayn yozilib bo'lmaydi.",
+    "empty": "Rejalashtirilgan dam olish yo'q",
+    "from": "Boshlanishi",
+    "to": "Tugashi",
+    "reason": "Sabab",
+    "optional": "(ixtiyoriy)",
+    "reasonPlaceholder": "Masalan: ta'til",
+    "add": "Qo'shish",
+    "added": "Dam olish qo'shildi ✓",
+    "removed": "Dam olish olib tashlandi",
+    "remove": "{{range}} — olib tashlash",
+    "oneDay": "1 kun",
+    "days": "{{count}} kun",
+    "impactTitle": "Dam olish qo'shasizmi?",
+    "impact": "Bu kunlarda {{count}} ta yozilish bor.",
+    "errors": {
+      "fromRequired": "Boshlanish sanasini tanlang.",
+      "past": "O'tgan sanani tanlab bo'lmaydi.",
+      "toBeforeFrom": "Tugash sanasi boshlanishdan oldin bo'lmasin.",
+      "tooLong": "Bir martada 1 yildan ko'p bo'lmasin."
+    }
+  },
   "placeholder": {
     "comingIn": "Bu bo'lim {{milestone}} bosqichida tayyor bo'ladi.",
     "appointments": "Bugungi va kelgusi yozilishlar, tasdiqlash va bekor qilish shu yerda bo'ladi.",
