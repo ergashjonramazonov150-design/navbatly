@@ -12,6 +12,12 @@
  *
  * Usage: npm run db:test            (all files)
  *        npm run db:test -- 01      (files whose name contains "01")
+ *
+ * Dry run of a migration that is NOT applied yet:
+ *        npm run db:test -- --with-migration supabase/migrations/<file>.sql [filter]
+ *   The migration SQL is placed right after each test file's `begin;`, inside the same
+ *   transaction that always rolls back — so the migration + all tests run, nothing stays.
+ *   The migration file must not contain its own begin/commit.
  */
 import { execSync } from 'node:child_process'
 import { mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs'
@@ -53,7 +59,22 @@ if (linkedRef !== DEV_PROJECT_REF) {
   process.exit(1)
 }
 
-const filter = process.argv[2] ?? ''
+const args = process.argv.slice(2)
+const migIdx = args.indexOf('--with-migration')
+const migrationPath = migIdx === -1 ? null : args[migIdx + 1]
+if (migIdx !== -1 && !migrationPath) {
+  console.error('--with-migration needs a file path.')
+  process.exit(1)
+}
+const migrationSql = migrationPath ? readFileSync(migrationPath, 'utf8') : ''
+if (/^\s*(begin|commit|rollback)\s*;/im.test(migrationSql)) {
+  console.error(
+    `${migrationPath}: contains begin/commit/rollback — refusing (it would end the safe transaction).`,
+  )
+  process.exit(1)
+}
+if (migrationPath) console.log(`# DRY RUN with unapplied migration ${migrationPath} (rolled back)`)
+const filter = args.filter((a, i) => i !== migIdx && i !== migIdx + 1)[0] ?? ''
 const files = readdirSync(TESTS_DIR)
   .filter((f) => f.endsWith('_test.sql') && f.includes(filter))
   .sort()
@@ -76,7 +97,18 @@ for (const file of files) {
     crashed++
     continue
   }
-  const sql = source.slice(0, lastRollback) + REPORT_SQL
+  let body = source.slice(0, lastRollback)
+  if (migrationSql) {
+    const begin = body.search(/^begin;\s*$/m)
+    if (begin === -1) {
+      console.error(`${file}: no "begin;" line to put the migration after — skipped.`)
+      crashed++
+      continue
+    }
+    const at = begin + 'begin;'.length
+    body = `${body.slice(0, at)}\n-- ===== DRY-RUN MIGRATION =====\n${migrationSql}\n-- ===== END MIGRATION =====\n${body.slice(at)}`
+  }
+  const sql = body + REPORT_SQL
   const tmpFile = join(tmp, file)
   writeFileSync(tmpFile, sql)
 

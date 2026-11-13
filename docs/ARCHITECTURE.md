@@ -732,6 +732,30 @@ Settings changes never modify or cancel existing bookings. Instead the owner is 
 
 The owner then cancels or contacts customers manually (M5 tools).
 
+### Salon images: upload order and orphan clean-up (M3.5, migration 9)
+
+**Where files live:** public bucket `salon-images`, path `<salon id>/<kind>/<image id>/<size>.<ext>` (kind = cover, logo, staff, services, gallery; size = `lg` or `sm`). The database stores only the `lg` path; `sm` sits in the same folder. Every upload uses a **new image id**, so a file is never overwritten.
+
+**Order when an owner adds or replaces a photo:**
+
+| #   | Step                                                                                               | If it fails…                                                                                                                                                                         |
+| --- | -------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 1   | Prepare in the browser: orient, crop, resize, compress (WebP, JPEG fallback). Nothing is sent yet. | Error message ("Bu rasmni ochib bo'lmadi…"). Nothing changed anywhere.                                                                                                               |
+| 2   | **Upload** the new `lg` + `sm` files to a new folder.                                              | Old photo stays. Error message. A file that did arrive (e.g. `lg` ok, `sm` failed) is deleted right away; if that delete also fails, it becomes an **orphan** (see below).           |
+| 3   | **Save the new path in the database** (update the column / insert the gallery row).                | Old photo stays (the database still points to it). The just-uploaded files are deleted right away (best effort; else orphans). E.g. `GALLERY_FULL` → "12 ta rasmdan ko'p bo'lmaydi". |
+| 4   | **Delete the old files** (`lg` + `sm` of the previous photo).                                      | The owner already sees the new photo — success is shown. The old files stay as **orphans**.                                                                                          |
+
+**Removing a photo** (incl. the "Rasmni olib tashlash" option when deactivating a barber): 1) set the column to empty / delete the gallery row, 2) delete the files; if 2 fails → orphans.
+
+**Why this order:** the database **never points to a file that doesn't exist** (no broken image on the booking page). The worst case is a leftover file nobody links to: it costs a little storage and is not listed anywhere (only someone who already had its exact link could open it).
+
+**Clean-up of orphans:**
+
+- `public.list_orphan_salon_images(older_than default 1 day)` lists files that no row points to. The 1-day grace period protects uploads that are still in progress. It is callable **only with the server secret key** (not by owners, staff or visitors).
+- Supabase blocks deleting files with SQL, so deletion goes through the **Storage API**: script `npm run storage:orphans` (built in M3.5 step 2c) shows the list (dry run) and deletes with `--delete`, using `SUPABASE_SECRET_KEY` from `.env.local` (never a `VITE_` variable).
+- **Later (M7/M9):** run it automatically once a week (scheduled Edge Function).
+- When a salon or a gallery row is deleted by the database (`on delete cascade`), its files also become orphans and are cleaned up the same way.
+
 ### Working agreements
 
 - One migration per logical change; never edit a migration that's already applied to prod — add a new one.
