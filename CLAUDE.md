@@ -19,7 +19,9 @@ then `git log --oneline -20` and `supabase/migrations/`.
 5. **After every deploy run `npm run check:live`** and report the result.
 6. **Commit and push the branch after every meaningful step**, so nothing is lost if a
    session ends unexpectedly. Work-in-progress commits are fine (`wip:` prefix).
-7. Settings changes never modify bookings automatically. Warn the owner with the number
+7. **Run every SQL snippet or command yourself, exactly as written, before putting it in a
+   checklist or instructions** for the user.
+8. Settings changes never modify bookings automatically. Warn the owner with the number
    of affected future bookings instead (ARCHITECTURE.md, "never change bookings
    automatically").
 
@@ -50,14 +52,11 @@ itself twice. Run it from `C:\Users\user\Documents\Navbatly` (uppercase `C:`) in
 _Last updated: 2026-11-13_
 
 - ✅ **Done and approved:** M0, M1 (migrations 1–6, pgTAP suite), design mockups
-  (`design/01–03`), M2 (login, roles, shell), M3 **3a** (migration 7 + Xizmatlar).
-- 🔄 **In progress: M3 3b** on branch `m3b-staff`: migration 8
-  (`replace_working_hours` + `count_bookings_outside_new_hours`, tests in
-  `supabase/tests/04_working_hours_test.sql`) is **applied** to dev. The Ustalar /
-  Ish vaqti / Dam olish UI is committed as WIP and pushed; waiting for the user's manual
-  checklist and approval.
-- ⏭ **Next:** 3c (Sozlamalar), then **M3.5** visual upgrade (mockups first: image-rich
-  booking page + `design/04-landing.html`; then Supabase Storage uploads), then **M4**
+  (`design/01–03`), M2 (login, roles, shell), M3 **3a** (migration 7 + Xizmatlar),
+  M3 **3b** (migration 8 + Ustalar, Ish vaqti, Dam olish; manual checklist passed,
+  merged to `main` and deployed 2026-11-13).
+- 🔄 **In progress: M3 3c** (Sozlamalar): plan posted, waiting for the user's OK.
+- ⏭ **Next:** **M3.5** visual upgrade (mockups first: image-rich booking page + `design/04-landing.html`; then Supabase Storage uploads), then **M4**
   (public booking).
 - 📌 **Pending before M5:** make the seed's demo bookings relative to "today"
   (re-runnable `npm run db:seed`).
