@@ -11,6 +11,11 @@ export type DbErrorKey =
   | 'db.notFound'
   | 'db.network'
   | 'db.unknown'
+  | `rpc.${RpcCode}`
+
+/** Business-error codes raised by our database functions (message = code, errcode P0001). */
+const RPC_CODES = ['NOT_ALLOWED', 'INVALID_HOURS', 'HOURS_OVERLAP'] as const
+type RpcCode = (typeof RPC_CODES)[number]
 
 const BY_CODE: Record<string, DbErrorKey> = {
   '23514': 'db.invalidValue', // check_violation (e.g. price < 0, name too short)
@@ -25,6 +30,9 @@ const BY_CODE: Record<string, DbErrorKey> = {
 export function dbErrorKey(error: unknown): DbErrorKey {
   if (!error || typeof error !== 'object') return 'db.unknown'
   const e = error as { code?: unknown; message?: unknown }
+  if (e.code === 'P0001' && RPC_CODES.includes(e.message as RpcCode)) {
+    return `rpc.${e.message as RpcCode}`
+  }
   if (typeof e.code === 'string' && e.code in BY_CODE) return BY_CODE[e.code]
   if (
     error instanceof TypeError ||

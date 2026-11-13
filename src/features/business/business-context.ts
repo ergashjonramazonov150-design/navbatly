@@ -15,6 +15,8 @@ export type BusinessContextValue =
       businessId: string
       businessName: string
       businessSlug: string
+      /** IANA timezone of the salon, e.g. 'Asia/Tashkent' — all times are shown in it */
+      timezone: string
       /** the bookable staff profile linked to this login (null for an owner who doesn't cut hair) */
       staffId: string | null
       staffName: string | null
@@ -25,7 +27,7 @@ export const BusinessContext = createContext<BusinessContextValue | null>(null)
 /** What we load from the database for the logged-in user (all rows already limited by RLS). */
 export type BusinessRows = {
   membership: { role: MemberRole; business_id: string; staff_id: string | null } | null
-  business: { id: string; name: string; slug: string; is_active: boolean } | null
+  business: { id: string; name: string; slug: string; is_active: boolean; timezone: string } | null
   staff: { id: string; full_name: string; is_active: boolean } | null
 }
 
@@ -51,6 +53,7 @@ export function resolveBusinessState(
     businessId: business.id,
     businessName: business.name,
     businessSlug: business.slug,
+    timezone: business.timezone,
     staffId: staff?.id ?? null,
     staffName: staff?.full_name ?? null,
   }

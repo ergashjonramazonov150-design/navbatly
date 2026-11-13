@@ -77,6 +77,7 @@ function renderPage() {
           businessId: 'biz-1',
           businessName: 'Demo',
           businessSlug: 'demo',
+          timezone: 'Asia/Tashkent',
           staffId: null,
           staffName: null,
         }}

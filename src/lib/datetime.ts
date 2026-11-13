@@ -46,3 +46,50 @@ export function formatTime(date: DateInput, timeZone = DEFAULT_TIMEZONE): string
 export function toDateKey(date: DateInput, timeZone = DEFAULT_TIMEZONE): string {
   return formatInBusinessTz(date, 'yyyy-MM-dd', { timeZone })
 }
+
+/** Today's date key in the salon's timezone (not the browser's). */
+export function todayKey(timeZone = DEFAULT_TIMEZONE): string {
+  return toDateKey(Date.now(), timeZone)
+}
+
+/** ISO weekday (1 = Monday … 7 = Sunday) of a moment, in the salon's timezone. */
+export function isoWeekday(date: DateInput, timeZone = DEFAULT_TIMEZONE): number {
+  return Number(formatInBusinessTz(date, 'i', { timeZone }))
+}
+
+/** "2026-11-17" + n days → date key (pure calendar arithmetic, no timezone involved). */
+export function addDaysToKey(key: string, days: number): string {
+  const [y, m, d] = key.split('-').map(Number)
+  const t = new Date(Date.UTC(y, m - 1, d + days))
+  return t.toISOString().slice(0, 10)
+}
+
+/**
+ * Start of a LOCAL calendar day as an exact UTC moment (ISO string).
+ * "2026-11-17" in Tashkent (UTC+5) → "2026-11-16T19:00:00.000Z".
+ */
+export function localDayStartUtc(key: string, timeZone = DEFAULT_TIMEZONE): string {
+  const [y, m, d] = key.split('-').map(Number)
+  return new Date(new TZDate(y, m - 1, d, 0, 0, 0, timeZone).getTime()).toISOString()
+}
+
+const MONTHS_UZ = [
+  'yanvar',
+  'fevral',
+  'mart',
+  'aprel',
+  'may',
+  'iyun',
+  'iyul',
+  'avgust',
+  'sentabr',
+  'oktabr',
+  'noyabr',
+  'dekabr',
+]
+
+/** "2026-11-17" → "17-noyabr" (Uzbek date style). */
+export function formatDayMonthUz(key: string): string {
+  const [, m, d] = key.split('-').map(Number)
+  return `${d}-${MONTHS_UZ[m - 1]}`
+}

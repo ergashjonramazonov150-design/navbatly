@@ -13,6 +13,13 @@ describe('dbErrorKey', () => {
     expect(dbErrorKey({ code, message: 'raw sql text' })).toBe(key)
   })
 
+  it("our database functions' business codes (P0001) map to rpc.*", () => {
+    expect(dbErrorKey({ code: 'P0001', message: 'HOURS_OVERLAP' })).toBe('rpc.HOURS_OVERLAP')
+    expect(dbErrorKey({ code: 'P0001', message: 'INVALID_HOURS' })).toBe('rpc.INVALID_HOURS')
+    expect(dbErrorKey({ code: 'P0001', message: 'NOT_ALLOWED' })).toBe('rpc.NOT_ALLOWED')
+    expect(dbErrorKey({ code: 'P0001', message: 'SOMETHING_ELSE' })).toBe('db.unknown')
+  })
+
   it('network failures', () => {
     expect(dbErrorKey(new TypeError('Failed to fetch'))).toBe('db.network')
     expect(dbErrorKey({ message: 'TypeError: NetworkError when attempting to fetch' })).toBe(

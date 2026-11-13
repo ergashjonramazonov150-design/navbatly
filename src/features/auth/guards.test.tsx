@@ -26,6 +26,7 @@ const ready = (role: 'owner' | 'staff'): BusinessContextValue => ({
   businessId: 'biz-1',
   businessName: 'Navbatly Demo Barbershop',
   businessSlug: 'demo',
+  timezone: 'Asia/Tashkent',
   staffId: role === 'staff' ? 'staff-1' : null,
   staffName: role === 'staff' ? 'Jasur' : null,
 })

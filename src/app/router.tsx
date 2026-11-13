@@ -18,6 +18,7 @@ import { LoginPage } from '@/pages/admin/LoginPage'
 import { ResetPasswordPage } from '@/pages/admin/ResetPasswordPage'
 import { ServicesPage } from '@/pages/admin/ServicesPage'
 import { SettingsPage } from '@/pages/admin/SettingsPage'
+import { StaffDetailPage } from '@/pages/admin/StaffDetailPage'
 import { StaffPage } from '@/pages/admin/StaffPage'
 import { LandingPage } from '@/pages/public/LandingPage'
 import { NotFoundPage } from '@/pages/public/NotFoundPage'
@@ -58,6 +59,7 @@ export const buildAdminRoutes = (gate: ReactNode = <BusinessGate />): RouteObjec
                 children: [
                   { path: 'services', element: <ServicesPage /> },
                   { path: 'staff', element: <StaffPage /> },
+                  { path: 'staff/:staffId', element: <StaffDetailPage /> },
                   { path: 'settings', element: <SettingsPage /> },
                 ],
               },
