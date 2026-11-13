@@ -58,12 +58,14 @@ _Last updated: 2026-11-13_
   migration, DB test 05); all merged to `main` and deployed 2026-11-13.
 - 🔄 **In progress: M3.5** visual upgrade. Step 1 mockups (`design/02` v3, `design/04`)
   approved and merged to `main`. Step 2 plan approved (public bucket, owner crops barber
-  photos AND cover, gallery in upload order, `react-easy-crop@6.2.4`). **2a:** migration 9
-  `20261113121720_salon_images.sql` + test 06 written on branch `m35-storage`, dry run
-  191/191 — **NOT applied; waiting for the user's OK to apply.**
-- ⏭ **Next:** 2b admin photo-screen mockup (include the note "Ustaning roziligi bilan
-  yuklang" + easy "remove photo", also when deactivating a barber) → 2c build (incl.
-  `npm run storage:orphans`, real-iPhone HEIC test), then **M4** (public booking).
+  photos AND cover, gallery in upload order, `react-easy-crop@6.2.4`). **2a done:**
+  migration 9 (`20261113121720_salon_images.sql`) **applied to dev** 2026-11-13, tests
+  193/193, race ok, advisors unchanged, types regenerated (branch `m35-storage`).
+  **2b:** `design/05-admin-photos.html` posted — **waiting for the user's approval** (6
+  TAKLIF items in its side panel).
+- ⏭ **Next:** 2c build after 2b approval (incl. `npm run storage:orphans` reading
+  `SUPABASE_SECRET_KEY` — never `VITE_` — from `.env.local`; real-iPhone HEIC test), then
+  **M4** (public booking).
 - ℹ️ The Vercel MCP connection needs team access re-authorized before it can read deploys.
   Until then, confirm a deploy by finding new UI text in the live `assets/start-*.js`
   file, then run `npm run check:live`.
