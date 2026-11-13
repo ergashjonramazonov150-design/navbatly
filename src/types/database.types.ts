@@ -507,6 +507,10 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      count_bookings_outside_new_hours: {
+        Args: { p_staff_id: string; p_week: Json }
+        Returns: number
+      }
       create_booking: {
         Args: {
           p_business_id: string
@@ -528,6 +532,25 @@ export type Database = {
           p_staff_id: string
         }
         Returns: string[]
+      }
+      replace_working_hours: {
+        Args: { p_staff_id: string; p_week: Json }
+        Returns: {
+          business_id: string
+          created_at: string
+          end_time: string
+          id: string
+          staff_id: string
+          start_time: string
+          updated_at: string
+          weekday: number
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "working_hours"
+          isOneToOne: false
+          isSetofReturn: true
+        }
       }
       set_appointment_status: {
         Args: {
