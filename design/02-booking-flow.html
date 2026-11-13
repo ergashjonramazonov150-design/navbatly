@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <title>Navbatly — bron qilish oqimi (maket)</title>
+    <title>Navbatly — bron qilish oqimi (maket v3, rasmlar bilan)</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -91,6 +91,7 @@
       /* phone frame (desktop) */
       .phone {
         width: 100%;
+        min-width: 0; /* wide content (e.g. the «Ishlarimiz» strip) scrolls instead of stretching the page */
         max-width: 400px;
         margin: 0 auto;
         border-radius: 44px;
@@ -1075,6 +1076,214 @@
         color: var(--muted);
         margin-top: 8px;
       }
+
+      /* ============================ M3.5 — images ============================ */
+      /* Image boxes show a warm placeholder colour while the photo loads */
+      .img-box {
+        background: var(--chip-bg);
+        overflow: hidden;
+      }
+      .img-box img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      /* Step 1: salon cover photo; folds away when the service list is scrolled */
+      .cover {
+        position: relative;
+        margin: -14px -16px 0;
+        height: 132px;
+        transition: height 0.25s ease;
+      }
+      .cover::after {
+        /* soft fade into the page colour so the logo + name sit on a calm background */
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, rgba(31, 27, 22, 0) 45%, rgba(31, 27, 22, 0.35) 100%);
+      }
+      /* only the LOGO overlaps the photo; the name + address stay on the calm page colour */
+      .app-head.has-cover .biz {
+        margin-top: 10px;
+        position: relative;
+        z-index: 1;
+        align-items: flex-start;
+      }
+      .app-head.has-cover .biz-logo {
+        width: 60px;
+        height: 60px;
+        border-radius: 18px;
+        margin-top: -38px;
+        box-shadow: 0 0 0 3px var(--bg);
+        transition: margin-top 0.25s ease;
+      }
+      .app-head.collapsed .cover {
+        height: 0;
+      }
+      .app-head.collapsed .biz-logo {
+        margin-top: 0;
+      }
+      .app-head.compact .cover {
+        display: none;
+      }
+      .app-head.compact .biz {
+        margin-top: 0;
+        align-items: center;
+      }
+      .app-head.compact .biz-logo {
+        width: 36px;
+        height: 36px;
+        border-radius: 11px;
+        margin-top: 0;
+        box-shadow: none;
+      }
+      .biz-logo.img-box {
+        background: var(--ink);
+        padding: 0;
+      }
+
+      /* Service photo (optional — cards without a photo stay as before) */
+      .thumb {
+        width: 52px;
+        height: 52px;
+        border-radius: 12px;
+        flex: none;
+        margin-right: -2px;
+      }
+      .card[aria-pressed='true'] .thumb {
+        box-shadow: 0 0 0 2px var(--accent);
+      }
+
+      /* Barber photo in the round avatar */
+      .avatar.img-box img {
+        object-position: center 22%;
+      }
+      .card[aria-pressed='true'] .avatar.img-box {
+        background: var(--chip-bg);
+        box-shadow: 0 0 0 3px var(--accent);
+      }
+
+      /* «Ishlarimiz» — horizontal strip of work photos under the services */
+      .works {
+        margin-top: 22px;
+      }
+      .works-head {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        margin-bottom: 10px;
+      }
+      .works-head h2 {
+        margin: 0;
+        font: 600 19px/1.2 var(--font-display);
+      }
+      .works-head span {
+        font-size: 12.5px;
+        color: var(--muted);
+        font-weight: 600;
+      }
+      .works-strip {
+        display: grid;
+        grid-auto-flow: column;
+        grid-auto-columns: 112px;
+        gap: 8px;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        scroll-padding: 0 16px;
+        margin: 0 -16px;
+        padding: 0 16px 6px;
+        scrollbar-width: none;
+      }
+      .works-strip::-webkit-scrollbar {
+        display: none;
+      }
+      .work {
+        width: 112px;
+        height: 112px;
+        border-radius: 14px;
+        border: 0;
+        padding: 0;
+        cursor: zoom-in;
+        scroll-snap-align: start;
+      }
+
+      /* Full-screen photo viewer (inside the phone). Phone Back closes it. */
+      .lightbox {
+        position: absolute;
+        inset: 0;
+        z-index: 30;
+        background: #14110e;
+        display: none;
+        flex-direction: column;
+        color: #fff;
+      }
+      .lightbox.open {
+        display: flex;
+      }
+      .lb-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 12px 0 18px;
+        font-weight: 600;
+        font-size: 14px;
+      }
+      .lb-btn {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        border: 0;
+        background: rgba(255, 255, 255, 0.12);
+        color: #fff;
+        display: grid;
+        place-items: center;
+        cursor: pointer;
+      }
+      .lb-btn:disabled {
+        opacity: 0.3;
+        cursor: default;
+      }
+      .lb-stage {
+        flex: 1;
+        min-height: 0;
+        display: grid;
+        place-items: center;
+        padding: 12px;
+      }
+      .lb-stage img {
+        max-width: 100%;
+        max-height: 100%;
+        border-radius: 12px;
+        object-fit: contain;
+      }
+      .lb-bottom {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 0 16px calc(18px + env(safe-area-inset-bottom));
+      }
+      .lb-bottom p {
+        flex: 1;
+        margin: 0;
+        text-align: center;
+        font-size: 14px;
+        color: #e9e1d7;
+      }
+
+      /* Review panel: tiny proposal tag */
+      .tag {
+        display: inline-block;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        padding: 2px 7px;
+        border-radius: 999px;
+        background: var(--accent-soft);
+        color: var(--accent);
+        vertical-align: 1px;
+      }
     </style>
   </head>
   <body>
@@ -1087,8 +1296,10 @@
           </div>
 
           <header class="app-head" id="appHead">
+            <!-- cover + logo are filled by render() (or hidden when the salon has no photos) -->
+            <div class="cover img-box" id="cover"></div>
             <div class="biz">
-              <div class="biz-logo" aria-hidden="true">N</div>
+              <div class="biz-logo" id="bizLogo" aria-hidden="true">N</div>
               <div class="biz-text">
                 <div class="biz-name">Navbatly Demo Barbershop</div>
                 <div class="biz-addr">Toshkent sh., Namuna ko'chasi, 1-uy</div>
@@ -1171,6 +1382,26 @@
               </div>
             </div>
           </div>
+
+          <!-- «Ishlarimiz» full-screen viewer -->
+          <div
+            class="lightbox"
+            id="lightbox"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Ishlarimiz — rasmni ko'rish"
+          >
+            <div class="lb-top">
+              <span id="lbCount"></span>
+              <button class="lb-btn" id="lbClose" type="button" aria-label="Yopish">✕</button>
+            </div>
+            <div class="lb-stage"><img id="lbImg" alt="" /></div>
+            <div class="lb-bottom">
+              <button class="lb-btn" id="lbPrev" type="button" aria-label="Oldingi rasm">‹</button>
+              <p id="lbCaption"></p>
+              <button class="lb-btn" id="lbNext" type="button" aria-label="Keyingi rasm">›</button>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -1180,6 +1411,7 @@
         <p>
           Bu jonli maket: telefondagi hamma narsa bosiladi. Mijoz Instagram yoki Telegram'dagi
           havoladan kiradi va 4 qadamda yoziladi. Ma'lumotlar — demo salondan.
+          <b>v3:</b> salon muqovasi, logo, usta va xizmat rasmlari, «Ishlarimiz» galereyasi.
         </p>
 
         <div class="box">
@@ -1196,6 +1428,48 @@
             <input type="checkbox" id="simTaken" />
             Keyingi «Band qilish» bosilganda: <b>vaqt band bo'lib qolgan</b> holatini ko'rsatish
           </label>
+        </div>
+
+        <div class="box">
+          <h2>Rasmlar (M3.5) — yangi</h2>
+          <label class="toggle" style="margin-top: 0">
+            <input type="checkbox" id="noImages" />
+            Salon <b>hali rasm yuklamagan</b> holatini ko'rsatish
+          </label>
+          <ul class="notes" style="margin-top: 12px">
+            <li>
+              <b>Muqova</b> — 1-qadamda tepada. Xizmatlar ro'yxati aylantirilganda yig'iladi, bron
+              uchun joy qoladi. Keyingi qadamlarda yo'q.
+            </li>
+            <li>
+              <b>Logo</b> muqovaga chiqib turadi. Logo yo'q bo'lsa — salon nomining birinchi harfi
+              (hozirgidek).
+            </li>
+            <li>
+              <b>Usta rasmi</b> — doira. Rasmi yo'q usta — ism harfi bilan (<b>Akmal</b> misolida).
+            </li>
+            <li>
+              <b>Xizmat rasmi — ixtiyoriy.</b> Rasmsiz xizmat oddiy karta bo'lib qoladi («Soch +
+              soqol», «Ukladka»).
+            </li>
+            <li>
+              <b>«Ishlarimiz»</b> — xizmatlar ostida gorizontal lenta. Bosilsa, katta ko'rinish;
+              telefonning <b>«Orqaga»</b> tugmasi yopadi (bron qadamini emas).
+            </li>
+            <li>
+              <b>Tezlik:</b> rasmlar WebP, ekranga mos o'lchamda (muqova ≈ 60–115 KB, usta rasmi ≈ 7
+              KB). «Ishlarimiz» faqat ko'ringanda yuklanadi. Yuklanguncha — iliq rangli joy.
+            </li>
+            <li>
+              <span class="tag">TAKLIF</span> «Ishlarimiz» — 12 tagacha rasm; yuklash: JPEG, PNG
+              yoki WebP, 5 MB gacha.
+            </li>
+            <li>
+              Rasmlar: <b>Pexels</b> (bepul litsenziya), manbalar —
+              <code>docs/IMAGE_CREDITS.md</code>. Logo — soxta namuna. Odamlar faqat demo salon
+              ichida.
+            </li>
+          </ul>
         </div>
 
         <div class="box">
@@ -1260,17 +1534,33 @@
 
     <script>
       /* =========================== Demo data (from the seed) =========================== */
+      // photo = Pexels photo id (free licence; sources in docs/IMAGE_CREDITS.md). No photo = optional.
       const SERVICES = [
-        { id: 'b1', name: 'Soch olish', desc: 'Yuvish va ukladka bilan', dur: 30, price: 80000 },
+        {
+          id: 'b1',
+          name: 'Soch olish',
+          desc: 'Yuvish va ukladka bilan',
+          dur: 30,
+          price: 80000,
+          photo: 7447133,
+        },
         {
           id: 'b2',
           name: 'Soqol olish',
           desc: 'Shakl berish va issiq sochiq',
           dur: 20,
           price: 50000,
+          photo: 3998427,
         },
         { id: 'b3', name: 'Soch + soqol', desc: 'Kompleks xizmat', dur: 50, price: 120000 },
-        { id: 'b4', name: 'Bolalar soch turmagi', desc: '12 yoshgacha', dur: 30, price: 60000 },
+        {
+          id: 'b4',
+          name: 'Bolalar soch turmagi',
+          desc: '12 yoshgacha',
+          dur: 30,
+          price: 60000,
+          photo: 19664861,
+        },
         { id: 'b5', name: 'Ukladka', desc: 'Bayram yoki tadbir uchun', dur: 20, price: 40000 },
       ]
       const STAFF = [
@@ -1279,20 +1569,48 @@
           name: 'Jasur',
           bio: 'Klassik va zamonaviy soch turmaklari. 8 yillik tajriba.',
           services: ['b1', 'b2', 'b3', 'b4', 'b5'],
+          photo: 8867537,
         },
         {
           id: 'a2',
           name: 'Bobur',
           bio: "Soqol va fade bo'yicha mutaxassis.",
           services: ['b1', 'b2', 'b3'],
+          photo: 20302331,
         },
         {
+          // no photo on purpose: shows the initials fallback
           id: 'a3',
           name: 'Akmal',
           bio: 'Bolalar soch turmaklari va ukladka.',
           services: ['b1', 'b4', 'b5'],
         },
       ]
+      const COVER = 13138476
+      const GALLERY = [
+        { photo: 12464841, caption: 'Ustara bilan fade' },
+        { photo: 9992817, caption: 'Soch va soqol' },
+        { photo: 3998431, caption: 'Soqolga shakl berish' },
+        { photo: 1453005, caption: 'Chiziq va taroq' },
+        { photo: 7447120, caption: 'Tayyor natija' },
+        { photo: 19664876, caption: 'Salonimiz' },
+      ]
+      // Fake demo logo (owner uploads a real one in Sozlamalar)
+      const LOGO =
+        'data:image/svg+xml,' +
+        encodeURIComponent(
+          `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120"><rect width="120" height="120" fill="#1f1b16"/><circle cx="60" cy="60" r="44" fill="none" stroke="#b4532a" stroke-width="4"/><text x="60" y="76" text-anchor="middle" font-family="Georgia,serif" font-size="46" font-weight="700" fill="#f6f1ea">N</text><path d="M38 92h44" stroke="#b4532a" stroke-width="4" stroke-linecap="round"/></svg>`,
+        )
+
+      // Pexels CDN: resized + WebP. In the real app: our own Storage files in the same sizes.
+      const px = (id, w, h, crop) =>
+        `https://images.pexels.com/photos/${id}/pexels-photo-${id}.jpeg?auto=compress&cs=tinysrgb&fm=webp&w=${w}` +
+        (h ? `&h=${h}&fit=crop` : '') +
+        (crop ? `&crop=${crop}` : '')
+      // square image, sharp on 2x phone screens
+      // (crop 'top' keeps faces in portraits; the real upload screen lets the owner choose the crop)
+      const sq = (id, size, alt = '', lazy = false, crop) =>
+        `<img src="${px(id, size, size, crop)}" srcset="${px(id, size, size, crop)} 1x, ${px(id, size * 2, size * 2, crop)} 2x" width="${size}" height="${size}" alt="${alt}" decoding="async"${lazy ? ' loading="lazy"' : ''} />`
       const WEEKDAY_SHORT = ['Ya', 'Du', 'Se', 'Ch', 'Pa', 'Ju', 'Sh']
       const WEEKDAY_LONG = [
         'yakshanba',
@@ -1416,6 +1734,8 @@
         consent: false,
         submitting: false,
         touched: false,
+        noImages: false, // review switch: salon hasn't uploaded any photos yet
+        lightbox: null, // index of the open «Ishlarimiz» photo
       }
       const service = () => SERVICES.find((s) => s.id === state.service)
       const staff = () => STAFF.find((s) => s.id === state.staff)
@@ -1469,6 +1789,8 @@
         })
       }
       window.addEventListener('popstate', (e) => {
+        // Back while a photo is open → only close the photo (stay on the same step)
+        if (state.lightbox !== null) return closeLightbox()
         closeTaken() // Back while the SLOT_TAKEN sheet is open → close it (lands on step 3)
         if (state.step === 5) {
           // After booking, Back must not reopen the submitted form: start a new booking.
@@ -1483,9 +1805,22 @@
         render()
       })
 
+      function renderHeaderImages() {
+        const withImages = !state.noImages
+        $('appHead').classList.toggle('has-cover', withImages)
+        $('cover').hidden = !withImages
+        $('cover').innerHTML = withImages
+          ? `<img src="${px(COVER, 800)}" srcset="${px(COVER, 600)} 600w, ${px(COVER, 900)} 900w, ${px(COVER, 1200)} 1200w"
+              sizes="(max-width: 520px) 100vw, 376px" alt="" fetchpriority="high" />`
+          : ''
+        $('bizLogo').classList.toggle('img-box', withImages)
+        $('bizLogo').innerHTML = withImages ? `<img src="${LOGO}" alt="" />` : 'N'
+      }
+
       function render() {
         const s = state.step
         $('appHead').classList.toggle('compact', s !== 1)
+        $('appHead').classList.remove('collapsed')
         $('bizHours').innerHTML = hoursHtml()
         $('stepHead').hidden = s === 5
         $('back').hidden = s === 1 || s === 5
@@ -1545,12 +1880,25 @@
         `<div class="list" role="list">${SERVICES.map(
           (s) => `
         <button class="card" type="button" data-pick="service" data-id="${s.id}" aria-pressed="${state.service === s.id}">
+          ${s.photo && !state.noImages ? `<span class="thumb img-box">${sq(s.photo, 52)}</span>` : ''}
           <span class="grow"><span class="title">${s.name}</span><span class="sub">${s.desc}</span>
             <span class="meta"><span class="pill">${s.dur} daq</span></span></span>
           <span class="price">${money(s.price)}</span>
           <span class="check" aria-hidden="true"></span>
         </button>`,
-        ).join('')}</div>`
+        ).join('')}</div>${viewWorks()}`
+
+      // «Ishlarimiz» — only when the salon has uploaded work photos
+      const viewWorks = () =>
+        state.noImages || !GALLERY.length
+          ? ''
+          : `<section class="works" aria-labelledby="worksTitle">
+          <div class="works-head"><h2 id="worksTitle">Ishlarimiz</h2><span>${GALLERY.length} ta rasm</span></div>
+          <div class="works-strip">${GALLERY.map(
+            (g, i) =>
+              `<button class="work img-box" type="button" data-work="${i}" aria-label="${g.caption} — kattalashtirish">${sq(g.photo, 112, '', true)}</button>`,
+          ).join('')}</div>
+        </section>`
 
       const viewStaff = () => {
         const list = STAFF.filter((st) => st.services.includes(state.service))
@@ -1565,7 +1913,11 @@
           .map((st) => {
             const nf = nextFree(st.id, state.service)
             return `<button class="card" type="button" data-pick="staff" data-id="${st.id}" aria-pressed="${state.staff === st.id}">
-            <span class="avatar" aria-hidden="true">${st.name[0]}</span>
+            ${
+              st.photo && !state.noImages
+                ? `<span class="avatar img-box" aria-hidden="true">${sq(st.photo, 54, '', false, 'top')}</span>`
+                : `<span class="avatar" aria-hidden="true">${st.name[0]}</span>`
+            }
             <span class="grow"><span class="title">${st.name}</span><span class="sub">${st.bio}</span>
               <span class="meta">${nf ? `<span class="pill free">Eng yaqin: ${nf}</span>` : '<span class="pill">Bo\'sh vaqt yo\'q</span>'}</span></span>
             <span class="check" aria-hidden="true"></span>
@@ -1793,6 +2145,8 @@
           if (dates) dates.scrollLeft = keepDates
           return
         }
+        const work = e.target.closest('[data-work]')
+        if (work) return openLightbox(+work.dataset.work)
         const goto = e.target.closest('[data-goto]')
         if (goto) return go(+goto.dataset.goto)
         if (e.target.closest('[data-restart]')) {
@@ -1817,7 +2171,58 @@
         if (e.target === $('overlay') || e.target.closest('#otherTime')) history.back()
       })
       document.addEventListener('keydown', (e) => {
+        if (state.lightbox !== null) {
+          if (e.key === 'Escape') history.back()
+          if (e.key === 'ArrowLeft') showPhoto(state.lightbox - 1)
+          if (e.key === 'ArrowRight') showPhoto(state.lightbox + 1)
+          return
+        }
         if (e.key === 'Escape' && $('overlay').classList.contains('open')) history.back()
+      })
+
+      /* ---------- «Ishlarimiz» viewer: a history entry, so the phone's Back closes it ---------- */
+      function showPhoto(i) {
+        if (i < 0 || i >= GALLERY.length) return
+        state.lightbox = i
+        const g = GALLERY[i]
+        $('lbImg').src = px(g.photo, 1000)
+        $('lbImg').alt = g.caption
+        $('lbCaption').textContent = g.caption
+        $('lbCount').textContent = `${i + 1} / ${GALLERY.length}`
+        $('lbPrev').disabled = i === 0
+        $('lbNext').disabled = i === GALLERY.length - 1
+      }
+      function openLightbox(i) {
+        history.pushState({ step: state.step, photo: true }, '')
+        showPhoto(i)
+        $('lightbox').classList.add('open')
+        $('lbClose').focus()
+      }
+      function closeLightbox() {
+        const i = state.lightbox
+        state.lightbox = null
+        $('lightbox').classList.remove('open')
+        document.querySelector(`[data-work="${i}"]`)?.focus()
+      }
+      $('lbClose').addEventListener('click', () => history.back())
+      $('lbPrev').addEventListener('click', () => showPhoto(state.lightbox - 1))
+      $('lbNext').addEventListener('click', () => showPhoto(state.lightbox + 1))
+
+      /* ---------- Cover folds away while the step-1 list is scrolled ---------- */
+      $('body').addEventListener('scroll', () => {
+        if (state.step !== 1 || state.noImages) return
+        const top = $('body').scrollTop
+        const head = $('appHead')
+        // hysteresis: collapse after 40px, expand only back at the very top (no flicker)
+        if (top > 40) head.classList.add('collapsed')
+        else if (top === 0) head.classList.remove('collapsed')
+      })
+
+      /* ---------- Review switch: salon without photos ---------- */
+      $('noImages').addEventListener('change', (e) => {
+        state.noImages = e.target.checked
+        renderHeaderImages()
+        render()
       })
 
       // Review panel: jump straight to any screen with sensible demo choices
@@ -1872,6 +2277,7 @@
       })
 
       history.replaceState({ step: 1 }, '')
+      renderHeaderImages()
       render()
     </script>
   </body>
