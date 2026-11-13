@@ -10,7 +10,11 @@
     "descriptionMax": "Tavsif 300 belgidan oshmasin.",
     "durationInvalid": "Davomiylikni tanlang.",
     "priceRequired": "Narxni kiriting (faqat raqamlar).",
-    "priceMax": "Narx juda katta."
+    "priceMax": "Narx juda katta.",
+    "salonNameMin": "Salon nomini kiriting (kamida 2 harf).",
+    "salonNameMax": "Salon nomi 100 belgidan oshmasin.",
+    "phoneInvalid": "Telefon raqami to'liq bo'lsin: 9 ta raqam (masalan: 90 123 45 67).",
+    "addressMax": "Manzil 200 belgidan oshmasin."
   },
   "auth": {
     "invalidCredentials": "Email yoki parol noto'g'ri. Qayta urinib ko'ring.",

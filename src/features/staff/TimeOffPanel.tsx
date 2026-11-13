@@ -30,12 +30,15 @@ export function TimeOffPanel({
   timezone,
   title,
   hint,
+  reasonPlaceholder,
 }: {
   businessId: string
   staffId: string | null
   timezone: string
   title: string
   hint: string
+  /** example reason; defaults to "Masalan: ta'til" */
+  reasonPlaceholder?: string
 }) {
   const { t } = useTranslation(['admin', 'errors'])
   const list = useTimeOff(businessId, staffId)
@@ -186,7 +189,7 @@ export function TimeOffPanel({
             id={`to-reason-${staffId ?? 'salon'}`}
             maxLength={200}
             value={reason}
-            placeholder={t('timeOff.reasonPlaceholder')}
+            placeholder={reasonPlaceholder ?? t('timeOff.reasonPlaceholder')}
             onChange={(e) => setReason(e.target.value)}
           />
         </FormField>

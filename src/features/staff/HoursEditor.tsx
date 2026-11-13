@@ -1,21 +1,12 @@
 import { CopyIcon, Loader2Icon, PlusIcon, XIcon } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useBlocker } from 'react-router'
 import { toast } from 'sonner'
 
 import { ImpactConfirmDialog } from '@/components/common/ImpactConfirmDialog'
 import { LoadError } from '@/components/common/PageHeader'
+import { useUnsavedChangesGuard } from '@/components/common/useUnsavedChangesGuard'
 import { Button } from '@/components/ui/button'
-import {
-  Dialog,
-  DialogBody,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Switch } from '@/components/ui/switch'
 import { dbErrorKey } from '@/lib/dbErrors'
@@ -77,18 +68,7 @@ function HoursForm({
   const invalid = weekHasErrors(week)
 
   // Unsaved changes: block in-app navigation (incl. switching tabs) and page refresh/close
-  const blocker = useBlocker(
-    ({ currentLocation, nextLocation }) =>
-      dirty &&
-      (currentLocation.pathname !== nextLocation.pathname ||
-        currentLocation.search !== nextLocation.search),
-  )
-  useEffect(() => {
-    if (!dirty) return
-    const warn = (e: BeforeUnloadEvent) => e.preventDefault()
-    window.addEventListener('beforeunload', warn)
-    return () => window.removeEventListener('beforeunload', warn)
-  }, [dirty])
+  const leaveDialog = useUnsavedChangesGuard(dirty, t('hours.leaveText'))
 
   const setDay = (d: Weekday, intervals: Week[Weekday]) =>
     setWeek((w) => ({ ...w, [d]: intervals }))
@@ -275,26 +255,7 @@ function HoursForm({
         />
       )}
 
-      {blocker.state === 'blocked' && (
-        <Dialog open onOpenChange={(open) => !open && blocker.reset()}>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>{t('hours.leaveTitle')}</DialogTitle>
-            </DialogHeader>
-            <DialogBody>
-              <DialogDescription>{t('hours.leaveText')}</DialogDescription>
-            </DialogBody>
-            <DialogFooter>
-              <Button variant="outline" onClick={() => blocker.reset()}>
-                {t('hours.stay')}
-              </Button>
-              <Button variant="destructive" onClick={() => blocker.proceed()}>
-                {t('hours.leave')}
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-      )}
+      {leaveDialog}
     </section>
   )
 }
