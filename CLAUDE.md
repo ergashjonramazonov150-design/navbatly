@@ -54,7 +54,8 @@ _Last updated: 2026-11-13_
 - 🔄 **In progress: M3 3b** on branch `m3b-staff`: migration 8
   (`replace_working_hours` + `count_bookings_outside_new_hours`, tests in
   `supabase/tests/04_working_hours_test.sql`) is **applied** to dev. The Ustalar /
-  Ish vaqti / Dam olish UI is written but not committed or approved yet.
+  Ish vaqti / Dam olish UI is committed as WIP and pushed; waiting for the user's manual
+  checklist and approval.
 - ⏭ **Next:** 3c (Sozlamalar), then **M3.5** visual upgrade (mockups first: image-rich
   booking page + `design/04-landing.html`; then Supabase Storage uploads), then **M4**
   (public booking).
