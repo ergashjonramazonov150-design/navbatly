@@ -321,11 +321,28 @@
         gap: 14px;
         flex-wrap: wrap;
       }
+      /* logo: the WHOLE logo fits inside the square (contain) on a neutral background */
       .logo-box {
         width: 88px;
         height: 88px;
         border-radius: 22px;
         flex: none;
+        background: #fffdf9;
+        border: 1.5px solid var(--line);
+        padding: 8px;
+        display: grid;
+        place-items: center;
+      }
+      .logo-box img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+      }
+      .logo-box.sm {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        padding: 4px;
       }
       .letter-tile {
         width: 88px;
@@ -767,30 +784,21 @@
         </ul>
         <h2>Takliflar — tasdiqlang</h2>
         <ul>
+          <li>Rasmlar <b>darhol saqlanadi</b> — «O'zgarishlarni saqlash» kerak emas.</li>
           <li>
-            <span class="tag">TAKLIF</span> Rasmlar <b>darhol saqlanadi</b> (yopiq kunlar kabi) —
-            «O'zgarishlarni saqlash» kerak emas.
+            «Ishlarimiz»ga <b>bir nechta rasm birdan</b>; kesish yo'q (kichik rasm markazdan). 12 ga
+            sig'maganlari yuklanmaydi va aniq aytiladi:
+            <b>«5 ta qo'shildi, 3 tasi sig'madi (limit 12)»</b>.
+          </li>
+          <li>O'chirishdan oldin <b>so'raladi</b> — o'chgan rasm qaytmaydi.</li>
+          <li>Nofaol qilishda «Rasmini ham olib tashlash» <b>belgilanmagan</b> turadi.</li>
+          <li>
+            Eng kichik o'lcham: muqova eni <b>1200 px</b>, boshqalar <b>400 px</b>; asl fayl
+            <b>25 MB</b> gacha. Kichik rasmda — o'lchami bilan aniq xato.
           </li>
           <li>
-            <span class="tag">TAKLIF</span> «Ishlarimiz»ga <b>bir nechta rasmni birdan</b> tanlash
-            mumkin (bo'sh joy sonigacha). Kesish yo'q — kichik rasm markazdan olinadi, katta
-            ko'rinishda rasm to'liq.
-          </li>
-          <li>
-            <span class="tag">TAKLIF</span> O'chirishdan oldin <b>so'raladi</b> («Rasmni
-            o'chirasizmi?») — o'chgan rasm qaytmaydi.
-          </li>
-          <li>
-            <span class="tag">TAKLIF</span> Nofaol qilishda «Rasmini ham olib tashlash»
-            <b>belgilanmagan</b> holda turadi (usta qaytishi mumkin).
-          </li>
-          <li>
-            <span class="tag">TAKLIF</span> Eng kichik o'lcham: muqova kamida <b>1200 px</b> eni,
-            boshqalar <b>400 px</b>. Asl fayl <b>25 MB</b> gacha.
-          </li>
-          <li>
-            <span class="tag">TAKLIF</span> Logo ham kvadrat kesiladi; xizmat rasmi — kvadrat,
-            markazdan (kesish oynasiz).
+            <b>Logo kesilmaydi:</b> butun logo kvadrat ichiga sig'diriladi, oq-krem fonda (keng
+            yozuvli logolar uchun). <b>Xizmat rasmi</b> — kvadrat, markazdan.
           </li>
         </ul>
         <h2>Rasmlar</h2>
@@ -811,10 +819,16 @@
         encodeURIComponent(
           `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120"><rect width="120" height="120" fill="#1f1b16"/><circle cx="60" cy="60" r="44" fill="none" stroke="#b4532a" stroke-width="4"/><text x="60" y="76" text-anchor="middle" font-family="Georgia,serif" font-size="46" font-weight="700" fill="#f6f1ea">N</text><path d="M38 92h44" stroke="#b4532a" stroke-width="4" stroke-linecap="round"/></svg>`,
         )
+      // a WIDE text logo (fake), to show "contain": the whole logo fits, nothing is cut
+      const LOGO_WIDE =
+        'data:image/svg+xml,' +
+        encodeURIComponent(
+          `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 120"><rect width="360" height="120" rx="14" fill="#1f1b16"/><text x="180" y="62" text-anchor="middle" font-family="Georgia,serif" font-size="44" font-weight="700" fill="#f6f1ea" letter-spacing="2">NAVBATLY</text><text x="180" y="96" text-anchor="middle" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#b4532a" letter-spacing="7">DEMO BARBERSHOP</text></svg>`,
+        )
       const COVER = 13138476
       const JASUR = 8867537
       const BOBUR = 20302331
-      const SPARE = [3998427, 4625627, 7447133, 19664861, 6843637, 1895701] // "picked" in the demo
+      const SPARE = [3998427, 7447133, 19664861, 6843637, 1895701, 13138476] // "picked" in the demo
       const S = {
         screen: 'settings',
         width: 'desktop',
@@ -822,6 +836,8 @@
         logo: true,
         gallery: [12464841, 9992817, 3998431, 1453005, 7447120, 19664876, 37764947],
         uploading: null, // {i, stage:'prep'|'up', pct}
+        wideLogo: true, // review switch: wide text logo vs round monogram
+        batchNote: '', // "5 ta qo'shildi, 3 tasi sig'madi (limit 12)"
         jasurPhoto: true,
         confirmDel: null,
         crop: { kind: 'staff', scale: 1, x: 0, y: 0 },
@@ -884,23 +900,30 @@
               <div class="photo-block">
                 <b>Logo</b>
                 <div class="logo-row">
-                  ${S.logo ? `<div class="logo-box ph"><img src="${LOGO}" alt="Salon logosi" /></div>` : `<div class="letter-tile" aria-label="Logo yo'q — salon nomining birinchi harfi">N</div>`}
+                  ${
+                    S.logo
+                      ? `<div class="logo-box"><img src="${S.wideLogo ? LOGO_WIDE : LOGO}" alt="Salon logosi" /></div>
+                         <div class="logo-box sm" title="Bron sahifasidagi kichik ko'rinishi"><img src="${S.wideLogo ? LOGO_WIDE : LOGO}" alt="" /></div>`
+                      : `<div class="letter-tile" aria-label="Logo yo'q — salon nomining birinchi harfi">N</div>`
+                  }
                   <div class="actions">
-                    <button class="btn btn-secondary btn-sm" type="button" data-act="crop-logo">${S.logo ? 'Almashtirish' : 'Logo yuklash'}</button>
+                    <button class="btn btn-secondary btn-sm" type="button" data-act="pick-logo">${S.logo ? 'Almashtirish' : 'Logo yuklash'}</button>
                     ${S.logo ? `<button class="btn btn-ghost-danger btn-sm" type="button" data-act="rm-logo">Olib tashlash</button>` : ''}
                   </div>
                 </div>
-                <small style="color:var(--muted);font-size:12.5px">Logo bo'lmasa, salon nomining birinchi harfi ko'rinadi.</small>
+                <small style="color:var(--muted);font-size:12.5px">Logo kesilmaydi — butun logo kvadrat ichiga sig'diriladi. Logo bo'lmasa, salon nomining birinchi harfi ko'rinadi.
+                  <button type="button" data-act="toggle-logo" style="border:0;background:none;color:var(--accent);font-weight:600;cursor:pointer;padding:0 0 0 4px">(maket: ${S.wideLogo ? 'dumaloq logoni' : 'keng logoni'} ko'rsatish)</button></small>
               </div>
               <div class="photo-block">
                 <div class="gallery-head"><b>Ishlarimiz</b><span class="count ${full ? 'full' : ''}">${n} / 12</span></div>
                 <div class="gallery">${tiles}
                   <button class="g-add" type="button" data-act="add-gallery" ${full || S.uploading ? 'disabled' : ''}><b>+</b>${full ? "Joy yo'q" : "Rasm qo'shish"}</button>
                 </div>
+                ${S.batchNote ? `<div class="hint-box warn" role="status">${S.batchNote}</div>` : ''}
                 ${
                   full
                     ? `<div class="hint-box warn">12 ta rasm — yangi rasm qo'shish uchun avval bittasini o'chiring.</div>`
-                    : `<small style="color:var(--muted);font-size:12.5px">Bir nechta rasmni birdan tanlash mumkin. Eng yaxshi ishlaringizni qo'ying.</small>`
+                    : `<small style="color:var(--muted);font-size:12.5px">Bir nechta rasmni birdan tanlash mumkin. Eng yaxshi ishlaringizni qo'ying. <span style="color:var(--accent)">(maket: «Rasm qo'shish» 8 ta rasm tanlagandek ishlaydi)</span></small>`
                 }
               </div>
             </div>
@@ -915,21 +938,15 @@
         const s = narrow ? 220 : 240
         return { w: s, h: s, round: S.crop.kind === 'staff' }
       }
-      const cropSrc = () =>
-        S.crop.kind === 'cover' ? px(COVER, 1200) : S.crop.kind === 'logo' ? LOGO : px(JASUR, 800)
+      // only the cover and barber photos are cropped by the owner (the logo is never cropped)
+      const cropSrc = () => (S.crop.kind === 'cover' ? px(COVER, 1200) : px(JASUR, 800))
       const cropTitle = () =>
-        S.crop.kind === 'cover'
-          ? 'Muqovani joylashtiring'
-          : S.crop.kind === 'logo'
-            ? 'Logoni joylashtiring'
-            : 'Usta rasmini joylashtiring'
+        S.crop.kind === 'cover' ? 'Muqovani joylashtiring' : 'Usta rasmini joylashtiring'
 
       function viewCrop() {
         const d = cropDims()
         const pv =
-          S.crop.kind === 'cover'
-            ? { w: 150, h: 50, r: '8px' }
-            : { w: 54, h: 54, r: S.crop.kind === 'staff' ? '50%' : '14px' }
+          S.crop.kind === 'cover' ? { w: 150, h: 50, r: '8px' } : { w: 54, h: 54, r: '50%' }
         return `${screenBehindCrop()}
           <div class="overlay">
             <div class="modal" role="dialog" aria-modal="true" aria-labelledby="cropTitle">
@@ -937,10 +954,10 @@
                 <p>Rasmni barmoq yoki sichqoncha bilan suring. Kattalashtirish — pastdagi chiziq.</p></div>
               <div class="modal-body">
                 <div class="seg" style="display:flex;gap:6px;flex-wrap:wrap">
-                  ${['staff', 'cover', 'logo']
+                  ${['staff', 'cover']
                     .map(
                       (k) =>
-                        `<button class="btn btn-sm ${S.crop.kind === k ? 'btn-primary' : 'btn-secondary'}" type="button" data-act="crop-kind" data-k="${k}">${{ staff: 'Usta (doira)', cover: 'Muqova (3:1)', logo: 'Logo (kvadrat)' }[k]}</button>`,
+                        `<button class="btn btn-sm ${S.crop.kind === k ? 'btn-primary' : 'btn-secondary'}" type="button" data-act="crop-kind" data-k="${k}">${{ staff: 'Usta (doira)', cover: 'Muqova (3:1)' }[k]}</button>`,
                     )
                     .join('')}
                   <span style="font-size:12px;color:var(--muted);align-self:center">← maket uchun</span>
@@ -1070,7 +1087,9 @@
             <div class="stack">
               <div class="hint-box err">Rasm juda katta — 25 MB dan kichik rasm tanlang.</div>
               <div class="hint-box err">Bu rasmni ochib bo'lmadi. JPEG, PNG yoki WebP rasm tanlang.</div>
-              <div class="hint-box err">Rasm juda kichik — muqova uchun kamida 1200 px enli rasm tanlang.</div>
+              <div class="hint-box err">Rasm juda kichik (800 × 600 px). Muqova uchun eni kamida 1200 px bo'lgan rasm tanlang.</div>
+              <div class="hint-box err">Rasm juda kichik (300 × 300 px). Kamida 400 × 400 px bo'lgan rasm tanlang.</div>
+              <div class="hint-box warn">5 ta qo'shildi, 3 tasi sig'madi (limit 12).</div>
               <div class="hint-box err">12 ta rasmdan ko'p bo'lmaydi — avval bittasini o'chiring.</div>
               <div class="hint-box err">Internet aloqasi uzildi — rasm saqlanmadi, eski rasm joyida qoldi. Qayta urinib ko'ring.</div>
             </div>
@@ -1216,11 +1235,28 @@
           return toast("Rasm o'chirildi")
         }
         if (act === 'add-gallery') {
-          if (S.gallery.length >= 12) return
-          S.gallery.push(SPARE[S.gallery.length % SPARE.length])
+          // demo: the owner picked 8 photos; only what fits the limit of 12 is uploaded
+          const picked = 8
+          const fits = Math.min(picked, 12 - S.gallery.length)
+          if (fits <= 0) return
+          for (let k = 0; k < fits; k++)
+            S.gallery.push(SPARE[(S.gallery.length + k) % SPARE.length])
+          S.batchNote =
+            fits < picked
+              ? `${fits} ta qo'shildi, ${picked - fits} tasi sig'madi (limit 12).`
+              : `${fits} ta rasm qo'shildi.`
           return simulateUpload(S.gallery.length - 1)
         }
-        if (act === 'crop-cover' || act === 'crop-logo' || act === 'crop-staff') {
+        if (act === 'toggle-logo') {
+          S.wideLogo = !S.wideLogo
+          return render()
+        }
+        if (act === 'pick-logo') {
+          // no crop window for logos: the whole logo is fitted into the square
+          S.logo = true
+          return toast("Logo saqlandi ✓ (butun logo kvadratga sig'dirildi)")
+        }
+        if (act === 'crop-cover' || act === 'crop-staff') {
           S.crop = { kind: act.slice(5), scale: 1, x: 0, y: 0 }
           S.screen = 'crop'
           return render()
@@ -1236,7 +1272,6 @@
           S.screen = back
           if (act === 'crop-save') {
             if (S.crop.kind === 'cover') S.cover = true
-            if (S.crop.kind === 'logo') S.logo = true
             if (S.crop.kind === 'staff') S.jasurPhoto = true
             return toast('Rasm saqlandi ✓')
           }
