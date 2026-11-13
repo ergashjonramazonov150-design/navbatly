@@ -55,7 +55,9 @@ _Last updated: 2026-11-13_
   (`design/01–03`), M2 (login, roles, shell), M3 **3a** (migration 7 + Xizmatlar),
   M3 **3b** (migration 8 + Ustalar, Ish vaqti, Dam olish; manual checklist passed,
   merged to `main` and deployed 2026-11-13).
-- 🔄 **In progress: M3 3c** (Sozlamalar): plan posted, waiting for the user's OK.
+- 🔄 **In progress: M3 3c** (Sozlamalar) on branch `m3c-settings`: plan approved, built
+  (no migration; DB test `05_business_settings_test.sql`). Waiting for the user's manual
+  checklist and approval.
 - ⏭ **Next:** **M3.5** visual upgrade (mockups first: image-rich booking page +
   `design/04-landing.html`; then Supabase Storage uploads), then **M4** (public booking).
 - ℹ️ The Vercel MCP connection needs team access re-authorized before it can read deploys.
