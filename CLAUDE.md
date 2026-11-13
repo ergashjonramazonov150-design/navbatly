@@ -56,7 +56,10 @@ _Last updated: 2026-11-13_
   M3 **3b** (migration 8 + Ustalar, Ish vaqti, Dam olish; manual checklist passed,
   merged to `main` and deployed 2026-11-13).
 - 🔄 **In progress: M3 3c** (Sozlamalar): plan posted, waiting for the user's OK.
-- ⏭ **Next:** **M3.5** visual upgrade (mockups first: image-rich booking page + `design/04-landing.html`; then Supabase Storage uploads), then **M4**
-  (public booking).
+- ⏭ **Next:** **M3.5** visual upgrade (mockups first: image-rich booking page +
+  `design/04-landing.html`; then Supabase Storage uploads), then **M4** (public booking).
+- ℹ️ The Vercel MCP connection needs team access re-authorized before it can read deploys.
+  Until then, confirm a deploy by finding new UI text in the live `assets/start-*.js`
+  file, then run `npm run check:live`.
 - 📌 **Pending before M5:** make the seed's demo bookings relative to "today"
   (re-runnable `npm run db:seed`).
