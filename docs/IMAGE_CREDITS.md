@@ -16,7 +16,7 @@ All photos are from **[Pexels](https://www.pexels.com/license/)** (checked 2026-
 1. **Pexels only** (or another source with an equally clear free licence). Every new photo is added
    to the table below before it is used.
 2. **Look at every photo before using it.** No visible brand names or logos of real shops (we
-   rejected 18483777, 18483769, 19225142, 4625627 and 4625644 for this reason).
+   rejected 18483770, 18483769, 19225142, 4625627 and 4625644 for this reason).
 3. **People appear only inside the clearly-labelled demo salon** (barbers, work photos). The
    Navbatly landing page uses **interiors without people**, and never presents anyone as a customer
    or reviewer.
