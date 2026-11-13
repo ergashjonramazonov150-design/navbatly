@@ -235,7 +235,60 @@
     "appointments": "Bugungi va kelgusi yozilishlar, tasdiqlash va bekor qilish shu yerda bo'ladi.",
     "calendar": "Kunlik kalendar: ustalar ustunlarda, bo'sh joyni bosib yozilish qo'shish.",
     "services": "Xizmatlar ro'yxati, narx va davomiylik, faol/nofaol.",
-    "staff": "Ustalar, ish vaqti, xizmatlar va dam olish kunlari.",
-    "settings": "Salon ma'lumotlari, bron qoidalari va Telegram xabarnomalari."
+    "staff": "Ustalar, ish vaqti, xizmatlar va dam olish kunlari."
+  },
+  "settings": {
+    "title": "Sozlamalar",
+    "subtitle": "Salon ma'lumotlari, bron qoidalari va yopiq kunlar.",
+    "loadError": "Sozlamalarni yuklab bo'lmadi.",
+    "info": {
+      "title": "Salon ma'lumotlari",
+      "hint": "Bular mijozlarning bron sahifasida ko'rinadi.",
+      "name": "Salon nomi",
+      "phone": "Telefon",
+      "optional": "(ixtiyoriy)",
+      "phoneWarning": "⚠️ Bu raqamni hamma mijozlar ko'radi. Salonning ish raqamini yozing — shaxsiy raqamingizni emas.",
+      "address": "Manzil",
+      "link": "Bron havolasi",
+      "copy": "Nusxa olish",
+      "copied": "Havola nusxalandi ✓",
+      "copyFailed": "Nusxa olib bo'lmadi — havolani qo'lda belgilang.",
+      "linkNote": "Havolani Navbatly administratori o'zgartiradi.",
+      "linkSoon": "Bron sahifasi tez orada ishga tushadi.",
+      "timezone": "Vaqt mintaqasi",
+      "timezoneTashkent": "Toshkent (UTC+5)",
+      "timezoneNote": "Platforma administratori o'zgartiradi."
+    },
+    "rules": {
+      "title": "Bron qoidalari",
+      "hint": "Onlayn yozilish qanday ishlashini belgilaydi.",
+      "step": "Vaqt qadami",
+      "stepHint": "Vaqt tugmalari orasidagi farq (09:00, 09:15…)",
+      "horizon": "Necha kun oldin yozilish mumkin",
+      "notice": "Eng kamida oldindan",
+      "noticeHint": "Masalan, 1 soat: 14:00 da mijoz 15:00 dan oldingi vaqtni ololmaydi.",
+      "maxPerPhone": "Bitta raqamga faol yozilishlar",
+      "maxPerPhoneHint": "Spamdan himoya.",
+      "autoConfirm": "Avtomatik tasdiqlash",
+      "autoConfirmHint": "Yoqilsa, onlayn yozilishlar darhol «Tasdiqlangan» bo'ladi. O'chiq bo'lsa, siz har birini tasdiqlaysiz.",
+      "autoConfirmNote": "Mavjud kutilayotgan yozilishlar avtomatik tasdiqlanmaydi."
+    },
+    "units": {
+      "minutes": "{{count}} daqiqa",
+      "hours": "{{count}} soat",
+      "days": "{{count}} kun",
+      "noLimit": "Cheklovsiz",
+      "bookings": "{{count}} ta"
+    },
+    "save": "O'zgarishlarni saqlash",
+    "saved": "Sozlamalar saqlandi ✓",
+    "unsaved": "Saqlanmagan o'zgarishlar bor",
+    "reset": "O'zgarishlarni bekor qilish",
+    "leaveText": "Sozlamalardagi o'zgarishlar saqlanmagan. Sahifadan chiqsangiz, ular yo'qoladi.",
+    "closed": {
+      "title": "Salon yopiq kunlari",
+      "hint": "Bayramlar yoki ta'mirlash — bu kunlarda hech qaysi ustaga yozilib bo'lmaydi.",
+      "reasonPlaceholder": "Masalan: Mustaqillik kuni"
+    }
   }
 }

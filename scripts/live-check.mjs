@@ -26,6 +26,8 @@ const CHECKS = [
   { path: '/admin/login', expect: ['Boshqaruv paneli', 'Kirish'], selector: 'input#email' },
   // logged out → must END on the login form (redirect works in a real browser)
   { path: '/admin/appointments', expect: ['Boshqaruv paneli'], endsAt: '/admin/login' },
+  { path: '/admin/services', expect: ['Boshqaruv paneli'], endsAt: '/admin/login' },
+  { path: '/admin/staff', expect: ['Boshqaruv paneli'], endsAt: '/admin/login' },
   { path: '/admin/settings', expect: ['Boshqaruv paneli'], endsAt: '/admin/login' },
   { path: '/admin/forgot-password', expect: ['Parolni tiklash hozircha ishlamayapti'] },
   { path: '/admin/reset-password', expect: ["Havola eskirgan yoki noto'g'ri"] },
