@@ -67,19 +67,17 @@ _Last updated: 2026-11-14_
   (`design/01–03`), M2 (login, roles, shell), **M3 complete** — 3a (migration 7 +
   Xizmatlar), 3b (migration 8 + Ustalar, Ish vaqti, Dam olish), 3c (Sozlamalar, no
   migration, DB test 05); all merged to `main` and deployed 2026-11-13.
-- 🔄 **In progress: M3.5** visual upgrade. Step 1 mockups (`design/02` v3, `design/04`)
-  approved and merged to `main`. Step 2 plan approved (public bucket, owner crops barber
-  photos AND cover, gallery in upload order, `react-easy-crop@6.2.4`). **2a done:**
-  migration 9 (`20261113121720_salon_images.sql`) **applied to dev** 2026-11-13, tests
-  193/193, race ok, advisors unchanged, types regenerated (branch `m35-storage`).
-  **2b approved** (`design/05-admin-photos.html`; logo fitted whole, not cropped).
-  **2c built** on `m35-storage` (2026-11-14): `src/lib/images/*`, `src/features/images/*`,
-  photo spots in Sozlamalar / Usta profili / Xizmat dialog / deactivate dialog; tests 125,
-  `check:images` 15/15. **Waiting for the user's manual checklist** (incl. real iPhone
-  via `npm run dev -- --host`, Windows Firewall → Private only). Deploy only after it
-  passes.
-- ⏭ **Next:** merge `m35-storage` → `main`, deploy, `check:live`; then **M4** (public
-  booking — shows the photos).
+- ✅ **M3.5 done** (photos: migration 9, admin photo screens, Xizmatlar thumbnails) —
+  desktop checklist passed, live 2026-11-14. iPhone (HEIC) test postponed (no iPhone).
+- ✅ **FAST-TRACK for submission (2026-11-14), all live on navbatly.vercel.app:**
+  **M4** public booking `/b/:slug` + Edge Function `create-booking` (deployed with
+  `--no-verify-jwt`; NO captcha yet; IP hash salt = `IP_HASH_SALT` secret if set, else the
+  server key) — end-to-end booking verified. **M5 simplified**: Yozilishlar list with
+  confirm/cancel (no calendar, no manual booking). **README** with screenshots
+  (`docs/screenshots/`); demo login rows are placeholders for the user to fill.
+- ⏭ **Postponed:** M5 calendar + manual booking, M6 Telegram, M7 captcha, M8 landing,
+  M9 domain/SMTP, orphan-script real run, iPhone test. No tests yet for the booking page /
+  appointments list (verified by Playwright walk-through + check:live).
 - ℹ️ The Vercel MCP connection needs team access re-authorized before it can read deploys.
   Until then, confirm a deploy by finding new UI text in the live `assets/start-*.js`
   file, then run `npm run check:live`.
