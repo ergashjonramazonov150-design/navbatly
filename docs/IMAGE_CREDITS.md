@@ -46,7 +46,11 @@ All photos are from **[Pexels](https://www.pexels.com/license/)** (checked 2026-
 
 "Akmal" deliberately has **no photo**, to show the initials fallback.
 
-### Landing page mockup — `design/04-landing.html`
+### Landing page — `design/04-landing.html` and the live page (`public/landing/`)
+
+The live landing serves the same three photos as resized WebP files in `public/landing/`
+(`<Pexels ID>.webp`). `app-*.jpg` there are our own screenshots (copies of
+`docs/screenshots/`).
 
 | Used as                           | Pexels ID | Photographer | Source                                                                                                                                 |
 | --------------------------------- | --------- | ------------ | -------------------------------------------------------------------------------------------------------------------------------------- |

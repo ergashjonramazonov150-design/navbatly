@@ -23,6 +23,7 @@ import { StaffPage } from '@/pages/admin/StaffPage'
 import { BookingPage } from '@/pages/public/BookingPage'
 import { LandingPage } from '@/pages/public/LandingPage'
 import { NotFoundPage } from '@/pages/public/NotFoundPage'
+import { PrivacyPage } from '@/pages/public/PrivacyPage'
 
 /*
  * /admin/*  →  RequireAuth  →  BusinessGate (loads salon, blocks inactive / no salon)
@@ -81,6 +82,7 @@ export const router = createBrowserRouter([
     children: [
       { path: '/', element: <LandingPage /> },
       { path: '/b/:slug', element: <BookingPage /> },
+      { path: '/privacy', element: <PrivacyPage /> },
       { path: '*', element: <NotFoundPage /> },
     ],
   },
