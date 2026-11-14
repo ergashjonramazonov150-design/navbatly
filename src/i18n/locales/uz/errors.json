@@ -31,7 +31,10 @@
     "NOT_ALLOWED": "Sizda bu amal uchun ruxsat yo'q.",
     "INVALID_HOURS": "Ish vaqtida xato bor: tugash vaqti boshlanishidan keyin bo'lsin.",
     "HOURS_OVERLAP": "Bir kundagi oraliqlar ustma-ust tushmasin.",
-    "GALLERY_FULL": "12 ta rasmdan ko'p bo'lmaydi — avval bittasini o'chiring."
+    "GALLERY_FULL": "12 ta rasmdan ko'p bo'lmaydi — avval bittasini o'chiring.",
+    "APPOINTMENT_NOT_FOUND": "Yozilish topilmadi yoki unga ruxsatingiz yo'q.",
+    "INVALID_STATUS_TRANSITION": "Bu yozilishning holatini o'zgartirib bo'lmaydi (masalan, allaqachon bekor qilingan).",
+    "INVALID_CANCEL_REASON": "Sabab 200 belgidan oshmasin."
   },
   "db": {
     "invalidValue": "Ma'lumot noto'g'ri. Maydonlarni tekshiring.",
