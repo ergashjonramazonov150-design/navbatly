@@ -74,7 +74,7 @@ if (/^\s*(begin|commit|rollback)\s*;/im.test(migrationSql)) {
   process.exit(1)
 }
 if (migrationPath) console.log(`# DRY RUN with unapplied migration ${migrationPath} (rolled back)`)
-const filter = args.filter((a, i) => i !== migIdx && i !== migIdx + 1)[0] ?? ''
+const filter = args.filter((_, i) => migIdx === -1 || (i !== migIdx && i !== migIdx + 1))[0] ?? ''
 const files = readdirSync(TESTS_DIR)
   .filter((f) => f.endsWith('_test.sql') && f.includes(filter))
   .sort()
