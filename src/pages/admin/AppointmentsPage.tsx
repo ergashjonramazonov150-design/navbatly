@@ -1,5 +1,5 @@
 import { cn } from 'cn'
-import { Loader2Icon, SearchIcon } from 'lucide-react'
+import { Loader2Icon, PlusIcon, SearchIcon } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
@@ -14,6 +14,11 @@ import {
 } from '@/features/appointments/api'
 import { CancelDialog } from '@/features/appointments/CancelDialog'
 import { useReadyBusiness } from '@/features/business/useBusiness'
+import { useSalonHours } from '@/features/calendar/api'
+import { NewAppointmentDialog } from '@/features/calendar/NewAppointmentDialog'
+import { useServices } from '@/features/services/api'
+import { useStaffList } from '@/features/staff/api'
+import { Button } from '@/components/ui/button'
 import {
   addDaysToKey,
   formatDayMonthUz,
@@ -39,7 +44,14 @@ const WD_UZ = ['', 'Dushanba', 'Seshanba', 'Chorshanba', 'Payshanba', 'Juma', 'S
 
 export function AppointmentsPage() {
   const { t } = useTranslation(['admin', 'errors'])
-  const { businessId, timezone, role } = useReadyBusiness()
+  const { businessId, timezone, role, staffId: myStaffId } = useReadyBusiness()
+  const staffQ = useStaffList(businessId, timezone)
+  const servicesQ = useServices(businessId)
+  const hoursQ = useSalonHours(businessId)
+  const [creating, setCreating] = useState(false)
+  const bookable = (staffQ.data ?? []).filter((s) =>
+    role === 'owner' ? s.isActive : s.id === myStaffId,
+  )
   const isOwner = role === 'owner'
   const list = useAppointments(businessId, timezone)
   const setStatus = useSetAppointmentStatus(businessId)
@@ -236,7 +248,19 @@ export function AppointmentsPage() {
 
   return (
     <>
-      <PageHeader title={t('appointments.title')} subtitle={dayLabel(today)} />
+      <PageHeader
+        title={t('appointments.title')}
+        subtitle={dayLabel(today)}
+        action={
+          <Button
+            onClick={() => setCreating(true)}
+            disabled={!servicesQ.data || !staffQ.data || !hoursQ.data || bookable.length === 0}
+          >
+            <PlusIcon aria-hidden="true" />
+            {t('newAppt.button')}
+          </Button>
+        }
+      />
       {!isOwner && (
         <p className="mb-4 rounded-2xl border border-border bg-surface px-4 py-3 text-[14px]">
           {t('appointments.staffNotePlain')}
@@ -347,6 +371,18 @@ export function AppointmentsPage() {
         </div>
       )}
 
+      {creating && (
+        <NewAppointmentDialog
+          businessId={businessId}
+          timezone={timezone}
+          today={today}
+          services={servicesQ.data ?? []}
+          staff={bookable}
+          hours={hoursQ.data ?? []}
+          appointments={all}
+          onClose={() => setCreating(false)}
+        />
+      )}
       {cancelling && (
         <CancelDialog
           summary={`${cancelling.customerName} · ${dayLabel(toDateKey(cancelling.startsAt, timezone))}, ${formatTime(cancelling.startsAt, timezone)} · ${cancelling.serviceName}`}
