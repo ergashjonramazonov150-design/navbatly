@@ -76,7 +76,8 @@
     "optional": "(ixtiyoriy)",
     "notePh": "Masalan: biroz kechikishim mumkin",
     "consent": "Shaxsiy ma'lumotlarim (ism va telefon) faqat shu yozilish uchun ishlatilishiga roziman.",
-    "consentErr": "Davom etish uchun rozilik belgisini qo'ying."
+    "consentErr": "Davom etish uchun rozilik belgisini qo'ying.",
+    "privacy": "Maxfiylik siyosati"
   },
   "rows": {
     "service": "Xizmat",

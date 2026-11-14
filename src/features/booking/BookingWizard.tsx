@@ -745,7 +745,17 @@ export function BookingWizard({
           onChange={(e) => setConsent(e.target.checked)}
           className="mt-0.5 size-5 shrink-0 accent-foreground"
         />
-        <span>{t('form.consent')}</span>
+        <span>
+          {t('form.consent')}{' '}
+          <a
+            href="/privacy"
+            target="_blank"
+            rel="noreferrer"
+            className="font-semibold text-brand underline-offset-2 hover:underline"
+          >
+            {t('form.privacy')}
+          </a>
+        </span>
       </label>
       {touched && !consent && (
         <p className="text-[13px] text-destructive">{t('form.consentErr')}</p>

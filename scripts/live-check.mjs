@@ -22,7 +22,8 @@ const EXPECT_CONFIG_ERROR = args.includes('--expect-config-error')
 const CONFIG_ERROR_TEXT = 'Sayt vaqtincha ishlamayapti'
 
 const CHECKS = [
-  { path: '/', expect: ['Salom, Navbatly!', 'Demo salonni ochish'] },
+  { path: '/', expect: ["Mijozlar o'zi yozilsin", 'Demo salonni ochish'] },
+  { path: '/privacy', expect: ['Maxfiylik siyosati'] },
   { path: '/b/demo', expect: ['Xizmatni tanlang', 'Davom etish'] },
   { path: '/admin/login', expect: ['Boshqaruv paneli', 'Kirish'], selector: 'input#email' },
   // logged out → must END on the login form (redirect works in a real browser)
