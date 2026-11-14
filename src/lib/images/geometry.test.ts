@@ -9,7 +9,7 @@ import {
   downscale,
   planBatch,
 } from './geometry'
-import { filePath, filesOf, newImageFolder, publicUrl, smallOf } from './paths'
+import { filePath, filesOf, newImageFolder, publicUrl, randomUuid, smallOf } from './paths'
 
 describe('checkMinSize', () => {
   it('cover needs 1200 px width (and 400 px height)', () => {
@@ -105,5 +105,19 @@ describe('paths', () => {
   })
   it('a new folder gets a fresh random id each time', () => {
     expect(newImageFolder(biz, 'gallery')).not.toBe(newImageFolder(biz, 'gallery'))
+  })
+  it('random ids are valid v4 UUIDs (the Storage rule checks the format) — no randomUUID needed', () => {
+    const original = crypto.randomUUID
+    // simulate plain-http (not a "secure context"): randomUUID is missing there
+    Object.defineProperty(crypto, 'randomUUID', { value: undefined, configurable: true })
+    try {
+      for (let i = 0; i < 50; i++) {
+        expect(randomUuid()).toMatch(
+          /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/,
+        )
+      }
+    } finally {
+      Object.defineProperty(crypto, 'randomUUID', { value: original, configurable: true })
+    }
   })
 })

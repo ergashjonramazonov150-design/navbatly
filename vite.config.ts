@@ -30,12 +30,22 @@ function validateEnvOnBuild(): Plugin {
   }
 }
 
+/**
+ * Windows: a terminal opened in "c:\…" (lowercase drive, e.g. VS Code's terminal) makes
+ * some paths resolve as "c:" and others as "C:". Vite then pre-bundles React TWICE and the
+ * app crashes ("Invalid hook call" / "reading 'useEffect'"). Using ONE spelling — uppercase
+ * drive — for the project root and the "@" alias avoids that.
+ */
+const upperDrive = (p: string) => p.replace(/^([a-z]):/, (_, d: string) => `${d.toUpperCase()}:`)
+const ROOT = upperDrive(fileURLToPath(new URL('.', import.meta.url)))
+
 // https://vite.dev/config/
 export default defineConfig({
+  root: ROOT,
   plugins: [react(), tailwindcss(), validateEnvOnBuild()],
   resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url)),
+      '@': upperDrive(fileURLToPath(new URL('./src', import.meta.url))),
     },
   },
   test: {
