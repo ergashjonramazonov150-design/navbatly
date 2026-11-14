@@ -64,8 +64,7 @@ export async function tg(token: string, method: string, body: Record<string, unk
 }
 
 /** Customer text inside HTML messages must never become markup. */
-export const esc = (s: string) =>
-  s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+export { esc } from './bookingMessages.ts'
 
 export function serverKey() {
   const legacy = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')

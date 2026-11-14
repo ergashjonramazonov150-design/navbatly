@@ -8,13 +8,14 @@
 // Anti-spam: honeypot + DB limits; Mini App bookings must carry Telegram-signed initData
 // (verified here); web bookings need a Cloudflare Turnstile token once TURNSTILE_SECRET_KEY
 // is set (M7).
-// After a successful ONLINE booking the salon gets a Telegram message (M6), in the
-// background — a Telegram problem never fails the booking (error saved in last_error).
+// After a successful ONLINE booking the salon gets a Telegram message (M6), and a Mini App
+// customer gets a short confirmation in their own chat — in the background; a Telegram
+// problem never fails the booking (salon errors saved in last_error).
+import { customerMessage, salonMessage, type BookingInfo } from '../_shared/bookingMessages.ts'
 import {
   APP_URL,
   adminClient,
   botToken,
-  esc,
   serverKey,
   tg,
   verifyInitData,
@@ -55,95 +56,59 @@ async function sha256(text: string) {
   return [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, '0')).join('')
 }
 
-/* ------------------------------ Telegram message ------------------------------ */
-const MONTHS = [
-  'yanvar',
-  'fevral',
-  'mart',
-  'aprel',
-  'may',
-  'iyun',
-  'iyul',
-  'avgust',
-  'sentabr',
-  'oktabr',
-  'noyabr',
-  'dekabr',
-]
-const WEEKDAYS = {
-  Mon: 'dushanba',
-  Tue: 'seshanba',
-  Wed: 'chorshanba',
-  Thu: 'payshanba',
-  Fri: 'juma',
-  Sat: 'shanba',
-  Sun: 'yakshanba',
-} as Record<string, string>
-const money = (n: number) => `${String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ' ')} so'm`
-const phoneFmt = (p: string) => p.replace(/^\+998(\d{2})(\d{3})(\d{2})(\d{2})$/, '+998 $1 $2 $3 $4')
-
-function whenUz(iso: string, tz: string) {
-  const parts = Object.fromEntries(
-    new Intl.DateTimeFormat('en-GB', {
-      timeZone: tz,
-      day: 'numeric',
-      month: 'numeric',
-      weekday: 'short',
-      hour: '2-digit',
-      minute: '2-digit',
-      hourCycle: 'h23',
-    })
-      .formatToParts(new Date(iso))
-      .map((p) => [p.type, p.value]),
-  )
-  return `${parts.day}-${MONTHS[Number(parts.month) - 1]}, ${WEEKDAYS[parts.weekday] ?? ''}, ${parts.hour}:${parts.minute}`
-}
-
-async function notifySalon(appointmentId: string, viaTelegram: boolean) {
+/* ------------------------------ Telegram messages ------------------------------ */
+// salon chat (if linked + enabled) and, for Mini App bookings, the customer's own chat
+async function notify(appointmentId: string, customerChatId: number | null) {
   const token = botToken()
   if (!token) return
   const db = adminClient()
   const { data: a } = await db
     .from('appointments')
     .select(
-      'business_id, customer_name, customer_phone, customer_note, starts_at, status, price_uzs, services(name, duration_minutes), staff(full_name), businesses(name, timezone)',
+      'business_id, customer_name, customer_phone, customer_note, starts_at, status, price_uzs, services(name, duration_minutes), staff(full_name), businesses(name, timezone, phone, address)',
     )
     .eq('id', appointmentId)
     .single()
   if (!a) return
-  const { data: s } = await db
-    .from('business_telegram_settings')
-    .select('chat_id, is_enabled')
-    .eq('business_id', a.business_id)
-    .maybeSingle()
-  if (!s?.chat_id || !s.is_enabled) return
 
-  const lines = [
-    `🆕 <b>Yangi yozilish — ${esc(a.businesses?.name ?? '')}</b>`,
-    `👤 ${esc(a.customer_name)}, ${esc(phoneFmt(a.customer_phone))}`,
-    `✂️ ${esc(a.services?.name ?? '')} (${a.services?.duration_minutes ?? '?'} daq) — ${money(a.price_uzs)}`,
-    `💈 Usta: ${esc(a.staff?.full_name ?? '')}`,
-    `🗓 ${whenUz(a.starts_at, a.businesses?.timezone ?? 'Asia/Tashkent')}`,
-    `Holat: ${a.status === 'confirmed' ? 'tasdiqlangan ✅' : 'tasdiqlash kutilmoqda ⏳'}`,
-  ]
-  if (a.customer_note) lines.push(`💬 ${esc(a.customer_note)}`)
-  if (viaTelegram) lines.push('📱 Telegram orqali yozildi')
-  const r = await tg(token, 'sendMessage', {
-    chat_id: s.chat_id,
-    parse_mode: 'HTML',
-    text: lines.join('\n'),
-    reply_markup: {
-      inline_keyboard: [[{ text: 'Admin panelda ochish', url: `${APP_URL}/admin/appointments` }]],
-    },
-  })
-  await db
-    .from('business_telegram_settings')
-    .update(
-      r.ok
-        ? { last_error: null, last_error_at: null }
-        : { last_error: r.error.slice(0, 500), last_error_at: new Date().toISOString() },
-    )
-    .eq('business_id', a.business_id)
+  // customer: ONLY the Telegram user whose signed initData made this booking. They opened
+  // the Mini App from our bot, so the bot is allowed to write to them.
+  const toCustomer = customerChatId
+    ? tg(token, 'sendMessage', {
+        chat_id: customerChatId,
+        parse_mode: 'HTML',
+        text: customerMessage(a as BookingInfo),
+      }).then((r) => {
+        if (!r.ok) console.error('customer message failed', r.error)
+      })
+    : Promise.resolve()
+
+  const toSalon = (async () => {
+    const { data: s } = await db
+      .from('business_telegram_settings')
+      .select('chat_id, is_enabled')
+      .eq('business_id', a.business_id)
+      .maybeSingle()
+    if (!s?.chat_id || !s.is_enabled) return
+    const r = await tg(token, 'sendMessage', {
+      chat_id: s.chat_id,
+      parse_mode: 'HTML',
+      text: salonMessage(a as BookingInfo, customerChatId !== null),
+      reply_markup: {
+        inline_keyboard: [[{ text: 'Admin panelda ochish', url: `${APP_URL}/admin/appointments` }]],
+      },
+    })
+    await db
+      .from('business_telegram_settings')
+      .update(
+        r.ok
+          ? { last_error: null, last_error_at: null }
+          : { last_error: r.error.slice(0, 500), last_error_at: new Date().toISOString() },
+      )
+      .eq('business_id', a.business_id)
+  })()
+
+  await Promise.all([toSalon, toCustomer])
 }
 
 declare const EdgeRuntime: { waitUntil(p: Promise<unknown>): void } | undefined
@@ -191,13 +156,13 @@ Deno.serve(async (req) => {
   // Mini App: the request must carry initData signed by Telegram for OUR bot. Then the
   // per-requester limit counts the Telegram user (more precise than a shared mobile IP).
   let requester: string
-  let viaTelegram = false
+  let tgChatId: number | null = null
   if (typeof tgInitData === 'string' && tgInitData) {
     const token = botToken()
     const tgUser = token ? await verifyInitData(tgInitData, token) : null
     if (!tgUser) return json({ ok: false, code: 'TELEGRAM_AUTH' }, 401, headers)
     requester = `tg:${tgUser}`
-    viaTelegram = true
+    tgChatId = Number(tgUser)
   } else {
     // Client IP: Supabase's gateway puts the real caller IP FIRST in X-Forwarded-For.
     const ip = (req.headers.get('x-forwarded-for') ?? '').split(',')[0].trim() || 'unknown'
@@ -241,10 +206,8 @@ Deno.serve(async (req) => {
   if (!data?.ok) return json(data, HTTP_STATUS[data?.code] ?? 400, headers)
 
   // Telegram message in the background: the customer gets the answer immediately
-  const notify = notifySalon(data.appointment.id, viaTelegram).catch((e) =>
-    console.error('notify failed', e),
-  )
-  if (typeof EdgeRuntime !== 'undefined') EdgeRuntime.waitUntil(notify)
-  else await notify
+  const sent = notify(data.appointment.id, tgChatId).catch((e) => console.error('notify failed', e))
+  if (typeof EdgeRuntime !== 'undefined') EdgeRuntime.waitUntil(sent)
+  else await sent
   return json(data, 201, headers)
 })
