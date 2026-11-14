@@ -139,6 +139,8 @@ export async function createBooking(input: {
   phone: string
   note: string
   website: string // honeypot — always empty for real people
+  /** Telegram-signed launch data (Mini App) — checked on the server */
+  tgInitData?: string
 }): Promise<BookingResult> {
   try {
     const res = await fetch(`${SUPABASE_URL}/functions/v1/create-booking`, {

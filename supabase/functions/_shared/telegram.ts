@@ -83,28 +83,4 @@ export const adminClient = () =>
     auth: { persistSession: false, autoRefreshToken: false },
   })
 
-/**
- * Mini App: checks Telegram's signed initData (Bot API "Validating data received via the
- * Mini App"): secret = HMAC_SHA256("WebAppData", bot_token); hash = HMAC_SHA256(secret,
- * data_check_string). Returns the Telegram user id, or null if invalid / older than maxAge.
- */
-export async function verifyInitData(initData: string, token: string, maxAgeSec = 24 * 3600) {
-  const params = new URLSearchParams(initData)
-  const hash = params.get('hash')
-  if (!hash) return null
-  params.delete('hash')
-  const dataCheck = [...params.entries()]
-    .sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0))
-    .map(([k, v]) => `${k}=${v}`)
-    .join('\n')
-  const secret = await hmac(enc.encode('WebAppData'), token)
-  if (!safeEqual(hex(await hmac(secret, dataCheck)), hash)) return null
-  const authDate = Number(params.get('auth_date'))
-  if (!authDate || Date.now() / 1000 - authDate > maxAgeSec) return null
-  try {
-    const user = JSON.parse(params.get('user') ?? 'null') as { id?: number } | null
-    return user?.id ? String(user.id) : null
-  } catch {
-    return null
-  }
-}
+export { verifyInitData } from './initData.ts'
