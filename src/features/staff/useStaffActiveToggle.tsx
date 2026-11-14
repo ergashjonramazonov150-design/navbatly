@@ -1,9 +1,11 @@
+import { useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 
+import { removeImage, saveStaffPhoto } from '@/features/images/api'
 import { dbErrorKey } from '@/lib/dbErrors'
-import { useSetStaffActive, type StaffItem } from './api'
+import { staffListKey, useSetStaffActive, type StaffItem } from './api'
 import { DeactivateStaffDialog } from './DeactivateStaffDialog'
 
 /**
@@ -15,16 +17,27 @@ import { DeactivateStaffDialog } from './DeactivateStaffDialog'
 export function useStaffActiveToggle(businessId: string) {
   const { t } = useTranslation(['admin', 'errors'])
   const setActive = useSetStaffActive(businessId)
+  const qc = useQueryClient()
   const [pending, setPending] = useState<StaffItem | null>(null)
 
-  const apply = (s: StaffItem, isActive: boolean) =>
+  const apply = (s: StaffItem, isActive: boolean, removePhoto = false) =>
     setActive.mutate(
       { id: s.id, isActive },
       {
-        onSuccess: () =>
-          toast.success(
-            t(isActive ? 'staff.activated' : 'staff.deactivated', { name: s.fullName }),
-          ),
+        onSuccess: async () => {
+          toast.success(t(isActive ? 'staff.activated' : 'staff.deactivated', { name: s.fullName }))
+          // "Rasmini ham olib tashlash": only AFTER the deactivation succeeded.
+          // If this part fails the barber stays deactivated — the owner is told.
+          if (removePhoto && s.photoPath) {
+            try {
+              await removeImage(s.photoPath, () => saveStaffPhoto(s.id, null))
+            } catch {
+              toast.error(t('photos.staff.deactivatePhotoFailed'))
+            } finally {
+              void qc.invalidateQueries({ queryKey: staffListKey(businessId) })
+            }
+          }
+        },
         onError: (err) => toast.error(t(`errors:${dbErrorKey(err)}`)),
       },
     )
@@ -35,8 +48,8 @@ export function useStaffActiveToggle(businessId: string) {
     <DeactivateStaffDialog
       staff={pending}
       onClose={() => setPending(null)}
-      onConfirm={() => {
-        apply(pending, false)
+      onConfirm={(removePhoto) => {
+        apply(pending, false, removePhoto)
         setPending(null)
       }}
     />

@@ -14,6 +14,8 @@ export type StaffItem = {
   id: string
   fullName: string
   bio: string | null
+  /** stored `lg` path of the barber photo (null = initials) */
+  photoPath: string | null
   isActive: boolean
   sortOrder: number
   serviceIds: string[]
@@ -33,7 +35,9 @@ export function useStaffList(businessId: string, timezone: string) {
       const [staffRes, hoursRes, membersRes] = await Promise.all([
         supabase
           .from('staff')
-          .select('id, full_name, bio, is_active, sort_order, staff_services(service_id)')
+          .select(
+            'id, full_name, bio, photo_path, is_active, sort_order, staff_services(service_id)',
+          )
           .eq('business_id', businessId)
           .order('sort_order', { ascending: true })
           .order('full_name', { ascending: true }),
@@ -57,6 +61,7 @@ export function useStaffList(businessId: string, timezone: string) {
         id: s.id,
         fullName: s.full_name,
         bio: s.bio,
+        photoPath: s.photo_path,
         isActive: s.is_active,
         sortOrder: s.sort_order,
         serviceIds: s.staff_services.map((x) => x.service_id),

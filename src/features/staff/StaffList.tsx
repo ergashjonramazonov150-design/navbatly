@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
 
 import { InitialsAvatar } from '@/components/common/InitialsAvatar'
+import { imageUrls } from '@/features/images/api'
 import { Switch } from '@/components/ui/switch'
 import type { StaffItem } from './api'
 import { formatDay } from './hours'
@@ -33,7 +34,11 @@ export function StaffList({
             to={`/admin/staff/${s.id}`}
             className="flex min-w-0 flex-1 items-center gap-3.5 outline-none focus-visible:rounded-lg focus-visible:ring-3 focus-visible:ring-ring/50"
           >
-            <InitialsAvatar name={s.fullName} active={s.isActive} />
+            <InitialsAvatar
+              name={s.fullName}
+              active={s.isActive}
+              photoUrl={imageUrls(s.photoPath)?.sm}
+            />
             <span className="min-w-0">
               <span
                 className={cn(
