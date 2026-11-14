@@ -12,12 +12,10 @@ ready for Russian.
 | **Book at the demo salon** | https://navbatly.vercel.app/b/demo      |
 | **Admin panel**            | https://navbatly.vercel.app/admin/login |
 
-### Demo logins
+### Demo login
 
-| Role           | Email                 | Password                 | Sees                                                              |
-| -------------- | --------------------- | ------------------------ | ----------------------------------------------------------------- |
-| Salon owner    | `<DEMO_OWNER_EMAIL>`  | `<DEMO_OWNER_PASSWORD>`  | Everything: bookings, services, barbers, settings, photos         |
-| Barber (Jasur) | `<DEMO_BARBER_EMAIL>` | `<DEMO_BARBER_PASSWORD>` | Only his own bookings (enforced by the database, not just the UI) |
+**Demo login: available on request.** Two roles exist: the **salon owner** (sees everything) and a
+**barber** (sees only his own bookings — enforced by the database, not just the UI).
 
 > The demo uses **fake data only** (customers are "Test mijoz", phones `+998 90 000 00 XX`).
 > Bookings made on the demo page appear in the admin panel within a minute.
@@ -118,6 +116,10 @@ Database changes live only in `supabase/migrations/` (9 migrations), never in th
 
 ## Next steps
 
+> **No custom domain or email server is planned.** The app runs on .
+> "Forgot password" stays switched off (); the platform admin
+> resets passwords in the Supabase dashboard (Authentication → Users).
+
 | Next                                   | Why                                                                                           |
 | -------------------------------------- | --------------------------------------------------------------------------------------------- |
 | **Telegram notifications** (M6)        | "Botni ulash" one-tap linking; a message to the salon for every new online booking.           |
@@ -125,7 +127,6 @@ Database changes live only in `supabase/migrations/` (9 migrations), never in th
 | **Day calendar** in the admin          | Approved mockup exists (`design/03-admin.html`): barbers as columns, tap a free slot to book. |
 | **Manual booking** by the owner        | For phone calls and walk-ins (database function already exists).                              |
 | **Landing page** (M8)                  | Approved mockup `design/04-landing.html`.                                                     |
-| **Own domain + email (SMTP)** (M9)     | Then password reset by email can be switched on; production Supabase project.                 |
 | Later                                  | Russian UI, reminders, "any free barber", Telegram Mini App, public salon catalog.            |
 
 Photos: free [Pexels](https://www.pexels.com/license/) images, credited in
