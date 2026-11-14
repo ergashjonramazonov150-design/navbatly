@@ -38,19 +38,30 @@ then `git log --oneline -20` and `supabase/migrations/`.
 | Frontend tests / types / lint     | `npm test` · `npm run typecheck` · `npm run lint` |
 | Live site check (after deploy)    | `npm run check:live`                              |
 | Security + performance advisors   | Supabase MCP `get_advisors` (both types)          |
+| Photo processing in real Chrome   | `npm run check:images`                            |
+| Orphan photo files (dry run)      | `npm run storage:orphans` (`-- --delete` deletes) |
+| Demo photos for checklists        | `npm run demo:photos` (→ `demo-photos/`, ignored) |
 
 There's no Docker. Everything runs against the cloud **navbatly-dev** project
 (`qxzcsuodzpmkksgjosvn`). The CLI labels it "production", but it's the dev project.
 Known advisor warning: `auth_leaked_password_protection` (not available on the free
 plan).
 
-**Windows quirk:** if `npm test` fails every file with "Vitest failed to find the
-current suite", the shell was started in `c:\…` (lowercase drive). Vitest then loads
-itself twice. Run it from `C:\Users\user\Documents\Navbatly` (uppercase `C:`) instead.
+**Windows quirk (lowercase `c:\…` terminals, e.g. VS Code):** paths then resolve as both
+`c:` and `C:`.
+
+- **Vitest** fails every file with "Vitest failed to find the current suite" → run tests
+  from `C:\Users\user\Documents\Navbatly` (uppercase `C:`).
+- **Dev server** used to pre-bundle React twice ("Invalid hook call" / "reading
+  'useEffect'") → fixed in `vite.config.ts` (root + `@` alias use an uppercase drive).
+- Never leave a shell `cd`-ed inside `node_modules/.vite` — it locks the cache (EBUSY).
+- Plain-http dev on the LAN (phone tests) is not a "secure context": no
+  `crypto.randomUUID`, no clipboard API. Use `crypto.getRandomValues` (see
+  `src/lib/images/paths.ts`).
 
 ## Status (update at the end of every session)
 
-_Last updated: 2026-11-13_
+_Last updated: 2026-11-14_
 
 - ✅ **Done and approved:** M0, M1 (migrations 1–6, pgTAP suite), design mockups
   (`design/01–03`), M2 (login, roles, shell), **M3 complete** — 3a (migration 7 +
@@ -61,11 +72,14 @@ _Last updated: 2026-11-13_
   photos AND cover, gallery in upload order, `react-easy-crop@6.2.4`). **2a done:**
   migration 9 (`20261113121720_salon_images.sql`) **applied to dev** 2026-11-13, tests
   193/193, race ok, advisors unchanged, types regenerated (branch `m35-storage`).
-  **2b:** `design/05-admin-photos.html` posted — **waiting for the user's approval** (6
-  TAKLIF items in its side panel).
-- ⏭ **Next:** 2c build after 2b approval (incl. `npm run storage:orphans` reading
-  `SUPABASE_SECRET_KEY` — never `VITE_` — from `.env.local`; real-iPhone HEIC test), then
-  **M4** (public booking).
+  **2b approved** (`design/05-admin-photos.html`; logo fitted whole, not cropped).
+  **2c built** on `m35-storage` (2026-11-14): `src/lib/images/*`, `src/features/images/*`,
+  photo spots in Sozlamalar / Usta profili / Xizmat dialog / deactivate dialog; tests 125,
+  `check:images` 15/15. **Waiting for the user's manual checklist** (incl. real iPhone
+  via `npm run dev -- --host`, Windows Firewall → Private only). Deploy only after it
+  passes.
+- ⏭ **Next:** merge `m35-storage` → `main`, deploy, `check:live`; then **M4** (public
+  booking — shows the photos).
 - ℹ️ The Vercel MCP connection needs team access re-authorized before it can read deploys.
   Until then, confirm a deploy by finding new UI text in the live `assets/start-*.js`
   file, then run `npm run check:live`.
