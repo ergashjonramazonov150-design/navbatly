@@ -54,6 +54,11 @@ All photos are from **[Pexels](https://www.pexels.com/license/)** (checked 2026-
 | Atmosphere — chair and brick wall | 1895701   | Lisa Fotios  | [Salon chair in front of a mirror](https://www.pexels.com/photo/salon-chair-beside-oil-heater-in-front-of-mirror-inside-room-1895701/) |
 | Atmosphere — shop corner          | 6843637   | Italo Crespi | [Barbershop with armchair and table](https://www.pexels.com/photo/barbershop-with-armchair-and-table-6843637/)                         |
 
+### Admin photo screens mockup — `design/05-admin-photos.html`
+
+Uses only photos already listed above (cover, barbers, gallery, landing interiors). Both logos
+are made-up SVGs.
+
 ### Our own images (no third-party licence)
 
 | File                                      | What it is                                                        |

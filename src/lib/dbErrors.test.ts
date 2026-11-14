@@ -15,6 +15,7 @@ describe('dbErrorKey', () => {
 
   it("our database functions' business codes (P0001) map to rpc.*", () => {
     expect(dbErrorKey({ code: 'P0001', message: 'HOURS_OVERLAP' })).toBe('rpc.HOURS_OVERLAP')
+    expect(dbErrorKey({ code: 'P0001', message: 'GALLERY_FULL' })).toBe('rpc.GALLERY_FULL')
     expect(dbErrorKey({ code: 'P0001', message: 'INVALID_HOURS' })).toBe('rpc.INVALID_HOURS')
     expect(dbErrorKey({ code: 'P0001', message: 'NOT_ALLOWED' })).toBe('rpc.NOT_ALLOWED')
     expect(dbErrorKey({ code: 'P0001', message: 'SOMETHING_ELSE' })).toBe('db.unknown')

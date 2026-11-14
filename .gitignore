@@ -31,3 +31,6 @@ dist-ssr
 # Supabase local temp files
 supabase/.temp
 supabase/.branches
+
+# Demo photos downloaded for the M3.5 checklist (npm run demo:photos)
+demo-photos/

@@ -1,0 +1,1308 @@
+<!doctype html>
+<html lang="uz">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Navbatly — admin: rasmlar (maket)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://images.pexels.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,500;7..72,600;7..72,700&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* ============================ Tokens — same as design/03-admin.html ============================ */
+      :root {
+        --bg: #f6f1ea;
+        --surface: #fffdf9;
+        --surface-2: #fbf7f1;
+        --ink: #1f1b16;
+        --ink-soft: #3a3129;
+        --muted: #6f655a;
+        --line: #e6dccf;
+        --line-strong: #c9b9a5;
+        --accent: #b4532a;
+        --accent-soft: #f6e4d8;
+        --success: #3f7d4e;
+        --success-soft: #e3efe5;
+        --danger: #b3261e;
+        --danger-soft: #fbe9e7;
+        --chip-bg: #f1e6d8;
+        --chip-ink: #6b4a2e;
+        --sel-ink: #fffdf9;
+        --font-display: Literata, Georgia, serif;
+        --font-body: Inter, system-ui, sans-serif;
+        --r-card: 16px;
+        --page-bg: #e9e4dc;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--page-bg);
+        color: var(--ink);
+        font: 15px/1.5 var(--font-body);
+      }
+      button,
+      input {
+        font: inherit;
+        color: inherit;
+      }
+      :focus-visible {
+        outline: 3px solid var(--accent);
+        outline-offset: 2px;
+      }
+      img {
+        display: block;
+      }
+
+      /* ============================ Review shell ============================ */
+      .review-top {
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 24px 16px 8px;
+      }
+      .review-top h1 {
+        font: 600 28px/1.15 var(--font-display);
+        margin: 0 0 6px;
+      }
+      .review-top p {
+        margin: 0 0 16px;
+        color: var(--muted);
+        max-width: 70ch;
+      }
+      .switcher {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        align-items: center;
+      }
+      .switcher button {
+        min-height: 40px;
+        padding: 0 14px;
+        border-radius: 999px;
+        border: 1.5px solid var(--line-strong);
+        background: transparent;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 13.5px;
+      }
+      .switcher button[aria-pressed='true'] {
+        background: var(--ink);
+        color: var(--sel-ink);
+        border-color: var(--ink);
+      }
+      .switcher .sep {
+        width: 1px;
+        height: 28px;
+        background: var(--line-strong);
+        margin: 0 4px;
+      }
+      .stage {
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 12px 16px 48px;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 320px;
+        gap: 24px;
+        align-items: start;
+      }
+      @media (max-width: 980px) {
+        .stage {
+          grid-template-columns: minmax(0, 1fr);
+        }
+      }
+      /* the "device": width toggled between computer and phone; layouts use container queries */
+      .device {
+        position: relative;
+        container-type: inline-size;
+        margin: 0 auto;
+        width: 100%;
+        max-width: 860px;
+        min-height: 640px;
+        background: var(--bg);
+        border-radius: 22px;
+        box-shadow: 0 24px 50px rgba(40, 25, 10, 0.18);
+        overflow: hidden;
+        transition: max-width 0.25s ease;
+      }
+      .device.phone {
+        max-width: 390px;
+        border: 10px solid #2a241e;
+        border-radius: 40px;
+      }
+      .device-body {
+        padding: 22px 22px 40px;
+      }
+      @container (max-width: 599px) {
+        .device-body {
+          padding: 16px 14px 32px;
+        }
+      }
+      .crumb {
+        font-size: 13px;
+        color: var(--muted);
+        font-weight: 600;
+        margin-bottom: 4px;
+      }
+      .page-title {
+        font: 600 26px/1.15 var(--font-display);
+        margin: 0 0 4px;
+      }
+      .page-sub {
+        color: var(--muted);
+        margin: 0 0 18px;
+      }
+
+      /* ============================ Components (from 03) ============================ */
+      .btn {
+        min-height: 46px;
+        padding: 0 18px;
+        border: 0;
+        border-radius: 999px;
+        font-weight: 600;
+        font-size: 14.5px;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        white-space: nowrap;
+      }
+      .btn-primary {
+        background: var(--ink);
+        color: var(--sel-ink);
+      }
+      .btn-secondary {
+        background: var(--surface);
+        box-shadow: inset 0 0 0 1.5px var(--line-strong);
+      }
+      .btn-ghost-danger {
+        background: transparent;
+        color: var(--danger);
+        box-shadow: inset 0 0 0 1.5px #e7b8b3;
+      }
+      .btn-danger {
+        background: var(--danger);
+        color: #fff;
+      }
+      .btn-sm {
+        min-height: 40px;
+        padding: 0 14px;
+        font-size: 13.5px;
+      }
+      .btn:disabled {
+        opacity: 0.45;
+        cursor: not-allowed;
+      }
+      .panel-card {
+        background: var(--surface);
+        border: 1.5px solid var(--line);
+        border-radius: var(--r-card);
+        padding: 20px;
+        margin-bottom: 16px;
+      }
+      @container (max-width: 599px) {
+        .panel-card {
+          padding: 16px;
+        }
+      }
+      .panel-card h2 {
+        font: 600 19px/1.2 var(--font-display);
+        margin: 0 0 4px;
+      }
+      .panel-card > p {
+        margin: 0 0 16px;
+        color: var(--muted);
+        font-size: 13.5px;
+      }
+      .field {
+        display: grid;
+        gap: 6px;
+      }
+      .field > span {
+        font-weight: 600;
+        font-size: 13.5px;
+      }
+      .field small {
+        color: var(--muted);
+        font-size: 12.5px;
+      }
+      .input {
+        width: 100%;
+        min-height: 46px;
+        padding: 0 14px;
+        border-radius: 12px;
+        border: 1.5px solid var(--line-strong);
+        background: var(--surface);
+        font-size: 15px;
+      }
+      .hint-box {
+        display: flex;
+        gap: 10px;
+        padding: 12px 14px;
+        border-radius: 12px;
+        background: var(--surface-2);
+        color: var(--muted);
+        font-size: 13px;
+        border: 1px solid var(--line);
+      }
+      .hint-box.warn {
+        background: var(--accent-soft);
+        color: #6d2f14;
+        border-color: #ecc9b4;
+      }
+      .hint-box.err {
+        background: var(--danger-soft);
+        color: var(--danger);
+        border-color: #f0c4bf;
+      }
+      .hint-box.ok {
+        background: var(--success-soft);
+        color: var(--success);
+        border-color: #c7dfcc;
+      }
+      .tag {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        padding: 2px 7px;
+        border-radius: 999px;
+        background: var(--accent-soft);
+        color: var(--accent);
+      }
+      .ph {
+        background: var(--chip-bg);
+        overflow: hidden;
+      }
+      .ph img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .stack {
+        display: grid;
+        gap: 16px;
+      }
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      /* ============================ Photo pieces ============================ */
+      .photo-block {
+        display: grid;
+        gap: 10px;
+      }
+      .photo-block > b {
+        font-size: 13.5px;
+      }
+      .cover-box {
+        aspect-ratio: 3 / 1;
+        border-radius: 14px;
+      }
+      .empty-box {
+        border: 2px dashed var(--line-strong);
+        background: var(--surface-2);
+        border-radius: 14px;
+        display: grid;
+        place-items: center;
+        text-align: center;
+        color: var(--muted);
+        font-size: 13.5px;
+        padding: 12px;
+      }
+      .logo-row {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        flex-wrap: wrap;
+      }
+      /* logo: the WHOLE logo fits inside the square (contain) on a neutral background */
+      .logo-box {
+        width: 88px;
+        height: 88px;
+        border-radius: 22px;
+        flex: none;
+        background: #fffdf9;
+        border: 1.5px solid var(--line);
+        padding: 8px;
+        display: grid;
+        place-items: center;
+      }
+      .logo-box img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+      }
+      .logo-box.sm {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        padding: 4px;
+      }
+      .letter-tile {
+        width: 88px;
+        height: 88px;
+        border-radius: 22px;
+        background: var(--accent);
+        color: #fff;
+        display: grid;
+        place-items: center;
+        font: 700 38px/1 var(--font-display);
+        flex: none;
+      }
+      .gallery-head {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 8px;
+      }
+      .count {
+        font-weight: 700;
+        font-size: 13px;
+        color: var(--muted);
+      }
+      .count.full {
+        color: var(--accent);
+      }
+      .gallery {
+        display: grid;
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+        gap: 10px;
+      }
+      @container (max-width: 599px) {
+        .gallery {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          gap: 8px;
+        }
+      }
+      .g-item {
+        position: relative;
+        aspect-ratio: 1;
+        border-radius: 12px;
+      }
+      .g-del {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        border: 0;
+        background: rgba(31, 27, 22, 0.72);
+        color: #fff;
+        display: grid;
+        place-items: center;
+        cursor: pointer;
+        font-size: 15px;
+      }
+      .g-del::before {
+        /* visible circle stays small; the tap area is 44 × 44 px (our touch-target rule) */
+        content: '';
+        position: absolute;
+        inset: -5px;
+      }
+      .g-add {
+        aspect-ratio: 1;
+        border-radius: 12px;
+        border: 2px dashed var(--line-strong);
+        background: var(--surface-2);
+        display: grid;
+        place-items: center;
+        align-content: center;
+        gap: 2px;
+        cursor: pointer;
+        color: var(--ink-soft);
+        font-weight: 600;
+        font-size: 12.5px;
+        text-align: center;
+        padding: 6px;
+      }
+      .g-add b {
+        font-size: 24px;
+        line-height: 1;
+      }
+      .g-add:disabled {
+        cursor: not-allowed;
+        opacity: 0.5;
+      }
+      /* upload states on a tile */
+      .g-busy {
+        position: absolute;
+        inset: 0;
+        background: rgba(255, 253, 249, 0.82);
+        display: grid;
+        place-items: center;
+        align-content: center;
+        gap: 8px;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--ink-soft);
+        padding: 8px;
+        text-align: center;
+      }
+      .bar {
+        width: 80%;
+        height: 6px;
+        border-radius: 6px;
+        background: var(--line);
+        overflow: hidden;
+      }
+      .bar i {
+        display: block;
+        height: 100%;
+        background: var(--accent);
+      }
+      .spin {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        border: 2.5px solid var(--line);
+        border-top-color: var(--accent);
+        animation: spin 0.8s linear infinite;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* barber photo */
+      .person {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        flex-wrap: wrap;
+      }
+      .avatar-lg {
+        width: 96px;
+        height: 96px;
+        border-radius: 50%;
+        flex: none;
+      }
+      .initials {
+        border-radius: 50%;
+        background: #e9d8c4;
+        color: #7a3d1e;
+        display: grid;
+        place-items: center;
+        font: 700 34px/1 var(--font-display);
+        flex: none;
+      }
+      .tabs {
+        display: flex;
+        gap: 4px;
+        border-bottom: 1.5px solid var(--line);
+        margin-bottom: 16px;
+        overflow-x: auto;
+      }
+      .tabs span {
+        padding: 10px 14px;
+        font-weight: 600;
+        white-space: nowrap;
+        color: var(--muted);
+        border-bottom: 2.5px solid transparent;
+        margin-bottom: -1.5px;
+      }
+      .tabs span.on {
+        color: var(--ink);
+        border-color: var(--accent);
+      }
+
+      /* list rows (Ustalar) */
+      .rows {
+        display: grid;
+        gap: 10px;
+      }
+      .row {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 14px 16px;
+        border-radius: var(--r-card);
+        background: var(--surface);
+        border: 1.5px solid var(--line);
+      }
+      .row .grow {
+        flex: 1;
+        min-width: 0;
+      }
+      .row .title {
+        font-weight: 650;
+        font-size: 15.5px;
+      }
+      .row .sub {
+        color: var(--muted);
+        font-size: 13px;
+      }
+      .av48 {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        flex: none;
+      }
+
+      /* ============================ Dialogs (inside the device) ============================ */
+      .overlay {
+        position: absolute;
+        inset: 0;
+        z-index: 20;
+        background: rgba(31, 27, 22, 0.45);
+        display: grid;
+        place-items: center;
+        padding: 16px;
+      }
+      .modal {
+        width: 100%;
+        max-width: 520px;
+        background: var(--surface);
+        border-radius: 22px;
+        box-shadow: 0 30px 70px rgba(31, 27, 22, 0.3);
+        overflow: hidden;
+      }
+      .modal-head {
+        padding: 20px 20px 4px;
+      }
+      .modal-head h2 {
+        font: 600 22px/1.2 var(--font-display);
+        margin: 0;
+      }
+      .modal-head p {
+        margin: 6px 0 0;
+        color: var(--muted);
+        font-size: 13.5px;
+      }
+      .modal-body {
+        padding: 12px 20px 8px;
+        display: grid;
+        gap: 14px;
+      }
+      .modal-foot {
+        display: flex;
+        gap: 10px;
+        justify-content: flex-end;
+        padding: 14px 20px 20px;
+        border-top: 1px solid var(--line);
+        flex-wrap: wrap;
+      }
+      @container (max-width: 599px) {
+        .overlay {
+          place-items: end stretch;
+          padding: 0;
+        }
+        .modal {
+          max-width: none;
+          border-radius: 22px 22px 0 0;
+        }
+        .modal-foot .btn {
+          flex: 1;
+        }
+      }
+      .check-row {
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+        padding: 12px 14px;
+        border-radius: 12px;
+        border: 1.5px solid var(--line);
+        cursor: pointer;
+      }
+      .check-row input {
+        width: 22px;
+        height: 22px;
+        margin: 1px 0 0;
+        accent-color: var(--danger);
+        flex: none;
+      }
+      .check-row small {
+        display: block;
+        color: var(--muted);
+        font-size: 12.5px;
+      }
+
+      /* ============================ Crop tool ============================ */
+      .crop-area {
+        position: relative;
+        background: #14110e;
+        border-radius: 14px;
+        overflow: hidden;
+        touch-action: none;
+        cursor: grab;
+        user-select: none;
+        display: grid;
+        place-items: center;
+        height: 300px;
+      }
+      .crop-area:active {
+        cursor: grabbing;
+      }
+      .crop-frame {
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 0 0 999px rgba(20, 17, 14, 0.6);
+        outline: 2px solid #fff;
+      }
+      .crop-frame.round {
+        border-radius: 50%;
+      }
+      .crop-frame img {
+        position: absolute;
+        left: 0;
+        top: 0;
+        transform-origin: 0 0;
+        max-width: none;
+        pointer-events: none;
+      }
+      .zoom {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .zoom input {
+        flex: 1;
+        accent-color: var(--ink);
+        height: 28px;
+      }
+      .zoom button {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        border: 1.5px solid var(--line-strong);
+        background: var(--surface);
+        cursor: pointer;
+        font-size: 18px;
+        font-weight: 700;
+      }
+      .crop-preview {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 13px;
+        color: var(--muted);
+      }
+      .crop-preview .pv {
+        position: relative;
+        overflow: hidden;
+        background: var(--chip-bg);
+        flex: none;
+      }
+      .crop-preview .pv img {
+        position: absolute;
+        left: 0;
+        top: 0;
+        transform-origin: 0 0;
+        max-width: none;
+      }
+
+      .toast {
+        position: absolute;
+        left: 50%;
+        bottom: 18px;
+        transform: translateX(-50%);
+        background: var(--ink);
+        color: var(--sel-ink);
+        padding: 12px 18px;
+        border-radius: 999px;
+        font-weight: 600;
+        font-size: 14px;
+        z-index: 40;
+        white-space: nowrap;
+      }
+
+      /* ============================ Notes panel ============================ */
+      .notes {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 16px 18px;
+        font-size: 14px;
+        position: sticky;
+        top: 12px;
+      }
+      .notes h2 {
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: var(--muted);
+        margin: 0 0 10px;
+      }
+      .notes ul {
+        margin: 0 0 14px;
+        padding-left: 18px;
+        color: var(--muted);
+      }
+      .notes li {
+        margin: 5px 0;
+      }
+      .notes b {
+        color: var(--ink);
+      }
+    </style>
+  </head>
+  <body>
+    <header class="review-top">
+      <h1>Admin: rasmlar (M3.5, 2b)</h1>
+      <p>
+        Jonli maket: rasm yuklash, kesish va o'chirish ekranlari. Ekranlarni tanlang; «Telefon»
+        tugmasi telefon kengligini ko'rsatadi. Yuklash taqlid qilinadi — hech narsa saqlanmaydi.
+      </p>
+      <div class="switcher" id="switcher" role="group" aria-label="Ekranlar">
+        <button type="button" data-screen="settings">1 · Sozlamalar → Rasmlar</button>
+        <button type="button" data-screen="crop">2 · Kesish oynasi</button>
+        <button type="button" data-screen="profile">3 · Usta → Profil</button>
+        <button type="button" data-screen="deactivate">4 · Ustani nofaol qilish</button>
+        <button type="button" data-screen="service">5 · Xizmat oynasi</button>
+        <button type="button" data-screen="list">6 · Ustalar ro'yxati</button>
+        <button type="button" data-screen="states">7 · Holatlar va xatolar</button>
+        <span class="sep" aria-hidden="true"></span>
+        <button type="button" data-width="desktop">Kompyuter</button>
+        <button type="button" data-width="phone">Telefon</button>
+      </div>
+    </header>
+
+    <div class="stage">
+      <div class="device" id="device">
+        <div class="device-body" id="screen"></div>
+      </div>
+
+      <aside class="notes">
+        <h2>Qarorlar (tasdiqlangan)</h2>
+        <ul>
+          <li>
+            <b>Muqova</b> va <b>usta rasmi</b> — egasi o'zi kesadi (muqova 3:1, usta — doira).
+          </li>
+          <li><b>«Ishlarimiz»</b> — 12 tagacha, yuklangan tartibda; faqat o'chirish.</li>
+          <li><b>Rasm brauzerda</b> kichraytiriladi va siqiladi (WebP / JPEG), keyin yuklanadi.</li>
+          <li>
+            Usta rasmi yonida: <b>«Ustaning roziligi bilan yuklang»</b>; «Rasmni olib tashlash» —
+            profilda va nofaol qilish oynasida.
+          </li>
+        </ul>
+        <h2>Takliflar — tasdiqlang</h2>
+        <ul>
+          <li>Rasmlar <b>darhol saqlanadi</b> — «O'zgarishlarni saqlash» kerak emas.</li>
+          <li>
+            «Ishlarimiz»ga <b>bir nechta rasm birdan</b>; kesish yo'q (kichik rasm markazdan). 12 ga
+            sig'maganlari yuklanmaydi va aniq aytiladi:
+            <b>«5 ta qo'shildi, 3 tasi sig'madi (limit 12)»</b>.
+          </li>
+          <li>O'chirishdan oldin <b>so'raladi</b> — o'chgan rasm qaytmaydi.</li>
+          <li>Nofaol qilishda «Rasmini ham olib tashlash» <b>belgilanmagan</b> turadi.</li>
+          <li>
+            Eng kichik o'lcham: muqova eni <b>1200 px</b>, boshqalar <b>400 px</b>; asl fayl
+            <b>25 MB</b> gacha. Kichik rasmda — o'lchami bilan aniq xato.
+          </li>
+          <li>
+            <b>Logo kesilmaydi:</b> butun logo kvadrat ichiga sig'diriladi, oq-krem fonda (keng
+            yozuvli logolar uchun). <b>Xizmat rasmi</b> — kvadrat, markazdan.
+          </li>
+        </ul>
+        <h2>Rasmlar</h2>
+        <ul>
+          <li>Pexels (bepul) — <code>docs/IMAGE_CREDITS.md</code>. Logo — soxta namuna.</li>
+        </ul>
+      </aside>
+    </div>
+
+    <script>
+      /* =========================== Data =========================== */
+      const px = (id, w, h, crop) =>
+        `https://images.pexels.com/photos/${id}/pexels-photo-${id}.jpeg?auto=compress&cs=tinysrgb&fm=webp&w=${w}` +
+        (h ? `&h=${h}&fit=crop` : '') +
+        (crop ? `&crop=${crop}` : '')
+      const LOGO =
+        'data:image/svg+xml,' +
+        encodeURIComponent(
+          `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120"><rect width="120" height="120" fill="#1f1b16"/><circle cx="60" cy="60" r="44" fill="none" stroke="#b4532a" stroke-width="4"/><text x="60" y="76" text-anchor="middle" font-family="Georgia,serif" font-size="46" font-weight="700" fill="#f6f1ea">N</text><path d="M38 92h44" stroke="#b4532a" stroke-width="4" stroke-linecap="round"/></svg>`,
+        )
+      // a WIDE text logo (fake), to show "contain": the whole logo fits, nothing is cut
+      const LOGO_WIDE =
+        'data:image/svg+xml,' +
+        encodeURIComponent(
+          `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 120"><rect width="360" height="120" rx="14" fill="#1f1b16"/><text x="180" y="62" text-anchor="middle" font-family="Georgia,serif" font-size="44" font-weight="700" fill="#f6f1ea" letter-spacing="2">NAVBATLY</text><text x="180" y="96" text-anchor="middle" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="#b4532a" letter-spacing="7">DEMO BARBERSHOP</text></svg>`,
+        )
+      const COVER = 13138476
+      const JASUR = 8867537
+      const BOBUR = 20302331
+      const SPARE = [3998427, 7447133, 19664861, 6843637, 1895701, 13138476] // "picked" in the demo
+      const S = {
+        screen: 'settings',
+        width: 'desktop',
+        cover: true,
+        logo: true,
+        gallery: [12464841, 9992817, 3998431, 1453005, 7447120, 19664876, 37764947],
+        uploading: null, // {i, stage:'prep'|'up', pct}
+        wideLogo: true, // review switch: wide text logo vs round monogram
+        batchNote: '', // "5 ta qo'shildi, 3 tasi sig'madi (limit 12)"
+        jasurPhoto: true,
+        confirmDel: null,
+        crop: { kind: 'staff', scale: 1, x: 0, y: 0 },
+        toast: '',
+      }
+      const $ = (id) => document.getElementById(id)
+      let toastTimer
+      const toast = (t) => {
+        S.toast = t
+        render()
+        clearTimeout(toastTimer)
+        toastTimer = setTimeout(() => {
+          S.toast = ''
+          render()
+        }, 2200)
+      }
+
+      /* =========================== Screens =========================== */
+      const head = (crumb, title, sub) =>
+        `<div class="crumb">${crumb}</div><h1 class="page-title">${title}</h1>${sub ? `<p class="page-sub">${sub}</p>` : ''}`
+
+      function viewSettings() {
+        const n = S.gallery.length
+        const full = n >= 12
+        const tiles = S.gallery
+          .map(
+            (id, i) => `<div class="g-item ph">
+              <img src="${px(id, 220, 220)}" alt="Ish rasmi ${i + 1}" loading="lazy" />
+              ${
+                S.uploading && S.uploading.i === i
+                  ? `<div class="g-busy">${
+                      S.uploading.stage === 'prep'
+                        ? '<span class="spin"></span>Rasm tayyorlanmoqda…'
+                        : `Yuklanmoqda ${S.uploading.pct}%<span class="bar"><i style="width:${S.uploading.pct}%"></i></span>`
+                    }</div>`
+                  : `<button class="g-del" type="button" data-act="ask-del" data-i="${i}" aria-label="Ish rasmi ${i + 1} — o'chirish">✕</button>`
+              }
+            </div>`,
+          )
+          .join('')
+        return `${head('Sozlamalar', 'Sozlamalar', "Salon ma'lumotlari, bron qoidalari, rasmlar va yopiq kunlar.")}
+          <div class="hint-box" style="margin-bottom:16px">… Salon ma'lumotlari, Bron qoidalari va «O'zgarishlarni saqlash» — avvalgidek (3c) …</div>
+          <section class="panel-card">
+            <h2>Salon rasmlari</h2>
+            <p>Bron sahifasida ko'rinadi. Rasmlar <b>darhol saqlanadi</b>.</p>
+            <div class="stack">
+              <div class="photo-block">
+                <b>Muqova</b>
+                ${
+                  S.cover
+                    ? `<div class="cover-box ph"><img src="${px(COVER, 900, 300)}" alt="Salon muqovasi" /></div>`
+                    : `<div class="cover-box empty-box">Muqova rasmi yo'q.<br/>Bron sahifasi tepasida salon rasmi ko'rinadi.</div>`
+                }
+                <div class="actions">
+                  <button class="btn btn-secondary btn-sm" type="button" data-act="crop-cover">${S.cover ? 'Almashtirish' : 'Rasm yuklash'}</button>
+                  ${S.cover ? `<button class="btn btn-ghost-danger btn-sm" type="button" data-act="rm-cover">Olib tashlash</button>` : ''}
+                </div>
+                <small style="color:var(--muted);font-size:12.5px">Keng (gorizontal) rasm tanlang — kamida 1200 px eni. Keyin ramka ichida joylashtirasiz.</small>
+              </div>
+              <div class="photo-block">
+                <b>Logo</b>
+                <div class="logo-row">
+                  ${
+                    S.logo
+                      ? `<div class="logo-box"><img src="${S.wideLogo ? LOGO_WIDE : LOGO}" alt="Salon logosi" /></div>
+                         <div class="logo-box sm" title="Bron sahifasidagi kichik ko'rinishi"><img src="${S.wideLogo ? LOGO_WIDE : LOGO}" alt="" /></div>`
+                      : `<div class="letter-tile" aria-label="Logo yo'q — salon nomining birinchi harfi">N</div>`
+                  }
+                  <div class="actions">
+                    <button class="btn btn-secondary btn-sm" type="button" data-act="pick-logo">${S.logo ? 'Almashtirish' : 'Logo yuklash'}</button>
+                    ${S.logo ? `<button class="btn btn-ghost-danger btn-sm" type="button" data-act="rm-logo">Olib tashlash</button>` : ''}
+                  </div>
+                </div>
+                <small style="color:var(--muted);font-size:12.5px">Logo kesilmaydi — butun logo kvadrat ichiga sig'diriladi. Logo bo'lmasa, salon nomining birinchi harfi ko'rinadi.
+                  <button type="button" data-act="toggle-logo" style="border:0;background:none;color:var(--accent);font-weight:600;cursor:pointer;padding:0 0 0 4px">(maket: ${S.wideLogo ? 'dumaloq logoni' : 'keng logoni'} ko'rsatish)</button></small>
+              </div>
+              <div class="photo-block">
+                <div class="gallery-head"><b>Ishlarimiz</b><span class="count ${full ? 'full' : ''}">${n} / 12</span></div>
+                <div class="gallery">${tiles}
+                  <button class="g-add" type="button" data-act="add-gallery" ${full || S.uploading ? 'disabled' : ''}><b>+</b>${full ? "Joy yo'q" : "Rasm qo'shish"}</button>
+                </div>
+                ${S.batchNote ? `<div class="hint-box warn" role="status">${S.batchNote}</div>` : ''}
+                ${
+                  full
+                    ? `<div class="hint-box warn">12 ta rasm — yangi rasm qo'shish uchun avval bittasini o'chiring.</div>`
+                    : `<small style="color:var(--muted);font-size:12.5px">Bir nechta rasmni birdan tanlash mumkin. Eng yaxshi ishlaringizni qo'ying. <span style="color:var(--accent)">(maket: «Rasm qo'shish» 8 ta rasm tanlagandek ishlaydi)</span></small>`
+                }
+              </div>
+            </div>
+          </section>
+          <div class="hint-box">… Salon yopiq kunlari — avvalgidek (3c) …</div>`
+      }
+
+      function cropDims() {
+        const narrow = S.width === 'phone'
+        if (S.crop.kind === 'cover')
+          return { w: narrow ? 300 : 420, h: narrow ? 100 : 140, round: false }
+        const s = narrow ? 220 : 240
+        return { w: s, h: s, round: S.crop.kind === 'staff' }
+      }
+      // only the cover and barber photos are cropped by the owner (the logo is never cropped)
+      const cropSrc = () => (S.crop.kind === 'cover' ? px(COVER, 1200) : px(JASUR, 800))
+      const cropTitle = () =>
+        S.crop.kind === 'cover' ? 'Muqovani joylashtiring' : 'Usta rasmini joylashtiring'
+
+      function viewCrop() {
+        const d = cropDims()
+        const pv =
+          S.crop.kind === 'cover' ? { w: 150, h: 50, r: '8px' } : { w: 54, h: 54, r: '50%' }
+        return `${screenBehindCrop()}
+          <div class="overlay">
+            <div class="modal" role="dialog" aria-modal="true" aria-labelledby="cropTitle">
+              <div class="modal-head"><h2 id="cropTitle">${cropTitle()}</h2>
+                <p>Rasmni barmoq yoki sichqoncha bilan suring. Kattalashtirish — pastdagi chiziq.</p></div>
+              <div class="modal-body">
+                <div class="seg" style="display:flex;gap:6px;flex-wrap:wrap">
+                  ${['staff', 'cover']
+                    .map(
+                      (k) =>
+                        `<button class="btn btn-sm ${S.crop.kind === k ? 'btn-primary' : 'btn-secondary'}" type="button" data-act="crop-kind" data-k="${k}">${{ staff: 'Usta (doira)', cover: 'Muqova (3:1)' }[k]}</button>`,
+                    )
+                    .join('')}
+                  <span style="font-size:12px;color:var(--muted);align-self:center">← maket uchun</span>
+                </div>
+                <div class="crop-area" id="cropArea">
+                  <div class="crop-frame ${d.round ? 'round' : ''}" id="cropFrame" style="width:${d.w}px;height:${d.h}px">
+                    <img id="cropImg" src="${cropSrc()}" alt="" draggable="false" />
+                  </div>
+                </div>
+                <div class="zoom">
+                  <button type="button" data-act="zoom-out" aria-label="Kichraytirish">−</button>
+                  <input type="range" id="zoom" min="1" max="3" step="0.01" value="${S.crop.scale}" aria-label="Kattalashtirish" />
+                  <button type="button" data-act="zoom-in" aria-label="Kattalashtirish">+</button>
+                </div>
+                <div class="crop-preview"><div class="pv" id="pv" style="width:${pv.w}px;height:${pv.h}px;border-radius:${pv.r}"><img id="pvImg" src="${cropSrc()}" alt="" /></div>
+                  Bron sahifasida shunday ko'rinadi</div>
+              </div>
+              <div class="modal-foot">
+                <button class="btn btn-secondary" type="button" data-act="crop-cancel">Bekor qilish</button>
+                <button class="btn btn-primary" type="button" data-act="crop-save">Saqlash</button>
+              </div>
+            </div>
+          </div>`
+      }
+      const screenBehindCrop = () => (S.crop.kind === 'staff' ? viewProfile(true) : viewSettings())
+
+      function viewProfile() {
+        const has = S.jasurPhoto
+        return `${head('Ustalar › Jasur', 'Jasur', 'Klassik va zamonaviy soch turmaklari. 8 yillik tajriba.')}
+          <div class="tabs" aria-hidden="true"><span>Ish vaqti</span><span>Xizmatlar</span><span>Dam olish</span><span class="on">Profil</span></div>
+          <section class="panel-card">
+            <h2>Rasm</h2>
+            <p>Mijozlar ustani tanlaganda ko'radi.</p>
+            <div class="stack">
+              <div class="person">
+                ${has ? `<div class="avatar-lg ph"><img src="${px(JASUR, 192, 192, 'top')}" alt="Jasur rasmi" /></div>` : `<div class="avatar-lg initials" aria-label="Rasm yo'q — ism harfi">J</div>`}
+                <div class="actions">
+                  <button class="btn btn-secondary btn-sm" type="button" data-act="crop-staff">${has ? 'Almashtirish' : 'Rasm yuklash'}</button>
+                  ${has ? `<button class="btn btn-ghost-danger btn-sm" type="button" data-act="rm-staff">Rasmni olib tashlash</button>` : ''}
+                </div>
+              </div>
+              <div class="hint-box warn">🤝 <span><b>Ustaning roziligi bilan yuklang.</b> Rasm bron sahifasida hamma mijozlarga ko'rinadi. Usta so'rasa — «Rasmni olib tashlash».</span></div>
+            </div>
+          </section>
+          <section class="panel-card">
+            <h2>Ma'lumotlar</h2>
+            <div class="stack">
+              <label class="field"><span>Ism</span><input class="input" value="Jasur" /></label>
+              <label class="field"><span>Qisqacha ma'lumot <small>(ixtiyoriy)</small></span><input class="input" value="Klassik va zamonaviy soch turmaklari. 8 yillik tajriba." /></label>
+            </div>
+          </section>`
+      }
+
+      function viewDeactivate() {
+        return `${viewProfile()}
+          <div class="overlay">
+            <div class="modal" role="dialog" aria-modal="true" aria-labelledby="deTitle">
+              <div class="modal-head"><h2 id="deTitle">Jasurni nofaol qilasizmi?</h2></div>
+              <div class="modal-body">
+                <div class="hint-box warn">Jasurning 1 ta kelgusi yozilishi bor — bekor qiling yoki mijozlar bilan bog'laning.</div>
+                <p style="margin:0;color:var(--muted);font-size:13.5px">🔑 Uning kirish hisobi ham vaqtincha bloklanadi.</p>
+                <label class="check-row"><input type="checkbox" id="rmPhoto" />
+                  <span><b>Rasmini ham olib tashlash</b><small>Rasm butunlay o'chiriladi. Usta qaytsa, yangisini yuklash mumkin.</small></span></label>
+              </div>
+              <div class="modal-foot">
+                <button class="btn btn-secondary" type="button" data-act="toast" data-t="Bekor qilindi">Bekor qilish</button>
+                <button class="btn btn-danger" type="button" data-act="deactivate">Nofaol qilish</button>
+              </div>
+            </div>
+          </div>`
+      }
+
+      function viewService() {
+        return `${head('Xizmatlar', 'Xizmatlar', '')}
+          <div class="hint-box">… xizmatlar ro'yxati (3a) …</div>
+          <div class="overlay">
+            <div class="modal" role="dialog" aria-modal="true" aria-labelledby="svTitle">
+              <div class="modal-head"><h2 id="svTitle">Xizmatni tahrirlash</h2></div>
+              <div class="modal-body">
+                <label class="field"><span>Nomi</span><input class="input" value="Soch olish" /></label>
+                <div class="field"><span>Rasm <small>(ixtiyoriy)</small></span>
+                  <div class="person">
+                    <div class="ph" style="width:72px;height:72px;border-radius:14px"><img src="${px(7447133, 144, 144)}" alt="Xizmat rasmi" /></div>
+                    <div class="actions">
+                      <button class="btn btn-secondary btn-sm" type="button" data-act="toast" data-t="Rasm tanlash oynasi ochiladi">Almashtirish</button>
+                      <button class="btn btn-ghost-danger btn-sm" type="button" data-act="toast" data-t="Rasm olib tashlandi">Olib tashlash</button>
+                    </div>
+                  </div>
+                  <small>Rasmsiz ham bo'ladi — bron sahifasida oddiy karta. Kvadrat, markazdan olinadi.</small>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+                  <label class="field"><span>Davomiyligi</span><input class="input" value="30 daqiqa" /></label>
+                  <label class="field"><span>Narxi (so'm)</span><input class="input" value="80 000" /></label>
+                </div>
+              </div>
+              <div class="modal-foot">
+                <button class="btn btn-secondary" type="button">Bekor qilish</button>
+                <button class="btn btn-primary" type="button">Saqlash</button>
+              </div>
+            </div>
+          </div>`
+      }
+
+      function viewList() {
+        const row = (name, photo, sub) => `<div class="row">
+          ${photo ? `<div class="av48 ph"><img src="${px(photo, 96, 96, 'top')}" alt="" /></div>` : `<div class="av48 initials" style="font-size:19px">${name[0]}</div>`}
+          <div class="grow"><div class="title">${name}</div><div class="sub">${sub}</div></div></div>`
+        return `${head('Ustalar', 'Ustalar', 'Ish vaqti, xizmatlar va dam olish kunlari.')}
+          <div class="rows">
+            ${row('Jasur', S.jasurPhoto ? JASUR : null, 'Bugun: 09:00–13:00, 14:00–20:00 · 5 ta xizmat')}
+            ${row('Bobur', BOBUR, 'Bugun: 09:00–13:00, 14:00–20:00 · 3 ta xizmat')}
+            ${row('Akmal', null, "Bugun: 09:00–13:00, 14:00–20:00 · 3 ta xizmat · rasm yo'q")}
+          </div>`
+      }
+
+      function viewStates() {
+        return `${head('Holatlar', 'Yuklash holatlari va xatolar', "Har bir yuklashda ko'rinadigan xabarlar.")}
+          <section class="panel-card"><h2>Jarayon</h2>
+            <div class="gallery" style="grid-template-columns:repeat(3,minmax(0,1fr))">
+              <div class="g-item ph"><img src="${px(9992817, 220, 220)}" alt="" /><div class="g-busy"><span class="spin"></span>Rasm tayyorlanmoqda…</div></div>
+              <div class="g-item ph"><img src="${px(3998431, 220, 220)}" alt="" /><div class="g-busy">Yuklanmoqda 64%<span class="bar"><i style="width:64%"></i></span></div></div>
+              <div class="g-item ph"><img src="${px(1453005, 220, 220)}" alt="" /></div>
+            </div>
+            <div class="hint-box ok" style="margin-top:12px">✓ Rasm saqlandi</div>
+          </section>
+          <section class="panel-card"><h2>Xatolar</h2>
+            <div class="stack">
+              <div class="hint-box err">Rasm juda katta — 25 MB dan kichik rasm tanlang.</div>
+              <div class="hint-box err">Bu rasmni ochib bo'lmadi. JPEG, PNG yoki WebP rasm tanlang.</div>
+              <div class="hint-box err">Rasm juda kichik (800 × 600 px). Muqova uchun eni kamida 1200 px bo'lgan rasm tanlang.</div>
+              <div class="hint-box err">Rasm juda kichik (300 × 300 px). Kamida 400 × 400 px bo'lgan rasm tanlang.</div>
+              <div class="hint-box warn">5 ta qo'shildi, 3 tasi sig'madi (limit 12).</div>
+              <div class="hint-box err">12 ta rasmdan ko'p bo'lmaydi — avval bittasini o'chiring.</div>
+              <div class="hint-box err">Internet aloqasi uzildi — rasm saqlanmadi, eski rasm joyida qoldi. Qayta urinib ko'ring.</div>
+            </div>
+          </section>
+          <section class="panel-card"><h2>O'chirishdan oldin</h2>
+            <div class="hint-box">«Rasmni o'chirasizmi? O'chgan rasmni qaytarib bo'lmaydi.» — [Bekor qilish] [O'chirish]</div>
+          </section>`
+      }
+
+      function viewConfirmDel() {
+        return `<div class="overlay"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="delTitle">
+            <div class="modal-head"><h2 id="delTitle">Rasmni o'chirasizmi?</h2><p>O'chgan rasmni qaytarib bo'lmaydi.</p></div>
+            <div class="modal-body"><div class="ph" style="width:120px;aspect-ratio:1;border-radius:12px"><img src="${px(S.gallery[S.confirmDel], 240, 240)}" alt="" /></div></div>
+            <div class="modal-foot">
+              <button class="btn btn-secondary" type="button" data-act="del-cancel">Bekor qilish</button>
+              <button class="btn btn-danger" type="button" data-act="del-ok">O'chirish</button>
+            </div></div></div>`
+      }
+
+      /* =========================== Render =========================== */
+      const VIEWS = {
+        settings: viewSettings,
+        crop: viewCrop,
+        profile: viewProfile,
+        deactivate: viewDeactivate,
+        service: viewService,
+        list: viewList,
+        states: viewStates,
+      }
+      function render() {
+        $('device').classList.toggle('phone', S.width === 'phone')
+        let html = VIEWS[S.screen]()
+        if (S.confirmDel !== null) html += viewConfirmDel()
+        if (S.toast) html += `<div class="toast" role="status">${S.toast}</div>`
+        $('screen').innerHTML = html
+        document
+          .querySelectorAll('#switcher [data-screen]')
+          .forEach((b) => b.setAttribute('aria-pressed', b.dataset.screen === S.screen))
+        document
+          .querySelectorAll('#switcher [data-width]')
+          .forEach((b) => b.setAttribute('aria-pressed', b.dataset.width === S.width))
+        if (S.screen === 'crop') initCrop()
+      }
+
+      /* =========================== Crop (drag + zoom) =========================== */
+      let natural = { w: 1, h: 1 }
+      function initCrop() {
+        const img = $('cropImg')
+        const ready = () => {
+          natural = { w: img.naturalWidth || 1, h: img.naturalHeight || 1 }
+          clampAndPaint()
+        }
+        img.complete ? ready() : img.addEventListener('load', ready, { once: true })
+        const area = $('cropArea')
+        let drag = null
+        area.addEventListener('pointerdown', (e) => {
+          drag = { x: e.clientX, y: e.clientY, ox: S.crop.x, oy: S.crop.y }
+          area.setPointerCapture(e.pointerId)
+        })
+        area.addEventListener('pointermove', (e) => {
+          if (!drag) return
+          S.crop.x = drag.ox + (e.clientX - drag.x)
+          S.crop.y = drag.oy + (e.clientY - drag.y)
+          clampAndPaint()
+        })
+        area.addEventListener('pointerup', () => (drag = null))
+        $('zoom').addEventListener('input', (e) => setZoom(+e.target.value))
+      }
+      const baseScale = () => {
+        const d = cropDims()
+        return Math.max(d.w / natural.w, d.h / natural.h) // image always covers the frame
+      }
+      function setZoom(z) {
+        const d = cropDims()
+        const old = baseScale() * S.crop.scale
+        S.crop.scale = Math.min(3, Math.max(1, z))
+        const nw = baseScale() * S.crop.scale
+        // zoom around the frame centre
+        S.crop.x = d.w / 2 - ((d.w / 2 - S.crop.x) * nw) / old
+        S.crop.y = d.h / 2 - ((d.h / 2 - S.crop.y) * nw) / old
+        clampAndPaint()
+        $('zoom').value = S.crop.scale
+      }
+      function clampAndPaint() {
+        const d = cropDims()
+        const k = baseScale() * S.crop.scale
+        const w = natural.w * k,
+          h = natural.h * k
+        S.crop.x = Math.min(0, Math.max(d.w - w, S.crop.x))
+        S.crop.y = Math.min(0, Math.max(d.h - h, S.crop.y))
+        $('cropImg').style.transform = `translate(${S.crop.x}px, ${S.crop.y}px) scale(${k})`
+        const pv = $('pv')
+        const r = pv.clientWidth / d.w
+        $('pvImg').style.transform =
+          `translate(${S.crop.x * r}px, ${S.crop.y * r}px) scale(${k * r})`
+      }
+
+      /* =========================== Events =========================== */
+      $('switcher').addEventListener('click', (e) => {
+        const b = e.target.closest('button')
+        if (!b) return
+        if (b.dataset.screen) {
+          S.screen = b.dataset.screen
+          S.confirmDel = null
+        }
+        if (b.dataset.width) S.width = b.dataset.width
+        S.crop.x = S.crop.y = 0
+        S.crop.scale = 1
+        render()
+      })
+
+      function simulateUpload(i) {
+        S.uploading = { i, stage: 'prep', pct: 0 }
+        render()
+        setTimeout(() => {
+          S.uploading = { i, stage: 'up', pct: 10 }
+          const t = setInterval(() => {
+            S.uploading.pct = Math.min(100, S.uploading.pct + 18)
+            if (S.uploading.pct >= 100) {
+              clearInterval(t)
+              S.uploading = null
+              toast('Rasm saqlandi ✓')
+            } else render()
+          }, 180)
+        }, 700)
+      }
+
+      $('screen').addEventListener('click', (e) => {
+        const b = e.target.closest('[data-act]')
+        if (!b) return
+        const act = b.dataset.act
+        if (act === 'ask-del') {
+          S.confirmDel = +b.dataset.i
+          return render()
+        }
+        if (act === 'del-cancel') {
+          S.confirmDel = null
+          return render()
+        }
+        if (act === 'del-ok') {
+          S.gallery.splice(S.confirmDel, 1)
+          S.confirmDel = null
+          return toast("Rasm o'chirildi")
+        }
+        if (act === 'add-gallery') {
+          // demo: the owner picked 8 photos; only what fits the limit of 12 is uploaded
+          const picked = 8
+          const fits = Math.min(picked, 12 - S.gallery.length)
+          if (fits <= 0) return
+          for (let k = 0; k < fits; k++)
+            S.gallery.push(SPARE[(S.gallery.length + k) % SPARE.length])
+          S.batchNote =
+            fits < picked
+              ? `${fits} ta qo'shildi, ${picked - fits} tasi sig'madi (limit 12).`
+              : `${fits} ta rasm qo'shildi.`
+          return simulateUpload(S.gallery.length - 1)
+        }
+        if (act === 'toggle-logo') {
+          S.wideLogo = !S.wideLogo
+          return render()
+        }
+        if (act === 'pick-logo') {
+          // no crop window for logos: the whole logo is fitted into the square
+          S.logo = true
+          return toast("Logo saqlandi ✓ (butun logo kvadratga sig'dirildi)")
+        }
+        if (act === 'crop-cover' || act === 'crop-staff') {
+          S.crop = { kind: act.slice(5), scale: 1, x: 0, y: 0 }
+          S.screen = 'crop'
+          return render()
+        }
+        if (act === 'crop-kind') {
+          S.crop = { kind: b.dataset.k, scale: 1, x: 0, y: 0 }
+          return render()
+        }
+        if (act === 'zoom-in') return setZoom(S.crop.scale + 0.25)
+        if (act === 'zoom-out') return setZoom(S.crop.scale - 0.25)
+        if (act === 'crop-cancel' || act === 'crop-save') {
+          const back = S.crop.kind === 'staff' ? 'profile' : 'settings'
+          S.screen = back
+          if (act === 'crop-save') {
+            if (S.crop.kind === 'cover') S.cover = true
+            if (S.crop.kind === 'staff') S.jasurPhoto = true
+            return toast('Rasm saqlandi ✓')
+          }
+          return render()
+        }
+        if (act === 'rm-cover') {
+          S.cover = false
+          return toast('Muqova olib tashlandi')
+        }
+        if (act === 'rm-logo') {
+          S.logo = false
+          return toast('Logo olib tashlandi')
+        }
+        if (act === 'rm-staff') {
+          S.jasurPhoto = false
+          return toast("Rasm olib tashlandi — endi ism harfi ko'rinadi")
+        }
+        if (act === 'deactivate') {
+          const rm = $('rmPhoto')?.checked
+          if (rm) S.jasurPhoto = false
+          S.screen = 'list'
+          return toast(
+            rm
+              ? 'Jasur nofaol, rasmi olib tashlandi'
+              : "Jasur nofaol — bron sahifasida ko'rinmaydi",
+          )
+        }
+        if (act === 'toast') return toast(b.dataset.t)
+      })
+
+      render()
+    </script>
+  </body>
+</html>

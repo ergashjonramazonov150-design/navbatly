@@ -14,7 +14,7 @@ export type DbErrorKey =
   | `rpc.${RpcCode}`
 
 /** Business-error codes raised by our database functions (message = code, errcode P0001). */
-const RPC_CODES = ['NOT_ALLOWED', 'INVALID_HOURS', 'HOURS_OVERLAP'] as const
+const RPC_CODES = ['NOT_ALLOWED', 'INVALID_HOURS', 'HOURS_OVERLAP', 'GALLERY_FULL'] as const
 type RpcCode = (typeof RPC_CODES)[number]
 
 const BY_CODE: Record<string, DbErrorKey> = {

@@ -5,6 +5,7 @@ import { Link, useParams, useSearchParams } from 'react-router'
 import { InitialsAvatar } from '@/components/common/InitialsAvatar'
 import { LoadError, PageHeader } from '@/components/common/PageHeader'
 import { useReadyBusiness } from '@/features/business/useBusiness'
+import { imageUrls } from '@/features/images/api'
 import { useStaffList } from '@/features/staff/api'
 import { HoursEditor } from '@/features/staff/HoursEditor'
 import { ProfileTab } from '@/features/staff/ProfileTab'
@@ -69,6 +70,7 @@ export function StaffDetailPage() {
             name={staff.fullName}
             active={staff.isActive}
             className="size-14 text-xl"
+            photoUrl={imageUrls(staff.photoPath)?.sm}
           />
         }
         title={staff.fullName}

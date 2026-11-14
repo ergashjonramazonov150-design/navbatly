@@ -12,6 +12,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { dbErrorKey } from '@/lib/dbErrors'
 import { useSaveStaff, type StaffItem } from './api'
 import { staffSchema, type StaffFormValues } from './schemas'
+import { StaffPhotoCard } from './StaffPhotoCard'
 import { useStaffActiveToggle } from './useStaffActiveToggle'
 
 export function ProfileTab({ staff, businessId }: { staff: StaffItem; businessId: string }) {
@@ -42,48 +43,55 @@ export function ProfileTab({ staff, businessId }: { staff: StaffItem; businessId
   })
 
   return (
-    <section className="rounded-2xl border-[1.5px] border-border bg-surface p-4 min-[600px]:p-5">
-      <form onSubmit={onSubmit} noValidate className="grid gap-4">
-        <FormField id="pf-name" label={t('staff.form.name')} error={msg(errors.fullName?.message)}>
-          <Input
+    <div className="grid gap-4">
+      <StaffPhotoCard staff={staff} businessId={businessId} />
+      <section className="rounded-2xl border-[1.5px] border-border bg-surface p-4 min-[600px]:p-5">
+        <form onSubmit={onSubmit} noValidate className="grid gap-4">
+          <FormField
             id="pf-name"
-            maxLength={80}
-            aria-invalid={!!errors.fullName}
-            {...register('fullName')}
-          />
-        </FormField>
-        <FormField
-          id="pf-bio"
-          label={`${t('staff.form.bio')} ${t('staff.form.optional')}`}
-          error={msg(errors.bio?.message)}
-        >
-          <Textarea id="pf-bio" maxLength={300} rows={3} {...register('bio')} />
-          <p className="text-[12.5px] text-muted-foreground">{t('staff.form.bioHint')}</p>
-        </FormField>
-
-        <p className="rounded-xl border border-border bg-surface-2 px-3.5 py-3 text-[13px] text-muted-foreground">
-          🔑 {staff.hasLogin ? t('staff.form.loginYes') : t('staff.form.loginNo')}
-          <br />
-          {t('staff.loginNote')}
-        </p>
-
-        {formError && <FormAlert>{formError}</FormAlert>}
-
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <label className="flex min-h-11 cursor-pointer items-center gap-3 font-semibold">
-            <Switch
-              checked={staff.isActive}
-              onCheckedChange={(next) => toggle(staff, next)}
-              aria-label={t('staff.activeLabel', { name: staff.fullName })}
+            label={t('staff.form.name')}
+            error={msg(errors.fullName?.message)}
+          >
+            <Input
+              id="pf-name"
+              maxLength={80}
+              aria-invalid={!!errors.fullName}
+              {...register('fullName')}
             />
-            {t('staff.form.active')}
-          </label>
-          <Button type="submit" disabled={!isDirty || isSubmitting}>
-            {isSubmitting ? t('actions.saving') : t('actions.save')}
-          </Button>
-        </div>
-      </form>
-      {dialog}
-    </section>
+          </FormField>
+          <FormField
+            id="pf-bio"
+            label={`${t('staff.form.bio')} ${t('staff.form.optional')}`}
+            error={msg(errors.bio?.message)}
+          >
+            <Textarea id="pf-bio" maxLength={300} rows={3} {...register('bio')} />
+            <p className="text-[12.5px] text-muted-foreground">{t('staff.form.bioHint')}</p>
+          </FormField>
+
+          <p className="rounded-xl border border-border bg-surface-2 px-3.5 py-3 text-[13px] text-muted-foreground">
+            🔑 {staff.hasLogin ? t('staff.form.loginYes') : t('staff.form.loginNo')}
+            <br />
+            {t('staff.loginNote')}
+          </p>
+
+          {formError && <FormAlert>{formError}</FormAlert>}
+
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <label className="flex min-h-11 cursor-pointer items-center gap-3 font-semibold">
+              <Switch
+                checked={staff.isActive}
+                onCheckedChange={(next) => toggle(staff, next)}
+                aria-label={t('staff.activeLabel', { name: staff.fullName })}
+              />
+              {t('staff.form.active')}
+            </label>
+            <Button type="submit" disabled={!isDirty || isSubmitting}>
+              {isSubmitting ? t('actions.saving') : t('actions.save')}
+            </Button>
+          </div>
+        </form>
+        {dialog}
+      </section>
+    </div>
   )
 }

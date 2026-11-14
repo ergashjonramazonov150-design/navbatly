@@ -16,6 +16,8 @@ vi.mock('@/lib/supabase', () => ({
       updateUser: vi.fn(),
     },
     from: vi.fn(),
+    // photos (M3.5): tests replace this with a recording fake
+    storage: { from: vi.fn() },
   },
 }))
 
