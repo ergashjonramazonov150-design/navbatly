@@ -19,3 +19,6 @@ export const ENV_PROBLEMS = validateEnv({
  * hourly limit, so real owners would never receive the reset link.
  */
 export const PASSWORD_RESET_ENABLED = import.meta.env.VITE_PASSWORD_RESET_ENABLED === 'true'
+
+/** Cloudflare Turnstile SITE key (public). Empty → no captcha on the web booking page (M7). */
+export const TURNSTILE_SITE_KEY = import.meta.env.VITE_TURNSTILE_SITE_KEY?.trim() ?? ''

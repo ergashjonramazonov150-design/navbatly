@@ -141,6 +141,8 @@ export async function createBooking(input: {
   website: string // honeypot — always empty for real people
   /** Telegram-signed launch data (Mini App) — checked on the server */
   tgInitData?: string
+  /** Cloudflare Turnstile token (web bookings, when the captcha is switched on) */
+  captchaToken?: string
 }): Promise<BookingResult> {
   try {
     const res = await fetch(`${SUPABASE_URL}/functions/v1/create-booking`, {

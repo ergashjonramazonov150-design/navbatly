@@ -6,7 +6,8 @@
 // days off, notice + horizon, max active bookings per phone, per-IP rate limit) and the
 // EXCLUDE constraint makes double booking impossible (SLOT_TAKEN).
 // Anti-spam: honeypot + DB limits; Mini App bookings must carry Telegram-signed initData
-// (verified here). Web captcha comes in M7.
+// (verified here); web bookings need a Cloudflare Turnstile token once TURNSTILE_SECRET_KEY
+// is set (M7).
 // After a successful ONLINE booking the salon gets a Telegram message (M6), in the
 // background — a Telegram problem never fails the booking (error saved in last_error).
 import {
@@ -199,7 +200,25 @@ Deno.serve(async (req) => {
     viaTelegram = true
   } else {
     // Client IP: Supabase's gateway puts the real caller IP FIRST in X-Forwarded-For.
-    requester = `ip:${(req.headers.get('x-forwarded-for') ?? '').split(',')[0].trim() || 'unknown'}`
+    const ip = (req.headers.get('x-forwarded-for') ?? '').split(',')[0].trim() || 'unknown'
+    requester = `ip:${ip}`
+    // Web captcha (M7): enforced only once TURNSTILE_SECRET_KEY is set.
+    const captchaSecret = Deno.env.get('TURNSTILE_SECRET_KEY')?.trim()
+    if (captchaSecret) {
+      const token = typeof body.captchaToken === 'string' ? body.captchaToken : ''
+      if (!token || token.length > 4096)
+        return json({ ok: false, code: 'CAPTCHA_FAILED' }, 403, headers)
+      const form = new FormData()
+      form.append('secret', captchaSecret)
+      form.append('response', token)
+      if (ip !== 'unknown') form.append('remoteip', ip)
+      const res = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+        method: 'POST',
+        body: form,
+      }).catch(() => null)
+      const out = (await res?.json().catch(() => null)) as { success?: boolean } | null
+      if (!out?.success) return json({ ok: false, code: 'CAPTCHA_FAILED' }, 403, headers)
+    }
   }
   // only a salted hash is stored (never the raw IP / Telegram id)
   const requesterHash = await sha256(`${salt}:${requester}`)
