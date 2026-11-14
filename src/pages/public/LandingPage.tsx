@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Link } from 'react-router'
 
 import { Button } from '@/components/ui/button'
 import { formatTime } from '@/lib/datetime'
 
-// Temporary M0 "hello" page. Replaced by the real landing page in M8.
+// Temporary home page (real landing page = M8, mockup design/04): links to the demo + admin.
 export function LandingPage() {
   const { t } = useTranslation()
   const [now, setNow] = useState(() => new Date())
@@ -21,7 +22,14 @@ export function LandingPage() {
       <p className="text-sm text-muted-foreground tabular-nums">
         {t('hello.tashkentTime', { time: formatTime(now) })}
       </p>
-      <Button disabled>{t('hello.cta')}</Button>
+      <div className="flex flex-wrap justify-center gap-3">
+        <Button asChild>
+          <Link to="/b/demo">{t('hello.demo')}</Link>
+        </Button>
+        <Button asChild variant="outline">
+          <Link to="/admin/login">{t('hello.admin')}</Link>
+        </Button>
+      </div>
     </main>
   )
 }

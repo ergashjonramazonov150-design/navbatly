@@ -4,7 +4,9 @@
     "title": "Salom, Navbatly!",
     "subtitle": "Sartaroshxona va go'zallik salonlari uchun onlayn navbat tizimi.",
     "tashkentTime": "Toshkent vaqti: {{time}}",
-    "cta": "Tez orada"
+    "cta": "Tez orada",
+    "demo": "Demo salonni ochish",
+    "admin": "Salon egalari uchun kirish"
   },
   "notFound": {
     "title": "Sahifa topilmadi",

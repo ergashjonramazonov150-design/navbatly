@@ -1,0 +1,124 @@
+{
+  "call": "Salonga qo'ng'iroq qilish",
+  "back": "Orqaga",
+  "ruSoon": "Rus tili tez orada",
+  "stepLabel": "{{n}}-qadam / 4",
+  "titles": {
+    "service": "Xizmatni tanlang",
+    "staff": "Ustani tanlang",
+    "time": "Kun va vaqtni tanlang",
+    "contact": "Ma'lumotlaringiz"
+  },
+  "next": "Davom etish",
+  "submit": "Band qilish",
+  "submitting": "Yuborilmoqda…",
+  "summary": {
+    "noService": "Xizmat tanlanmagan",
+    "pickOne": "Ro'yxatdan bittasini tanlang",
+    "pickTime": "Vaqtni tanlang",
+    "payAtSalon": "To'lov salonda"
+  },
+  "minutes": "{{count}} daq",
+  "works": "Ishlarimiz",
+  "worksCount": "{{count}} ta rasm",
+  "zoom": "{{n}}-rasm — kattalashtirish",
+  "workAlt": "Ish rasmi {{n}}",
+  "viewer": {
+    "close": "Yopish",
+    "prev": "Oldingi rasm",
+    "next": "Keyingi rasm",
+    "count": "{{n}} / {{total}}"
+  },
+  "anyBarber": "Istalgan usta",
+  "anyBarberSub": "Eng yaqin bo'sh vaqtga — qaysi usta bo'sh bo'lsa",
+  "soon": "Tez orada",
+  "nearest": "Eng yaqin: {{when}}",
+  "noFree": "Yaqin kunlarda bo'sh vaqt yo'q",
+  "today": "bugun",
+  "tomorrow": "ertaga",
+  "noStaff": "Bu xizmat uchun hozir usta yo'q.",
+  "dayToday": "Bugun",
+  "dayTomorrow": "Ertaga",
+  "wd": {
+    "1": "Du",
+    "2": "Se",
+    "3": "Ch",
+    "4": "Pa",
+    "5": "Ju",
+    "6": "Sh",
+    "7": "Ya"
+  },
+  "wdLong": {
+    "1": "Dushanba",
+    "2": "Seshanba",
+    "3": "Chorshanba",
+    "4": "Payshanba",
+    "5": "Juma",
+    "6": "Shanba",
+    "7": "Yakshanba"
+  },
+  "groups": {
+    "morning": "Ertalab",
+    "day": "Kunduzi",
+    "evening": "Kechqurun",
+    "free": "{{count}} ta bo'sh"
+  },
+  "emptyDay": "Bu kunda bo'sh vaqt yo'q",
+  "emptyDayHint": "Boshqa kunni tanlang yoki boshqa ustani ko'ring.",
+  "loadingSlots": "Bo'sh vaqtlar yuklanmoqda…",
+  "form": {
+    "name": "Ismingiz",
+    "namePh": "Masalan: Aziz",
+    "nameErr": "Ismingizni kiriting (kamida 2 ta harf).",
+    "phone": "Telefon raqamingiz",
+    "phoneErr": "Raqamni to'liq kiriting: 9 ta raqam, masalan 90 123 45 67.",
+    "note": "Izoh",
+    "optional": "(ixtiyoriy)",
+    "notePh": "Masalan: biroz kechikishim mumkin",
+    "consent": "Shaxsiy ma'lumotlarim (ism va telefon) faqat shu yozilish uchun ishlatilishiga roziman.",
+    "consentErr": "Davom etish uchun rozilik belgisini qo'ying."
+  },
+  "rows": {
+    "service": "Xizmat",
+    "staff": "Usta",
+    "time": "Vaqt",
+    "price": "Narxi",
+    "change": "O'zgartirish"
+  },
+  "taken": {
+    "title": "Bu vaqt band bo'lib qoldi",
+    "text": "Kimdir sizdan biroz oldin {{when}} vaqtini band qildi. Ma'lumotlaringiz saqlanib qoldi — boshqa vaqtni tanlang.",
+    "nearest": "Yaqin bo'sh vaqtlar",
+    "none": "Bu kunda boshqa bo'sh vaqt qolmadi.",
+    "other": "Boshqa kun yoki vaqt"
+  },
+  "success": {
+    "titlePending": "So'rovingiz yuborildi!",
+    "textPending": "Rahmat, {{name}}. Salon yozilishingizni tez orada tasdiqlaydi.",
+    "pending": "Tasdiqlash kutilmoqda",
+    "titleConfirmed": "Siz yozildingiz!",
+    "textConfirmed": "Rahmat, {{name}}. Sizni kutamiz.",
+    "confirmed": "Tasdiqlangan",
+    "again": "Yana yozilish",
+    "fine": "Bekor qilish yoki vaqtni o'zgartirish uchun salonga qo'ng'iroq qiling. To'lov xizmatdan so'ng salonda amalga oshiriladi."
+  },
+  "notFound": {
+    "title": "Salon topilmadi",
+    "text": "Havola noto'g'ri yoki salon hozircha ishlamayapti."
+  },
+  "loadError": "Ma'lumotlarni yuklab bo'lmadi. Internetni tekshirib, qayta urinib ko'ring.",
+  "retry": "Qayta urinish",
+  "errors": {
+    "SLOT_NOT_AVAILABLE": "Bu vaqtni tanlab bo'lmaydi — boshqa vaqtni tanlang.",
+    "TOO_MANY_BOOKINGS": "Bu raqam bilan faol yozilishlar juda ko'p. Salonga qo'ng'iroq qiling.",
+    "RATE_LIMITED": "Juda ko'p urinish. Birozdan so'ng qayta urinib ko'ring.",
+    "INVALID_NAME": "Ismingizni kiriting (kamida 2 ta harf).",
+    "INVALID_PHONE": "Raqamni to'liq kiriting: 9 ta raqam.",
+    "INVALID_NOTE": "Izoh 300 belgidan oshmasin.",
+    "SERVICE_NOT_AVAILABLE": "Bu xizmat hozir mavjud emas.",
+    "STAFF_NOT_AVAILABLE": "Bu usta hozir yozuv qabul qilmayapti.",
+    "STAFF_SERVICE_MISMATCH": "Bu usta bu xizmatni bajarmaydi.",
+    "network": "Internet aloqasi yo'q yoki server javob bermayapti. Qayta urinib ko'ring.",
+    "unknown": "Yozib bo'lmadi. Qayta urinib ko'ring."
+  }
+}
