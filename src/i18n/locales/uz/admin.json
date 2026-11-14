@@ -232,7 +232,6 @@
   },
   "placeholder": {
     "comingIn": "Bu bo'lim {{milestone}} bosqichida tayyor bo'ladi.",
-    "calendar": "Kunlik kalendar: ustalar ustunlarda, bo'sh joyni bosib yozilish qo'shish.",
     "services": "Xizmatlar ro'yxati, narx va davomiylik, faol/nofaol.",
     "staff": "Ustalar, ish vaqti, xizmatlar va dam olish kunlari."
   },
@@ -446,5 +445,51 @@
     "customerHint": "Bu havolani Instagram profilingiz yoki Telegram kanalingizga qo'ying: mijoz botni ochadi va «Yozilish» tugmasi orqali Telegram ichida yoziladi.",
     "copy": "Nusxa olish",
     "copied": "Havola nusxalandi ✓"
+  },
+  "calendar": {
+    "title": "Kalendar",
+    "hint": "Bo'sh joyni bosing — yangi yozilish qo'shiladi.",
+    "prev": "Oldingi kun",
+    "next": "Keyingi kun",
+    "today": "Bugun",
+    "showCancelled": "Bekor qilinganlar",
+    "legend": {
+      "confirmed": "Tasdiqlangan",
+      "pending": "Kutilmoqda",
+      "off": "Ish vaqtidan tashqari"
+    },
+    "lunch": "Tushlik",
+    "dayOff": "Dam olish",
+    "count": "{{count}} ta yozilish",
+    "noStaff": "Hali usta yo'q.",
+    "pickBarber": "Usta",
+    "details": "Yozilish",
+    "close": "Yopish",
+    "nobodyWorks": "Bu kunda hech kim ishlamaydi."
+  },
+  "newAppt": {
+    "button": "Yangi yozilish",
+    "title": "Yangi yozilish",
+    "service": "Xizmat",
+    "staff": "Usta",
+    "day": "Kun",
+    "time": "Vaqt",
+    "freeTimes": "bo'sh vaqtlar",
+    "noFree": "Bu kunda bo'sh vaqt yo'q.",
+    "custom": "Boshqa vaqt (qo'lda kiritish)",
+    "clash": "⛔ Bu vaqtda {{name}}da boshqa yozilish bor. Boshqa vaqt tanlang.",
+    "outside": "⚠️ Bu vaqt {{name}}ning ish vaqtidan tashqarida. Admin sifatida baribir qo'shishingiz mumkin.",
+    "name": "Mijoz ismi",
+    "namePh": "Ism",
+    "phone": "Telefon",
+    "note": "Izoh",
+    "optional": "(ixtiyoriy)",
+    "hint": "Admin qo'shgan yozilish darhol «Tasdiqlangan» bo'ladi. Narx: {{price}}.",
+    "cancel": "Bekor",
+    "save": "Qo'shish",
+    "saved": "Yozilish qo'shildi ✓",
+    "pickTime": "Vaqtni tanlang.",
+    "nameErr": "Ismni kiriting (kamida 2 harf).",
+    "phoneErr": "Telefon raqami to'liq bo'lsin: 9 ta raqam."
   }
 }
