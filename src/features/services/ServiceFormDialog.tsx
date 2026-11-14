@@ -21,6 +21,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { dbErrorKey } from '@/lib/dbErrors'
 import { formatNumber, formatUzs, priceDigits } from '@/lib/money'
 import { useSaveService, type ServiceItem } from './api'
+import { ServicePhotoField } from './ServicePhotoField'
 import {
   DURATION_OPTIONS,
   serviceSchema,
@@ -102,6 +103,8 @@ export function ServiceFormDialog({ businessId, service, nextSortOrder, onClose 
                 {...register('name')}
               />
             </FormField>
+
+            <ServicePhotoField businessId={businessId} service={service} />
 
             <FormField
               id="svc-desc"

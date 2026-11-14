@@ -12,6 +12,8 @@ export type ServiceItem = {
   id: string
   name: string
   description: string | null
+  /** stored `lg` path of the optional service photo */
+  photoPath: string | null
   durationMinutes: number
   priceUzs: number
   isActive: boolean
@@ -28,7 +30,7 @@ export function useServices(businessId: string) {
       const { data, error } = await supabase
         .from('services')
         .select(
-          'id, name, description, duration_minutes, price_uzs, is_active, sort_order, staff_services(count)',
+          'id, name, description, photo_path, duration_minutes, price_uzs, is_active, sort_order, staff_services(count)',
         )
         .eq('business_id', businessId)
         .order('sort_order', { ascending: true })
@@ -38,6 +40,7 @@ export function useServices(businessId: string) {
         id: s.id,
         name: s.name,
         description: s.description,
+        photoPath: s.photo_path,
         durationMinutes: s.duration_minutes,
         priceUzs: s.price_uzs,
         isActive: s.is_active,

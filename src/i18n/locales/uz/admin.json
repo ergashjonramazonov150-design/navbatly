@@ -356,6 +356,7 @@
       "hint": "Rasmsiz ham bo'ladi — bron sahifasida oddiy karta. Kvadrat, markazdan olinadi.",
       "afterSave": "Rasmni xizmat saqlangandan keyin qo'shishingiz mumkin.",
       "alt": "{{name}} rasmi"
-    }
+    },
+    "removed": "Rasm olib tashlandi"
   }
 }
