@@ -2,6 +2,7 @@ import { cn } from 'cn'
 import { useTranslation } from 'react-i18next'
 
 import { Switch } from '@/components/ui/switch'
+import { imageUrls } from '@/features/images/api'
 import { formatUzs } from '@/lib/money'
 import type { ServiceItem } from './api'
 
@@ -29,6 +30,17 @@ export function ServiceList({
               : 'border-dashed border-input bg-transparent',
           )}
         >
+          {s.photoPath && (
+            <img
+              src={imageUrls(s.photoPath)?.sm}
+              alt=""
+              loading="lazy"
+              className={cn(
+                'size-12 shrink-0 rounded-xl bg-muted object-cover',
+                !s.isActive && 'opacity-60 grayscale',
+              )}
+            />
+          )}
           <button
             type="button"
             onClick={() => onEdit(s)}
