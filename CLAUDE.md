@@ -78,14 +78,20 @@ _Last updated: 2026-11-14_
   **Telegram Mini App** (same `/b/:slug`, initData checked server-side) — passed.
   **M7** security headers in `vercel.json` + Turnstile captcha (dormant until the user sets
   `VITE_TURNSTILE_SITE_KEY` in Vercel FIRST, then `TURNSTILE_SECRET_KEY` in Supabase).
-  **M8** landing `/` (mockup 04, photos in `public/landing/`) + `/privacy`. Tests: 211 DB,
-  149 frontend (booking wizard, appointments list, Telegram links, landing/privacy added).
-  README updated.
+  **M8** landing `/` (mockup 04, photos in `public/landing/`) + `/privacy`. **Mini App
+  customer confirmation** (bot messages the booking Telegram user only; texts in
+  `supabase/functions/_shared/bookingMessages.ts`) — user's test passed. **Desktop layout
+  for `/b/:slug`** (≥1024px: cover, `SalonInfoPanel` left, sticky wizard card right;
+  phones unchanged; screenshots approved) + **migration 11** `get_salon_hours` (salon-wide
+  hours for visitors). Tests: 218 DB (test 08 added), 173 frontend (calendar, manual
+  booking, TelegramCard, SalonInfoPanel included). README updated.
+- 👤 **Demo login for the teacher:** `demoprofil@gmail.com` = OWNER of the demo salon
+  (business_members row, no staff profile; added 2026-11-14 at the user's request, user
+  accepts the risks). Password only with the user — never in the repo.
 - ❌ **Dropped:** M9 custom domain/SMTP. Password reset stays off (admin resets in the
   Supabase dashboard).
 - ⏭ **Postponed:** orphan-script real run, iPhone (HEIC) test, Russian UI, reminders,
-  "any free barber", catalog. No component tests yet for the calendar / manual-booking
-  dialog / TelegramCard (verified by Playwright walk-throughs + check:live).
+  "any free barber", catalog.
 - ℹ️ The Vercel MCP connection needs team access re-authorized before it can read deploys.
   Until then, confirm a deploy by fetching a new file (e.g. `/landing/1895701.webp`) or new
   text in the live JS (the entry is now `assets/index-*.js`; texts may sit in other

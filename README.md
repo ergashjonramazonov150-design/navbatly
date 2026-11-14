@@ -50,10 +50,14 @@ bookings from an admin panel and gets a **Telegram message** for every new booki
 - If someone takes the time a second earlier: **"Bu vaqt band bo'lib qoldi"** sheet with the
   nearest free times; the form stays filled in.
 - Salon cover, logo, barber photos, optional service photos, «Ishlarimiz» gallery with a viewer.
+- **Desktop layout** (≥1024px): full-width cover; on the left the salon's logo, address,
+  weekly opening hours (today marked), call button, barbers and «Ishlarimiz»; on the right
+  the booking steps in a card that stays in view. Phones keep the single-column flow.
 - **Telegram Mini App:** each salon has its own bot link `t.me/navbatly_uz_bot?start=<slug>`;
   the bot answers with a **«✂️ Yozilish»** button that opens the same booking page inside
   Telegram (Telegram's own Back / Main buttons, name pre-filled). The server checks Telegram's
-  signature on every Mini App booking.
+  signature on every Mini App booking. After booking, the customer gets a short
+  **confirmation in their own Telegram chat** (salon, service, barber, date/time, status).
 - Landing page (`/`) for salon owners and a plain-language privacy policy (`/privacy`), linked
   from the booking form's consent checkbox.
 
@@ -81,7 +85,7 @@ bookings from an admin panel and gets a **Telegram message** for every new booki
   rejects overlaps even when two customers press "Band qilish" in the same millisecond —
   proven by a real parallel test (`npm run db:test:race`).
 - **Row Level Security on every table:** salon A can never read salon B; barbers see only their
-  own bookings; inactive barbers/salons lose access. 211 database tests (pgTAP).
+  own bookings; inactive barbers/salons lose access. 218 database tests (pgTAP).
 - **Customers never write to tables directly:** bookings go through the `create-booking` Edge
   Function → `create_booking()` database function, which re-checks every rule, limits active
   bookings per phone and requests per (hashed) IP or Telegram user, and computes the price and
@@ -106,7 +110,7 @@ bookings from an admin panel and gets a **Telegram message** for every new booki
 | Frontend | React 19 + TypeScript, Vite 8, React Router, TanStack Query, react-hook-form + zod, Tailwind CSS 4 + shadcn/ui, i18next (Uzbek, Russian-ready), react-easy-crop |
 | Backend  | Supabase: PostgreSQL (RLS, `EXCLUDE` constraints, SQL functions), Auth, Storage, Edge Functions (Deno), Telegram Bot API + Mini App, Cloudflare Turnstile       |
 | Hosting  | Vercel (frontend), Supabase cloud (database, functions, storage)                                                                                                |
-| Quality  | pgTAP (211 DB tests), Vitest + Testing Library (149 tests), Playwright (live-site render check, real-Chrome image pipeline check), oxlint, Prettier             |
+| Quality  | pgTAP (218 DB tests), Vitest + Testing Library (173 tests), Playwright (live-site render check, real-Chrome image pipeline check), oxlint, Prettier             |
 
 ```mermaid
 flowchart LR
@@ -140,7 +144,7 @@ npm run dev                     # http://localhost:5173  (phone on Wi-Fi: npm ru
 | `npm run check:live`                         | Opens the live site (desktop + phone) and fails on errors / blank pages |
 | `npm run db:push` · `npm run db:types`       | Apply migrations · regenerate DB types                                  |
 
-Database changes live only in `supabase/migrations/` (10 migrations), never in the dashboard.
+Database changes live only in `supabase/migrations/` (11 migrations), never in the dashboard.
 
 ## Next steps
 
