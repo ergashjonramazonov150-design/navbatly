@@ -20,6 +20,7 @@ import { ServicesPage } from '@/pages/admin/ServicesPage'
 import { SettingsPage } from '@/pages/admin/SettingsPage'
 import { StaffDetailPage } from '@/pages/admin/StaffDetailPage'
 import { StaffPage } from '@/pages/admin/StaffPage'
+import { BookingPage } from '@/pages/public/BookingPage'
 import { LandingPage } from '@/pages/public/LandingPage'
 import { NotFoundPage } from '@/pages/public/NotFoundPage'
 
@@ -79,6 +80,7 @@ export const router = createBrowserRouter([
     errorElement: <RouteErrorScreen />,
     children: [
       { path: '/', element: <LandingPage /> },
+      { path: '/b/:slug', element: <BookingPage /> },
       { path: '*', element: <NotFoundPage /> },
     ],
   },

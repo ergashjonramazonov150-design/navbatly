@@ -9,6 +9,7 @@ import { initReactI18next } from 'react-i18next'
 
 import type { AppLanguage } from '@/lib/datetime'
 import uzAdmin from './locales/uz/admin.json'
+import uzBooking from './locales/uz/booking.json'
 import uzCommon from './locales/uz/common.json'
 import uzErrors from './locales/uz/errors.json'
 
@@ -28,7 +29,7 @@ function readSavedLanguage(): AppLanguage {
 }
 
 export const resources = {
-  uz: { common: uzCommon, admin: uzAdmin, errors: uzErrors },
+  uz: { common: uzCommon, admin: uzAdmin, booking: uzBooking, errors: uzErrors },
 } as const
 
 void i18n.use(initReactI18next).init({
@@ -36,7 +37,7 @@ void i18n.use(initReactI18next).init({
   lng: readSavedLanguage(),
   fallbackLng: DEFAULT_LANGUAGE,
   defaultNS: 'common',
-  ns: ['common', 'admin', 'errors'],
+  ns: ['common', 'admin', 'booking', 'errors'],
   interpolation: { escapeValue: false }, // React already escapes output
 })
 
