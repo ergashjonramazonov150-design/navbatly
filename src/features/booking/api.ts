@@ -128,7 +128,8 @@ export type SalonHours = { weekday: number; opens: string; closes: string }[]
 
 export function useSalonOpeningHours(businessId: string, enabled: boolean) {
   return useQuery({
-    queryKey: ['salon-hours', businessId],
+    // not 'salon-hours' — that key is the admin calendar's per-barber list (other shape)
+    queryKey: ['public-salon-hours', businessId],
     enabled,
     staleTime: 5 * 60_000,
     retry: false, // optional info: if it can't load, the block is simply not shown
