@@ -232,7 +232,6 @@
   },
   "placeholder": {
     "comingIn": "Bu bo'lim {{milestone}} bosqichida tayyor bo'ladi.",
-    "appointments": "Bugungi va kelgusi yozilishlar, tasdiqlash va bekor qilish shu yerda bo'ladi.",
     "calendar": "Kunlik kalendar: ustalar ustunlarda, bo'sh joyni bosib yozilish qo'shish.",
     "services": "Xizmatlar ro'yxati, narx va davomiylik, faol/nofaol.",
     "staff": "Ustalar, ish vaqti, xizmatlar va dam olish kunlari."
@@ -358,5 +357,59 @@
       "alt": "{{name}} rasmi"
     },
     "removed": "Rasm olib tashlandi"
+  },
+  "appointments": {
+    "title": "Yozilishlar",
+    "staffNote": "Siz <b>faqat o'zingizga</b> yozilgan mijozlarni ko'rasiz va boshqarasiz.",
+    "staffNotePlain": "Siz faqat o'zingizga yozilgan mijozlarni ko'rasiz va boshqarasiz.",
+    "pendingBanner": "{{count}} ta yozilish tasdiqlashingizni kutmoqda.",
+    "show": "Ko'rish",
+    "search": "Ism yoki telefon bo'yicha qidirish",
+    "searchLabel": "Mijozni ism yoki telefon bo'yicha qidirish",
+    "searchingAll": "Barcha kunlar bo'yicha qidirilmoqda",
+    "period": {
+      "today": "Bugun",
+      "tomorrow": "Ertaga",
+      "week": "7 kun",
+      "all": "Hammasi"
+    },
+    "status": {
+      "all": "Hammasi",
+      "pending": "Kutilmoqda",
+      "confirmed": "Tasdiqlangan",
+      "cancelled": "Bekor qilingan",
+      "cancelledShort": "Bekor",
+      "past": "O'tgan"
+    },
+    "allStaff": "Barcha ustalar",
+    "byStaff": "Usta bo'yicha",
+    "dayCount": "{{count}} ta",
+    "until": "{{time}} gacha",
+    "source": {
+      "online": "Onlayn",
+      "admin": "Admin"
+    },
+    "reason": "Sabab: {{reason}}",
+    "confirm": "Tasdiqlash",
+    "cancel": "Bekor qilish",
+    "confirmed": "Tasdiqlandi ✓",
+    "cancelled": "Yozilish bekor qilindi",
+    "emptyTitle": "Yozilishlar yo'q",
+    "emptyText": "Tanlangan filtrlar bo'yicha hech narsa topilmadi.",
+    "notFound": "«{{q}}» topilmadi",
+    "notFoundText": "Ismni yoki telefon raqamining bir qismini tekshiring.",
+    "loadError": "Yozilishlarni yuklab bo'lmadi.",
+    "cancelDialog": {
+      "title": "Yozilishni bekor qilish",
+      "reason": "Sabab",
+      "optional": "(ixtiyoriy)",
+      "r1": "Mijoz qo'ng'iroq qilib bekor qildi",
+      "r2": "Usta ishlay olmaydi",
+      "r3": "Xato yozilish",
+      "placeholder": "Yoki o'zingiz yozing",
+      "hint": "Bekor qilingan vaqt darhol boshqa mijozlar uchun bo'shaydi. Mijozga o'zingiz xabar bering.",
+      "back": "Ortga",
+      "confirm": "Bekor qilish"
+    }
   }
 }
