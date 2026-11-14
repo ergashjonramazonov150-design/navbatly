@@ -116,8 +116,8 @@ Database changes live only in `supabase/migrations/` (9 migrations), never in th
 
 ## Next steps
 
-> **No custom domain or email server is planned.** The app runs on .
-> "Forgot password" stays switched off (); the platform admin
+> **No custom domain or email server is planned.** The app runs on `navbatly.vercel.app`.
+> "Forgot password" stays switched off (`VITE_PASSWORD_RESET_ENABLED=false`); the platform admin
 > resets passwords in the Supabase dashboard (Authentication → Users).
 
 | Next                                   | Why                                                                                           |
