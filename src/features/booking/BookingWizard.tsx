@@ -32,7 +32,8 @@ import { Turnstile } from './Turnstile'
  * 4 steps + success. EVERY step is a browser-history entry: the phone's Back button goes to
  * the previous step; after success Back starts a new booking (no double submit).
  * Not in this MVP: salon opening hours line (visitors can't read working hours; free times
- * come from get_available_slots), captcha (M7), "Istalgan usta" (Phase 2, shown disabled).
+ * come from get_available_slots), "Istalgan usta" (Phase 2, shown disabled).
+ * Captcha (M7): Turnstile on the web when VITE_TURNSTILE_SITE_KEY is set; never in Telegram.
  */
 
 type Step = 1 | 2 | 3 | 4 | 5

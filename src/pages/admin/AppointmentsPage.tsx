@@ -35,7 +35,7 @@ import { formatLocal, toLocalDigits } from '@/lib/phone'
 /*
  * Yozilishlar (M5, simplified) — approved mockup design/03-admin.html "Yozilishlar":
  * search, period + status filters, barber filter (owner), day groups, confirm / cancel.
- * Not in this MVP: manual "Yangi yozilish", calendar view (README "next steps").
+ * "Yangi yozilish" opens the same manual-booking dialog as the calendar (M5 rest).
  */
 type Period = 'today' | 'tomorrow' | 'week' | 'all'
 type StatusFilter = 'all' | ApptStatus
