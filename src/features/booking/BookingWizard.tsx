@@ -20,10 +20,12 @@ import {
   localDayStartUtc,
   todayKey,
 } from '@/lib/datetime'
+import { TURNSTILE_SITE_KEY } from '@/lib/env'
 import { formatUzs } from '@/lib/money'
 import { cleanLocalDigits, formatLocal, toE164 } from '@/lib/phone'
 import { BRAND, type TelegramWebApp } from '@/lib/telegramWebApp'
 import { createBooking, fetchSlots, slotsKey, type PublicSalon } from './api'
+import { Turnstile } from './Turnstile'
 
 /*
  * Public booking wizard — approved mockup design/02-booking-flow.html (v3, with photos).
@@ -63,6 +65,10 @@ export function BookingWizard({
   const [note, setNote] = useState('')
   const [consent, setConsent] = useState(false)
   const [website, setWebsite] = useState('') // honeypot
+  // web captcha (M7): only outside Telegram and only when a site key is configured
+  const useCaptcha = !tg && !!TURNSTILE_SITE_KEY
+  const [captcha, setCaptcha] = useState<string | null>(null)
+  const [captchaReset, setCaptchaReset] = useState(0)
   const [touched, setTouched] = useState(false)
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -178,6 +184,7 @@ export function BookingWizard({
     setTouched(true)
     setError(null)
     if (!nameOk || !phoneOk || !consent || !service || !staff || !time) return
+    if (useCaptcha && !captcha) return setError(t('captchaNeeded'))
     setSubmitting(true)
     const res = await createBooking({
       businessId: salon.id,
@@ -189,8 +196,10 @@ export function BookingWizard({
       note,
       website,
       tgInitData: tg?.initData,
+      captchaToken: useCaptcha ? (captcha ?? undefined) : undefined,
     })
     setSubmitting(false)
+    if (useCaptcha) setCaptchaReset((n) => n + 1) // a token works once
     if (res.ok) {
       setResult({ status: res.appointment.status })
       void qc.invalidateQueries({ queryKey: ['slots'] })
@@ -717,6 +726,7 @@ export function BookingWizard({
           onChange={(e) => setNote(e.target.value)}
         />
       </label>
+      {useCaptcha && <Turnstile onToken={setCaptcha} resetKey={captchaReset} />}
       {/* honeypot: hidden from people, bots fill it */}
       <input
         type="text"
