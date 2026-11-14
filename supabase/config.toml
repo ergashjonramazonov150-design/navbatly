@@ -429,3 +429,11 @@ enabled = true
 # Customers have no login; the browser sends the publishable key (not a JWT).
 # The function itself is the gatekeeper (honeypot, validation, DB limits; captcha in M7).
 verify_jwt = false
+
+[functions.telegram-webhook]
+# Called by Telegram (no Supabase login). Protected by the X-Telegram-Bot-Api-Secret-Token check.
+verify_jwt = false
+
+[functions.telegram-admin]
+# Checks the owner itself (user JWT + database); new-style keys are not JWTs.
+verify_jwt = false
