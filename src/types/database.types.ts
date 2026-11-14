@@ -148,28 +148,34 @@ export type Database = {
         Row: {
           business_id: string
           chat_id: string | null
+          chat_title: string | null
           created_at: string
           is_enabled: boolean
           last_error: string | null
           last_error_at: string | null
+          linked_at: string | null
           updated_at: string
         }
         Insert: {
           business_id: string
           chat_id?: string | null
+          chat_title?: string | null
           created_at?: string
           is_enabled?: boolean
           last_error?: string | null
           last_error_at?: string | null
+          linked_at?: string | null
           updated_at?: string
         }
         Update: {
           business_id?: string
           chat_id?: string | null
+          chat_title?: string | null
           created_at?: string
           is_enabled?: boolean
           last_error?: string | null
           last_error_at?: string | null
+          linked_at?: string | null
           updated_at?: string
         }
         Relationships: [
@@ -630,6 +636,15 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      telegram_create_link_code: {
+        Args: { p_business_id: string; p_code: string }
+        Returns: string
+      }
+      telegram_link_chat: {
+        Args: { p_chat_id: string; p_chat_title: string; p_code: string }
+        Returns: string
+      }
+      telegram_unlink: { Args: { p_business_id: string }; Returns: undefined }
     }
     Enums: {
       appointment_source: "online" | "admin"

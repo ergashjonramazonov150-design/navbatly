@@ -411,5 +411,40 @@
       "back": "Ortga",
       "confirm": "Bekor qilish"
     }
+  },
+  "telegram": {
+    "title": "Telegram xabarnomalari",
+    "hint": "Yangi onlayn yozilish bo'lganda Telegram'ga xabar keladi. Chat ID qo'lda kiritilmaydi — bot o'zi ulanadi.",
+    "step1": "«Botni ulash» ni bosing — Telegram'da @{{bot}} ochiladi.",
+    "step2": "Botda «Start» ni bosing.",
+    "step3": "Shu sahifaga qayting — salon avtomatik ulanadi.",
+    "connect": "Botni ulash",
+    "codeNote": "🔒 Havolada bir martalik maxfiy kod bor (10 daqiqa amal qiladi). Bot shu kod orqali chatni aynan sizning saloningizga bog'laydi.",
+    "waiting": "Telegram'da «Start» bosilishi kutilmoqda… Havola 10 daqiqa amal qiladi.",
+    "reopen": "Telegram'ni qayta ochish",
+    "cancel": "Bekor qilish",
+    "expired": "Havola muddati tugadi — «Botni ulash» ni qayta bosing.",
+    "linked": "Ulangan: {{who}}",
+    "linkedToast": "Telegram ulandi ✓",
+    "enabled": "Xabarnomalar yoqilgan",
+    "enabledHint": "O'chirsangiz, ulanish saqlanadi, lekin xabar kelmaydi.",
+    "test": "Sinov xabarini yuborish",
+    "testSent": "📨 Sinov xabari yuborildi. Telegram'ni tekshiring.",
+    "unlink": "Uzish",
+    "unlinkTitle": "Telegram'ni uzasizmi?",
+    "unlinkText": "Yangi yozilishlar haqida xabar kelmaydi. Keyin qayta ulash mumkin.",
+    "unlinked": "Telegram uzildi",
+    "lastError": "⚠️ Oxirgi xabar yuborilmadi: {{error}}. Botni bloklamaganingizni tekshiring yoki qayta ulang.",
+    "errors": {
+      "BOT_NOT_CONFIGURED": "Bot hali sozlanmagan (TELEGRAM_BOT_TOKEN). Administratorga murojaat qiling.",
+      "TELEGRAM_ERROR": "Telegram javob bermadi. Birozdan so'ng qayta urinib ko'ring.",
+      "NOT_LINKED": "Avval botni ulang.",
+      "NOT_ALLOWED": "Sizda bu amal uchun ruxsat yo'q.",
+      "unknown": "Xatolik yuz berdi. Qayta urinib ko'ring."
+    },
+    "customerTitle": "Mijozlar uchun Telegram havola",
+    "customerHint": "Bu havolani Instagram profilingiz yoki Telegram kanalingizga qo'ying: mijoz botni ochadi va «Yozilish» tugmasi orqali Telegram ichida yoziladi.",
+    "copy": "Nusxa olish",
+    "copied": "Havola nusxalandi ✓"
   }
 }

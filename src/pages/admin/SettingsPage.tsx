@@ -7,11 +7,12 @@ import { SettingsForm } from '@/features/business/SettingsForm'
 import { useBusinessSettings } from '@/features/business/settingsApi'
 import { useReadyBusiness } from '@/features/business/useBusiness'
 import { TimeOffPanel } from '@/features/staff/TimeOffPanel'
+import { TelegramCard } from '@/features/telegram/TelegramCard'
 
 /*
  * Sozlamalar (owner only, delivery 3c): salon details + booking rules (one Save button),
  * then «Salon rasmlari» (M3.5, each photo saved immediately), then salon-wide closed days
- * (saved one by one, like a barber's days off). Telegram settings come in M6.
+ * (saved one by one, like a barber's days off), then «Telegram xabarnomalari» (M6).
  */
 export function SettingsPage() {
   const { t } = useTranslation('admin')
@@ -44,6 +45,7 @@ export function SettingsPage() {
             hint={t('settings.closed.hint')}
             reasonPlaceholder={t('settings.closed.reasonPlaceholder')}
           />
+          <TelegramCard businessId={businessId} slug={settings.data.slug} />
         </div>
       )}
     </>
