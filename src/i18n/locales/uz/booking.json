@@ -125,5 +125,10 @@
     "CAPTCHA_FAILED": "Tekshiruvdan o'tilmadi. Qayta urinib ko'ring."
   },
   "close": "Yopish",
-  "captchaNeeded": "Iltimos, «Siz robot emassiz» tekshiruvini yakunlang."
+  "captchaNeeded": "Iltimos, «Siz robot emassiz» tekshiruvini yakunlang.",
+  "info": {
+    "hours": "Ish vaqti",
+    "closed": "Dam olish kuni",
+    "barbers": "Ustalar"
+  }
 }

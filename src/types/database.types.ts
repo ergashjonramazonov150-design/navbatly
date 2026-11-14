@@ -577,6 +577,14 @@ export type Database = {
         }
         Returns: string[]
       }
+      get_salon_hours: {
+        Args: { p_business_id: string }
+        Returns: {
+          closes: string
+          opens: string
+          weekday: number
+        }[]
+      }
       list_orphan_salon_images: {
         Args: { p_older_than?: string }
         Returns: {
