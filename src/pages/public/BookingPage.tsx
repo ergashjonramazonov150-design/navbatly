@@ -1,22 +1,30 @@
 import { Loader2Icon } from 'lucide-react'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router'
 
 import { usePublicSalon } from '@/features/booking/api'
 import { BookingWizard } from '@/features/booking/BookingWizard'
+import { launchedByTelegram, loadTelegramWebApp, type TelegramWebApp } from '@/lib/telegramWebApp'
 
 /** /b/:slug — the salon's public booking page (customers, no login). */
 export function BookingPage() {
   const { t } = useTranslation('booking')
   const { slug = '' } = useParams()
   const salon = usePublicSalon(slug)
+  // inside Telegram: wait for the Mini App script (undefined = still loading)
+  const [tg, setTg] = useState<TelegramWebApp | null | undefined>(() =>
+    launchedByTelegram() ? undefined : null,
+  )
+  useEffect(() => {
+    void loadTelegramWebApp().then(setTg)
+  }, [])
 
   useEffect(() => {
     if (salon.data) document.title = `${salon.data.name} — onlayn yozilish`
   }, [salon.data])
 
-  if (salon.isPending) {
+  if (salon.isPending || tg === undefined) {
     return (
       <div
         role="status"
@@ -48,5 +56,5 @@ export function BookingPage() {
       </main>
     )
   }
-  return <BookingWizard salon={salon.data} />
+  return <BookingWizard salon={salon.data} tg={tg} />
 }

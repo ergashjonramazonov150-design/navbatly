@@ -119,6 +119,8 @@
     "STAFF_NOT_AVAILABLE": "Bu usta hozir yozuv qabul qilmayapti.",
     "STAFF_SERVICE_MISMATCH": "Bu usta bu xizmatni bajarmaydi.",
     "network": "Internet aloqasi yo'q yoki server javob bermayapti. Qayta urinib ko'ring.",
-    "unknown": "Yozib bo'lmadi. Qayta urinib ko'ring."
-  }
+    "unknown": "Yozib bo'lmadi. Qayta urinib ko'ring.",
+    "TELEGRAM_AUTH": "Telegram ma'lumotlarini tekshirib bo'lmadi. Botni qayta oching."
+  },
+  "close": "Yopish"
 }

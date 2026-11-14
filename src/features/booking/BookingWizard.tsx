@@ -22,6 +22,7 @@ import {
 } from '@/lib/datetime'
 import { formatUzs } from '@/lib/money'
 import { cleanLocalDigits, formatLocal, toE164 } from '@/lib/phone'
+import { BRAND, type TelegramWebApp } from '@/lib/telegramWebApp'
 import { createBooking, fetchSlots, slotsKey, type PublicSalon } from './api'
 
 /*
@@ -36,7 +37,14 @@ type Step = 1 | 2 | 3 | 4 | 5
 const NEAREST_DAYS = 7
 const MAX_DATES = 30
 
-export function BookingWizard({ salon }: { salon: PublicSalon }) {
+export function BookingWizard({
+  salon,
+  tg = null,
+}: {
+  salon: PublicSalon
+  /** set when the page runs inside Telegram as a Mini App */
+  tg?: TelegramWebApp | null
+}) {
   const { t } = useTranslation('booking')
   const qc = useQueryClient()
   const tz = salon.timezone
@@ -47,7 +55,10 @@ export function BookingWizard({ salon }: { salon: PublicSalon }) {
   const [staffId, setStaffId] = useState<string | null>(null)
   const [day, setDay] = useState<string | null>(null)
   const [time, setTime] = useState<string | null>(null)
-  const [name, setName] = useState('')
+  const tgUser = tg?.initDataUnsafe.user
+  const [name, setName] = useState(() =>
+    [tgUser?.first_name, tgUser?.last_name].filter(Boolean).join(' ').slice(0, 80),
+  )
   const [phone, setPhone] = useState('') // 9 digits
   const [note, setNote] = useState('')
   const [consent, setConsent] = useState(false)
@@ -177,6 +188,7 @@ export function BookingWizard({ salon }: { salon: PublicSalon }) {
       phone: toE164(phone),
       note,
       website,
+      tgInitData: tg?.initData,
     })
     setSubmitting(false)
     if (res.ok) {
@@ -782,10 +794,43 @@ export function BookingWizard({ salon }: { salon: PublicSalon }) {
         >
           {t('success.again')}
         </button>
+        {tg && (
+          <button
+            type="button"
+            onClick={() => tg.close()}
+            className="min-h-[54px] rounded-full font-semibold shadow-[inset_0_0_0_1.5px_var(--input)]"
+          >
+            {t('close')}
+          </button>
+        )}
       </div>
       <p className="text-[13px] text-muted-foreground">{t('success.fine')}</p>
     </div>
   )
+
+  /* ------------------------------ Telegram Mini App ------------------------------ */
+  // brand colours inside Telegram; Telegram's BackButton + MainButton replace ours
+  useEffect(() => {
+    if (!tg) return
+    tg.ready()
+    tg.expand()
+    tg.setHeaderColor(BRAND.bg)
+    tg.setBackgroundColor(BRAND.bg)
+    if (tg.isVersionAtLeast('7.10')) tg.setBottomBarColor?.(BRAND.surface)
+  }, [tg])
+  const nextRef = useRef(next)
+  nextRef.current = next
+  useEffect(() => {
+    if (!tg) return
+    const back = () => history.back()
+    const main = () => nextRef.current()
+    tg.BackButton.onClick(back)
+    tg.MainButton.onClick(main)
+    return () => {
+      tg.BackButton.offClick(back)
+      tg.MainButton.offClick(main)
+    }
+  }, [tg])
 
   /* ------------------------------ bottom bar ------------------------------ */
   let sumTitle = ''
@@ -828,6 +873,24 @@ export function BookingWizard({ salon }: { salon: PublicSalon }) {
     : []
 
   const gallery = salon.gallery
+  const mainLabel = step === 4 ? (submitting ? t('submitting') : t('submit')) : t('next')
+  useEffect(() => {
+    if (!tg) return
+    if (step > 1 || photo !== null || taken) tg.BackButton.show()
+    else tg.BackButton.hide()
+    if (step <= 4 && !taken && photo === null) {
+      tg.MainButton.setParams({
+        text: mainLabel,
+        color: enabled ? BRAND.ink : '#e7ded2',
+        text_color: enabled ? BRAND.onInk : '#a99c8c',
+        is_active: enabled,
+        is_visible: true,
+      })
+      if (submitting) tg.MainButton.showProgress(false)
+      else tg.MainButton.hideProgress()
+    } else tg.MainButton.hide()
+  }, [tg, step, photo, taken, enabled, submitting, mainLabel])
+
   return (
     <div className="mx-auto flex min-h-dvh max-w-[480px] flex-col bg-background min-[481px]:shadow-[0_0_40px_rgba(40,25,10,0.12)]">
       {header}
@@ -849,6 +912,7 @@ export function BookingWizard({ salon }: { salon: PublicSalon }) {
             type="button"
             disabled={!enabled}
             onClick={next}
+            hidden={!!tg}
             className="inline-flex min-h-[54px] items-center gap-2 rounded-full bg-foreground px-6 text-base font-semibold text-background disabled:bg-secondary disabled:text-muted-foreground"
           >
             {step === 4 ? (
