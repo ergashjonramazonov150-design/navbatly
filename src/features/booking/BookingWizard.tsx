@@ -24,7 +24,9 @@ import { TURNSTILE_SITE_KEY } from '@/lib/env'
 import { formatUzs } from '@/lib/money'
 import { cleanLocalDigits, formatLocal, toE164 } from '@/lib/phone'
 import { BRAND, type TelegramWebApp } from '@/lib/telegramWebApp'
+import { useMediaQuery } from '@/lib/useMediaQuery'
 import { createBooking, fetchSlots, slotsKey, type PublicSalon } from './api'
+import { SalonInfoPanel } from './SalonInfoPanel'
 import { Turnstile } from './Turnstile'
 
 /*
@@ -34,6 +36,8 @@ import { Turnstile } from './Turnstile'
  * Not in this MVP: salon opening hours line (visitors can't read working hours; free times
  * come from get_available_slots), "Istalgan usta" (Phase 2, shown disabled).
  * Captcha (M7): Turnstile on the web when VITE_TURNSTILE_SITE_KEY is set; never in Telegram.
+ * Desktop (≥1024px): full-width cover, salon info on the left (SalonInfoPanel), this wizard
+ * as a sticky card on the right. Phones: unchanged single column.
  */
 
 type Step = 1 | 2 | 3 | 4 | 5
@@ -52,6 +56,7 @@ export function BookingWizard({
   const qc = useQueryClient()
   const tz = salon.timezone
   const today = todayKey(tz)
+  const isDesktop = useMediaQuery('(min-width: 1024px)')
 
   const [step, setStep] = useState<Step>(1)
   const [serviceId, setServiceId] = useState<string | null>(null)
@@ -222,7 +227,7 @@ export function BookingWizard({
   const compact = step !== 1
 
   const header = (
-    <header className="px-4 pt-3.5 pb-2.5">
+    <header className="px-4 pt-3.5 pb-2.5 lg:px-6 lg:pt-5">
       {!compact && cover && (
         <img
           src={cover.lg}
@@ -230,10 +235,15 @@ export function BookingWizard({
           sizes="(max-width: 480px) 100vw, 480px"
           alt=""
           fetchPriority="high"
-          className="-mx-4 -mt-3.5 aspect-[3/1] w-[calc(100%+2rem)] max-w-none bg-secondary object-cover"
+          className="-mx-4 -mt-3.5 aspect-[3/1] w-[calc(100%+2rem)] max-w-none bg-secondary object-cover lg:hidden"
         />
       )}
-      <div className={cn('flex gap-3', !compact && cover ? 'mt-2.5 items-start' : 'items-center')}>
+      <div
+        className={cn(
+          'flex gap-3 lg:hidden',
+          !compact && cover ? 'mt-2.5 items-start' : 'items-center',
+        )}
+      >
         {logo ? (
           <img
             src={compact ? logo.sm : logo.lg}
@@ -276,7 +286,7 @@ export function BookingWizard({
       </div>
       {step <= 4 && (
         <>
-          <div className="mt-4 flex items-center gap-2.5">
+          <div className="mt-4 flex items-center gap-2.5 lg:mt-1">
             {step > 1 && (
               <button
                 type="button"
@@ -415,7 +425,7 @@ export function BookingWizard({
         })}
       </ul>
       {salon.gallery.length > 0 && (
-        <section className="mt-6" aria-labelledby="works-title">
+        <section className="mt-6 lg:hidden" aria-labelledby="works-title">
           <div className="mb-2.5 flex items-baseline justify-between">
             <h2 id="works-title" className="font-heading text-[19px] font-semibold">
               {t('works')}
@@ -429,10 +439,7 @@ export function BookingWizard({
               <button
                 key={g.id}
                 type="button"
-                onClick={() => {
-                  history.pushState({ step, photo: true }, '')
-                  setPhoto(i)
-                }}
+                onClick={() => openPhoto(i)}
                 aria-label={t('zoom', { n: i + 1 })}
                 className="size-28 snap-start overflow-hidden rounded-[14px] bg-secondary"
               >
@@ -912,146 +919,179 @@ export function BookingWizard({
     } else tg.MainButton.hide()
   }, [tg, step, photo, taken, enabled, submitting, mainLabel])
 
+  const openPhoto = (i: number) => {
+    history.pushState({ step, photo: true }, '')
+    setPhoto(i)
+  }
+
   return (
-    <div className="mx-auto flex min-h-dvh max-w-[480px] flex-col bg-background min-[481px]:shadow-[0_0_40px_rgba(40,25,10,0.12)]">
-      {header}
-      <main className="flex-1 px-4 pt-2.5 pb-6">
-        {step === 1 && viewService}
-        {step === 2 && viewStaff}
-        {step === 3 && viewTime}
-        {step === 4 && viewContact}
-        {step === 5 && viewSuccess}
-      </main>
-
-      {step <= 4 && (
-        <div className="sticky bottom-0 flex items-center gap-3 border-t border-border bg-surface px-4 pt-3 pb-[calc(14px+env(safe-area-inset-bottom))]">
-          <div className="min-w-0 flex-1">
-            <b className="block truncate text-[15px]">{sumTitle}</b>
-            <span className="text-[12.5px] text-muted-foreground">{sumSub}</span>
-          </div>
-          <button
-            type="button"
-            disabled={!enabled}
-            onClick={next}
-            hidden={!!tg}
-            className="inline-flex min-h-[54px] items-center gap-2 rounded-full bg-foreground px-6 text-base font-semibold text-background disabled:bg-secondary disabled:text-muted-foreground"
-          >
-            {step === 4 ? (
-              submitting ? (
-                <>
-                  <Loader2Icon className="size-[18px] animate-spin" aria-hidden="true" />{' '}
-                  {t('submitting')}
-                </>
-              ) : (
-                t('submit')
-              )
-            ) : (
-              t('next')
-            )}
-          </button>
-        </div>
+    <div className="lg:min-h-dvh lg:bg-background">
+      {isDesktop && cover && (
+        <img
+          src={cover.lg}
+          srcSet={`${cover.sm} 800w, ${cover.lg} 1600w`}
+          sizes="100vw"
+          alt=""
+          fetchPriority="high"
+          className="h-[320px] w-full bg-secondary object-cover"
+        />
       )}
-
-      {/* SLOT_TAKEN bottom sheet — the form stays filled in */}
-      {taken && (
+      <div className="lg:mx-auto lg:grid lg:max-w-[1180px] lg:grid-cols-[minmax(0,1fr)_460px] lg:items-start lg:gap-12 lg:px-8 lg:pb-12">
+        {isDesktop && (
+          <SalonInfoPanel
+            salon={salon}
+            todayWeekday={isoWeekday(localDayStartUtc(today, tz), tz)}
+            hasCover={!!cover}
+            onOpenPhoto={openPhoto}
+          />
+        )}
         <div
-          className="fixed inset-0 z-40 flex items-end justify-center bg-foreground/45"
-          onClick={(e) => e.target === e.currentTarget && history.back()}
+          className={cn(
+            'mx-auto flex min-h-dvh max-w-[480px] flex-col bg-background min-[481px]:shadow-[0_0_40px_rgba(40,25,10,0.12)]',
+            'lg:sticky lg:top-6 lg:mx-0 lg:max-h-[calc(100dvh-48px)] lg:min-h-0 lg:w-full lg:max-w-none lg:overflow-hidden lg:rounded-[26px] lg:border lg:border-border lg:shadow-[0_18px_50px_rgba(40,25,10,0.13)]',
+            cover ? 'lg:mt-8' : 'lg:mt-10',
+          )}
         >
-          <div
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="taken-title"
-            className="w-full max-w-[480px] rounded-t-[22px] bg-surface px-5 pt-3 pb-[calc(20px+env(safe-area-inset-bottom))]"
-          >
-            <div className="mx-auto mb-3 h-1 w-10 rounded bg-border" />
-            <h2 id="taken-title" className="font-heading text-[21px] font-semibold">
-              {t('taken.title')}
-            </h2>
-            <p className="mt-1.5 text-[14px] text-muted-foreground">
-              {t('taken.text', { when: `${dayLabel(day!)}, ${formatTime(taken, tz)}` })}
-            </p>
-            <p className="mt-4 mb-2 text-[13px] font-semibold text-muted-foreground">
-              {t('taken.nearest')}
-            </p>
-            {slots.isFetching ? (
-              <Loader2Icon
-                className="size-5 animate-spin text-muted-foreground"
-                aria-hidden="true"
-              />
-            ) : alternatives.length ? (
-              <div className="grid grid-cols-4 gap-2">
-                {alternatives.map((iso) =>
-                  slotButton(iso, false, () => {
-                    setTime(iso)
-                    setTaken(null)
-                  }),
-                )}
+          {header}
+          <main className="flex-1 px-4 pt-2.5 pb-6 lg:overflow-y-auto lg:px-6">
+            {step === 1 && viewService}
+            {step === 2 && viewStaff}
+            {step === 3 && viewTime}
+            {step === 4 && viewContact}
+            {step === 5 && viewSuccess}
+          </main>
+
+          {step <= 4 && (
+            <div className="sticky bottom-0 flex items-center gap-3 border-t border-border bg-surface px-4 pt-3 pb-[calc(14px+env(safe-area-inset-bottom))] lg:static lg:px-6 lg:pb-4">
+              <div className="min-w-0 flex-1">
+                <b className="block truncate text-[15px]">{sumTitle}</b>
+                <span className="text-[12.5px] text-muted-foreground">{sumSub}</span>
               </div>
-            ) : (
-              <p className="text-[14px] text-muted-foreground">{t('taken.none')}</p>
-            )}
-            <button
-              type="button"
-              onClick={() => history.back()}
-              className="mt-4 min-h-[54px] w-full rounded-full font-semibold shadow-[inset_0_0_0_1.5px_var(--input)]"
-            >
-              {t('taken.other')}
-            </button>
-          </div>
-        </div>
-      )}
+              <button
+                type="button"
+                disabled={!enabled}
+                onClick={next}
+                hidden={!!tg}
+                className="inline-flex min-h-[54px] items-center gap-2 rounded-full bg-foreground px-6 text-base font-semibold text-background disabled:bg-secondary disabled:text-muted-foreground"
+              >
+                {step === 4 ? (
+                  submitting ? (
+                    <>
+                      <Loader2Icon className="size-[18px] animate-spin" aria-hidden="true" />{' '}
+                      {t('submitting')}
+                    </>
+                  ) : (
+                    t('submit')
+                  )
+                ) : (
+                  t('next')
+                )}
+              </button>
+            </div>
+          )}
 
-      {/* «Ishlarimiz» viewer — the phone's Back closes it */}
-      {photo !== null && gallery[photo] && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          aria-label={t('works')}
-          className="fixed inset-0 z-50 flex flex-col bg-[#14110e] text-white"
-        >
-          <div className="flex items-center justify-between px-4 pt-3">
-            <span className="text-[14px] font-semibold">
-              {t('viewer.count', { n: photo + 1, total: gallery.length })}
-            </span>
-            <button
-              type="button"
-              onClick={() => history.back()}
-              aria-label={t('viewer.close')}
-              className="grid size-12 place-items-center rounded-full bg-white/12"
+          {/* SLOT_TAKEN bottom sheet — the form stays filled in */}
+          {taken && (
+            <div
+              className="fixed inset-0 z-40 flex items-end justify-center bg-foreground/45"
+              onClick={(e) => e.target === e.currentTarget && history.back()}
             >
-              <XIcon className="size-5" aria-hidden="true" />
-            </button>
-          </div>
-          <div className="grid min-h-0 flex-1 place-items-center p-3">
-            <img
-              src={imageUrls(gallery[photo].path)?.lg}
-              alt={t('workAlt', { n: photo + 1 })}
-              className="max-h-full max-w-full rounded-xl object-contain"
-            />
-          </div>
-          <div className="flex justify-between px-4 pb-[calc(18px+env(safe-area-inset-bottom))]">
-            <button
-              type="button"
-              disabled={photo === 0}
-              onClick={() => setPhoto(photo - 1)}
-              aria-label={t('viewer.prev')}
-              className="grid size-12 place-items-center rounded-full bg-white/12 text-2xl disabled:opacity-30"
+              <div
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="taken-title"
+                className="w-full max-w-[480px] rounded-t-[22px] bg-surface px-5 pt-3 pb-[calc(20px+env(safe-area-inset-bottom))]"
+              >
+                <div className="mx-auto mb-3 h-1 w-10 rounded bg-border" />
+                <h2 id="taken-title" className="font-heading text-[21px] font-semibold">
+                  {t('taken.title')}
+                </h2>
+                <p className="mt-1.5 text-[14px] text-muted-foreground">
+                  {t('taken.text', { when: `${dayLabel(day!)}, ${formatTime(taken, tz)}` })}
+                </p>
+                <p className="mt-4 mb-2 text-[13px] font-semibold text-muted-foreground">
+                  {t('taken.nearest')}
+                </p>
+                {slots.isFetching ? (
+                  <Loader2Icon
+                    className="size-5 animate-spin text-muted-foreground"
+                    aria-hidden="true"
+                  />
+                ) : alternatives.length ? (
+                  <div className="grid grid-cols-4 gap-2">
+                    {alternatives.map((iso) =>
+                      slotButton(iso, false, () => {
+                        setTime(iso)
+                        setTaken(null)
+                      }),
+                    )}
+                  </div>
+                ) : (
+                  <p className="text-[14px] text-muted-foreground">{t('taken.none')}</p>
+                )}
+                <button
+                  type="button"
+                  onClick={() => history.back()}
+                  className="mt-4 min-h-[54px] w-full rounded-full font-semibold shadow-[inset_0_0_0_1.5px_var(--input)]"
+                >
+                  {t('taken.other')}
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* «Ishlarimiz» viewer — the phone's Back closes it */}
+          {photo !== null && gallery[photo] && (
+            <div
+              role="dialog"
+              aria-modal="true"
+              aria-label={t('works')}
+              className="fixed inset-0 z-50 flex flex-col bg-[#14110e] text-white"
             >
-              ‹
-            </button>
-            <button
-              type="button"
-              disabled={photo === gallery.length - 1}
-              onClick={() => setPhoto(photo + 1)}
-              aria-label={t('viewer.next')}
-              className="grid size-12 place-items-center rounded-full bg-white/12 text-2xl disabled:opacity-30"
-            >
-              ›
-            </button>
-          </div>
+              <div className="flex items-center justify-between px-4 pt-3">
+                <span className="text-[14px] font-semibold">
+                  {t('viewer.count', { n: photo + 1, total: gallery.length })}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => history.back()}
+                  aria-label={t('viewer.close')}
+                  className="grid size-12 place-items-center rounded-full bg-white/12"
+                >
+                  <XIcon className="size-5" aria-hidden="true" />
+                </button>
+              </div>
+              <div className="grid min-h-0 flex-1 place-items-center p-3">
+                <img
+                  src={imageUrls(gallery[photo].path)?.lg}
+                  alt={t('workAlt', { n: photo + 1 })}
+                  className="max-h-full max-w-full rounded-xl object-contain"
+                />
+              </div>
+              <div className="flex justify-between px-4 pb-[calc(18px+env(safe-area-inset-bottom))]">
+                <button
+                  type="button"
+                  disabled={photo === 0}
+                  onClick={() => setPhoto(photo - 1)}
+                  aria-label={t('viewer.prev')}
+                  className="grid size-12 place-items-center rounded-full bg-white/12 text-2xl disabled:opacity-30"
+                >
+                  ‹
+                </button>
+                <button
+                  type="button"
+                  disabled={photo === gallery.length - 1}
+                  onClick={() => setPhoto(photo + 1)}
+                  aria-label={t('viewer.next')}
+                  className="grid size-12 place-items-center rounded-full bg-white/12 text-2xl disabled:opacity-30"
+                >
+                  ›
+                </button>
+              </div>
+            </div>
+          )}
         </div>
-      )}
+      </div>
     </div>
   )
 }

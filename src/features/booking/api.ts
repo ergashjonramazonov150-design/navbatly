@@ -123,6 +123,28 @@ export async function fetchSlots(
   return (data ?? []) as string[]
 }
 
+/** Salon-wide opening hours per weekday (1 = Monday). Missing weekday = closed. */
+export type SalonHours = { weekday: number; opens: string; closes: string }[]
+
+export function useSalonOpeningHours(businessId: string, enabled: boolean) {
+  return useQuery({
+    // not 'salon-hours' — that key is the admin calendar's per-barber list (other shape)
+    queryKey: ['public-salon-hours', businessId],
+    enabled,
+    staleTime: 5 * 60_000,
+    retry: false, // optional info: if it can't load, the block is simply not shown
+    queryFn: async (): Promise<SalonHours> => {
+      const { data, error } = await supabase.rpc('get_salon_hours', { p_business_id: businessId })
+      if (error) throw error
+      return (data ?? []).map((r) => ({
+        weekday: r.weekday,
+        opens: r.opens.slice(0, 5),
+        closes: r.closes.slice(0, 5),
+      }))
+    },
+  })
+}
+
 export const slotsKey = (b: string, svc: string, st: string, date: string) =>
   ['slots', b, svc, st, date] as const
 
