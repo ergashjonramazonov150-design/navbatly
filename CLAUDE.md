@@ -69,17 +69,26 @@ _Last updated: 2026-11-14_
   migration, DB test 05); all merged to `main` and deployed 2026-11-13.
 - ✅ **M3.5 done** (photos: migration 9, admin photo screens, Xizmatlar thumbnails) —
   desktop checklist passed, live 2026-11-14. iPhone (HEIC) test postponed (no iPhone).
-- ✅ **FAST-TRACK for submission (2026-11-14), all live on navbatly.vercel.app:**
-  **M4** public booking `/b/:slug` + Edge Function `create-booking` (deployed with
-  `--no-verify-jwt`; NO captcha yet; IP hash salt = `IP_HASH_SALT` secret if set, else the
-  server key) — end-to-end booking verified. **M5 simplified**: Yozilishlar list with
-  confirm/cancel (no calendar, no manual booking). **README** with screenshots
-  (`docs/screenshots/`); demo login rows are placeholders for the user to fill.
-- ⏭ **Postponed:** M5 calendar + manual booking, M6 Telegram, M7 captcha, M8 landing,
-  M9 domain/SMTP, orphan-script real run, iPhone test. No tests yet for the booking page /
-  appointments list (verified by Playwright walk-through + check:live).
+- ✅ **Deadline sprint (2026-11-14), all merged to `main` and live on navbatly.vercel.app:**
+  **M4** public booking `/b/:slug` + Edge Function `create-booking` (`--no-verify-jwt`; IP
+  hash salt = `IP_HASH_SALT` secret if set, else the server key). **M5** Yozilishlar list,
+  day calendar, manual booking («Yangi yozilish»). **M6 Telegram** (migration 10; functions
+  `telegram-webhook`, `telegram-admin`; bot @navbatly_uz_bot, secret `TELEGRAM_BOT_TOKEN`;
+  owner link `?start=link_<code>`, salon link `?start=<slug>`) — user's real test passed.
+  **Telegram Mini App** (same `/b/:slug`, initData checked server-side) — passed.
+  **M7** security headers in `vercel.json` + Turnstile captcha (dormant until the user sets
+  `VITE_TURNSTILE_SITE_KEY` in Vercel FIRST, then `TURNSTILE_SECRET_KEY` in Supabase).
+  **M8** landing `/` (mockup 04, photos in `public/landing/`) + `/privacy`. Tests: 211 DB,
+  149 frontend (booking wizard, appointments list, Telegram links, landing/privacy added).
+  README updated.
+- ❌ **Dropped:** M9 custom domain/SMTP. Password reset stays off (admin resets in the
+  Supabase dashboard).
+- ⏭ **Postponed:** orphan-script real run, iPhone (HEIC) test, Russian UI, reminders,
+  "any free barber", catalog. No component tests yet for the calendar / manual-booking
+  dialog / TelegramCard (verified by Playwright walk-throughs + check:live).
 - ℹ️ The Vercel MCP connection needs team access re-authorized before it can read deploys.
-  Until then, confirm a deploy by finding new UI text in the live `assets/start-*.js`
-  file, then run `npm run check:live`.
-- 📌 **Pending before M5:** make the seed's demo bookings relative to "today"
+  Until then, confirm a deploy by fetching a new file (e.g. `/landing/1895701.webp`) or new
+  text in the live JS (the entry is now `assets/index-*.js`; texts may sit in other
+  chunks), then run `npm run check:live`.
+- 📌 **Pending:** make the seed's demo bookings relative to "today"
   (re-runnable `npm run db:seed`).

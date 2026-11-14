@@ -2,15 +2,18 @@
 
 **Online appointment booking for barbershops and beauty salons in Uzbekistan.**
 A customer opens the salon's link (from Instagram or Telegram), picks a service, a barber and a
-free time, and books in under a minute — no account needed. The salon owner manages services,
-barbers, working hours, days off, photos and bookings from an admin panel. UI in Uzbek (Latin),
-ready for Russian.
+free time, and books in under a minute — no account needed, on the web or **inside Telegram**
+(Mini App). The salon owner manages services, barbers, working hours, days off, photos and
+bookings from an admin panel and gets a **Telegram message** for every new booking. UI in Uzbek
+(Latin), ready for Russian.
 
 |                            |                                         |
 | -------------------------- | --------------------------------------- |
-| **Live demo**              | https://navbatly.vercel.app             |
+| **Live demo (landing)**    | https://navbatly.vercel.app             |
 | **Book at the demo salon** | https://navbatly.vercel.app/b/demo      |
+| **Book inside Telegram**   | https://t.me/navbatly_uz_bot?start=demo |
 | **Admin panel**            | https://navbatly.vercel.app/admin/login |
+| **Privacy policy**         | https://navbatly.vercel.app/privacy     |
 
 ### Demo login
 
@@ -47,11 +50,24 @@ ready for Russian.
 - If someone takes the time a second earlier: **"Bu vaqt band bo'lib qoldi"** sheet with the
   nearest free times; the form stays filled in.
 - Salon cover, logo, barber photos, optional service photos, «Ishlarimiz» gallery with a viewer.
+- **Telegram Mini App:** each salon has its own bot link `t.me/navbatly_uz_bot?start=<slug>`;
+  the bot answers with a **«✂️ Yozilish»** button that opens the same booking page inside
+  Telegram (Telegram's own Back / Main buttons, name pre-filled). The server checks Telegram's
+  signature on every Mini App booking.
+- Landing page (`/`) for salon owners and a plain-language privacy policy (`/privacy`), linked
+  from the booking form's consent checkbox.
 
 **Owner / barber (admin)** — `/admin`
 
 - Bookings list: search by name/phone, today / tomorrow / 7 days / all, status and barber
   filters, **confirm** and **cancel with reason**. Barbers see only their own bookings.
+- **Day calendar:** barbers as columns (one barber at a time on a phone), lunch and days off
+  hatched, a "now" line; tap a free spot to book.
+- **Manual booking («Yangi yozilish»)** for phone calls and walk-ins — from the calendar or
+  the list; the same database rules apply (no double booking).
+- **Telegram notifications:** «Botni ulash» links the salon's chat in one tap (one-time code,
+  no chat ID copying); every new online booking arrives as a message, marked
+  «📱 Telegram orqali yozildi» when it came from the Mini App. «Sinov xabarini yuborish» sends a test.
 - Services (price, duration, active switch, optional photo), barbers (profile, services,
   weekly hours with lunch breaks, days off, round photo the owner crops, consent note).
 - Settings: salon details, booking rules (time step, horizon, notice, max bookings per phone,
@@ -65,10 +81,19 @@ ready for Russian.
   rejects overlaps even when two customers press "Band qilish" in the same millisecond —
   proven by a real parallel test (`npm run db:test:race`).
 - **Row Level Security on every table:** salon A can never read salon B; barbers see only their
-  own bookings; inactive barbers/salons lose access. 193 database tests (pgTAP).
+  own bookings; inactive barbers/salons lose access. 211 database tests (pgTAP).
 - **Customers never write to tables directly:** bookings go through the `create-booking` Edge
   Function → `create_booking()` database function, which re-checks every rule, limits active
-  bookings per phone and requests per (hashed) IP, and computes the price and end time itself.
+  bookings per phone and requests per (hashed) IP or Telegram user, and computes the price and
+  end time itself.
+- **Bot protection:** honeypot field + database limits; **Cloudflare Turnstile** captcha on web
+  bookings (switched on by setting the keys; Telegram bookings are verified by Telegram's
+  signature instead).
+- **Security headers** (Vercel): Content-Security-Policy, HSTS, `nosniff`, referrer and
+  permissions policies; the admin can't be put in a frame, the booking page only inside
+  Telegram Web.
+- **Telegram:** the webhook accepts only requests carrying Telegram's secret token; the bot
+  token lives only in Supabase secrets.
 - **Photos:** resized and compressed **in the browser** (WebP, JPEG fallback, GPS data removed)
   before upload; Storage rules allow uploads only into the owner's own salon folder; 5 MB and
   JPEG/PNG/WebP are enforced by Supabase.
@@ -79,16 +104,19 @@ ready for Russian.
 | Layer    | Technology                                                                                                                                                      |
 | -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Frontend | React 19 + TypeScript, Vite 8, React Router, TanStack Query, react-hook-form + zod, Tailwind CSS 4 + shadcn/ui, i18next (Uzbek, Russian-ready), react-easy-crop |
-| Backend  | Supabase: PostgreSQL (RLS, `EXCLUDE` constraints, SQL functions), Auth, Storage, Edge Functions (Deno)                                                          |
+| Backend  | Supabase: PostgreSQL (RLS, `EXCLUDE` constraints, SQL functions), Auth, Storage, Edge Functions (Deno), Telegram Bot API + Mini App, Cloudflare Turnstile       |
 | Hosting  | Vercel (frontend), Supabase cloud (database, functions, storage)                                                                                                |
-| Quality  | pgTAP (193 DB tests), Vitest + Testing Library (125 tests), Playwright (live-site render check, real-Chrome image pipeline check), oxlint, Prettier             |
+| Quality  | pgTAP (211 DB tests), Vitest + Testing Library (149 tests), Playwright (live-site render check, real-Chrome image pipeline check), oxlint, Prettier             |
 
 ```mermaid
 flowchart LR
   C[Customer phone] -- read salon, free times --> API[Supabase API + RLS]
   C -- book --> EF[Edge Function create-booking] -- create_booking() --> DB[(PostgreSQL)]
+  EF -- new booking message --> TG[Telegram bot]
+  TG -- /start slug: Yozilish button --> C
   O[Owner / barber] -- login, manage --> API --> DB
   O -- photos --> ST[Supabase Storage]
+  TG -- message --> O
 ```
 
 Full design, decisions and roadmap: **[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)**.
@@ -112,7 +140,7 @@ npm run dev                     # http://localhost:5173  (phone on Wi-Fi: npm ru
 | `npm run check:live`                         | Opens the live site (desktop + phone) and fails on errors / blank pages |
 | `npm run db:push` · `npm run db:types`       | Apply migrations · regenerate DB types                                  |
 
-Database changes live only in `supabase/migrations/` (9 migrations), never in the dashboard.
+Database changes live only in `supabase/migrations/` (10 migrations), never in the dashboard.
 
 ## Next steps
 
@@ -120,14 +148,12 @@ Database changes live only in `supabase/migrations/` (9 migrations), never in th
 > "Forgot password" stays switched off (`VITE_PASSWORD_RESET_ENABLED=false`); the platform admin
 > resets passwords in the Supabase dashboard (Authentication → Users).
 
-| Next                                   | Why                                                                                           |
-| -------------------------------------- | --------------------------------------------------------------------------------------------- |
-| **Telegram notifications** (M6)        | "Botni ulash" one-tap linking; a message to the salon for every new online booking.           |
-| **Captcha** (M7, Cloudflare Turnstile) | The booking form has a honeypot + database limits today; captcha stops scripted spam.         |
-| **Day calendar** in the admin          | Approved mockup exists (`design/03-admin.html`): barbers as columns, tap a free slot to book. |
-| **Manual booking** by the owner        | For phone calls and walk-ins (database function already exists).                              |
-| **Landing page** (M8)                  | Approved mockup `design/04-landing.html`.                                                     |
-| Later                                  | Russian UI, reminders, "any free barber", Telegram Mini App, public salon catalog.            |
+| Next                 | Why                                                                   |
+| -------------------- | --------------------------------------------------------------------- |
+| Russian UI           | Texts already go through i18n; the RU switch is shown as "tez orada". |
+| Reminders            | A Telegram / SMS reminder to the customer before the visit.           |
+| "Any free barber"    | Book the nearest free time with whichever barber is free.             |
+| Public salon catalog | Find a salon by district and service (Phase 3 in ARCHITECTURE.md).    |
 
 Photos: free [Pexels](https://www.pexels.com/license/) images, credited in
 [docs/IMAGE_CREDITS.md](docs/IMAGE_CREDITS.md).
