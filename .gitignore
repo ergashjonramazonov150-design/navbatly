@@ -34,3 +34,6 @@ supabase/.branches
 
 # Demo photos downloaded for the M3.5 checklist (npm run demo:photos)
 demo-photos/
+
+# Playwright MCP working files (page snapshots may contain typed form values)
+.playwright-mcp/
