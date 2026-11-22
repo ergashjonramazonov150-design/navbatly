@@ -1,0 +1,215 @@
+{
+  "base": "https://navbatly.vercel.app",
+  "started": "2026-11-22T10:06:43.801Z",
+  "finished": "2026-11-22T10:08:51.106Z",
+  "server": {
+    "name": "Playwright",
+    "version": "1.65.0-alpha-2026-10-30"
+  },
+  "summary": {
+    "PASS": 20,
+    "FAIL": 2,
+    "BLOCKED": 0,
+    "NOT TESTED": 3
+  },
+  "results": [
+    {
+      "id": "TC-01",
+      "area": "Homepage",
+      "title": "Homepage loads with title, headline, navigation and CTAs",
+      "status": "PASS",
+      "evidence": "title \"Navbatly\"; h1 \"Mijozlar o'zi yozilsin — siz ishingizga e'tibor bering.\"; 6 sections; header links: N\nNavbatly | Qanday ishlaydi | Imkoniyatlar | Boshqaruv paneli | Demoni ko'rish",
+      "ms": 3472
+    },
+    {
+      "id": "TC-02",
+      "area": "Navigation",
+      "title": "Header menu links scroll to their sections",
+      "status": "PASS",
+      "evidence": "Qanday ishlaydi → #qanday (section top 0px); Imkoniyatlar → #imkoniyatlar (section top 0px); Boshqaruv paneli → #panel (section top 0px)",
+      "ms": 9166
+    },
+    {
+      "id": "TC-02b",
+      "area": "Navigation",
+      "title": "After a menu jump, the section label is not hidden behind the sticky header",
+      "status": "PASS",
+      "evidence": "Qanday ishlaydi: label \"QANDAY ISHLAYDI\" top 73px, header bottom 69px, visible element at that point: label; Imkoniyatlar: label \"IMKONIYATLAR\" top 72px, header bottom 69px, visible element at that point: label; Boshqaruv paneli: label \"BOSHQARUV PANELI\" top 72px, header bottom 69px, visible element at that point: label",
+      "ms": 9283
+    },
+    {
+      "id": "TC-03",
+      "area": "Navigation",
+      "title": "All internal links open real pages; external links are well-formed",
+      "status": "PASS",
+      "evidence": "internal pages opened OK: /, /b/demo, /privacy, /admin/login; in-page anchors: #qanday, #imkoniyatlar, #panel; external (checked, not opened): https://t.me/navbatly_uz_bot?start=demo, https://t.me/navbatly_uz_bot",
+      "ms": 18155
+    },
+    {
+      "id": "TC-04",
+      "area": "Navigation",
+      "title": "Hero CTA \"Demo salonni ochish\" opens the demo salon booking page",
+      "status": "PASS",
+      "evidence": "CTA → /b/demo, booking step 1 \"Xizmatni tanlang\" shown",
+      "ms": 2844
+    },
+    {
+      "id": "TC-05",
+      "area": "Navigation",
+      "title": "Privacy page shows all sections and links back home",
+      "status": "PASS",
+      "evidence": "h1 \"Maxfiylik siyosati\", 6 sections, back link → /",
+      "ms": 3201
+    },
+    {
+      "id": "TC-06",
+      "area": "Navigation",
+      "title": "Unknown page and unknown salon show friendly \"not found\" pages",
+      "status": "PASS",
+      "evidence": "unknown URL → \"Sahifa topilmadi\" with a link home; unknown salon slug → \"Salon topilmadi\"",
+      "ms": 2498
+    },
+    {
+      "id": "TC-07",
+      "area": "Security",
+      "title": "Admin pages require login (logged-out visitor is redirected)",
+      "status": "PASS",
+      "evidence": "/admin/appointments → /admin/login",
+      "ms": 1348
+    },
+    {
+      "id": "TC-08",
+      "area": "Forms",
+      "title": "Admin login form: empty and invalid email are rejected before any request",
+      "status": "PASS",
+      "evidence": "empty → \"Emailni kiriting.\" + \"Parolni kiriting.\"; \"not-an-email\" → \"Email noto'g'ri ko'rinishda\"; no request to /auth/v1/token",
+      "ms": 2894
+    },
+    {
+      "id": "TC-09",
+      "area": "Barbershops",
+      "title": "Barbershop listing page",
+      "status": "NOT TESTED",
+      "evidence": "Navbatly has no public salon list: every salon shares its own link /b/<slug> (router has no listing route; a public catalog is planned for Phase 3 in docs/ARCHITECTURE.md). The demo salon page is tested instead (TC-10)."
+    },
+    {
+      "id": "TC-10",
+      "area": "Barbershops",
+      "title": "Salon page (desktop): name, address, opening hours, barbers, gallery",
+      "status": "PASS",
+      "evidence": "\"Madara Barbershop\"; hours: Dushanba 09:00 – 20:00 / Seshanba 09:00 – 20:00 / Chorshanba 09:00 – 20:00 / Payshanba 09:00 – 20:00 / Juma 09:00 – 20:00 / Shanba 09:00 – 20:00 / YakshanbaBugun Dam olish kuni; barbers: Jasur, Bobur, Akmal; gallery photos: 8; call link: true",
+      "ms": 3674
+    },
+    {
+      "id": "TC-11",
+      "area": "Barbershops",
+      "title": "Services show name, duration and price, matching the API data",
+      "status": "PASS",
+      "evidence": "Soch olish — 80 000 so'm, 30 daq; Soqol olish — 50 000 so'm, 20 daq; Soch + soqol — 120 000 so'm, 50 daq; Bolalar soch turmagi — 60 000 so'm, 30 daq; Ukladka — 40 000 so'm, 20 daq",
+      "ms": 536
+    },
+    {
+      "id": "TC-12",
+      "area": "Booking",
+      "title": "Step 1 → 2: \"Davom etish\" disabled until a service is chosen; barbers filtered",
+      "status": "PASS",
+      "evidence": "service \"Soch olish\" → barbers offered: Jasur Klassik va zamonaviy soch turmaklari. 8 yillik tajriba. Eng yaqin: ertaga 10:00 | Bobur Soqol va fade bo'yicha mutaxassis. Eng yaqin: ertaga 09:00 | A Akmal Bolalar soch turmaklari va ukladka. Eng yaqin: ertaga 09:00",
+      "ms": 6500
+    },
+    {
+      "id": "TC-13",
+      "area": "Booking",
+      "title": "Step 2 → 3 → 4: choose barber, day and a free time",
+      "status": "PASS",
+      "evidence": "barber \"Jasur\", 26 free times shown, picked 10:00 → contact form",
+      "ms": 6864
+    },
+    {
+      "id": "TC-14",
+      "area": "Booking",
+      "title": "Empty form submission shows all required-field errors and sends nothing",
+      "status": "PASS",
+      "evidence": "name, phone and consent errors shown; no request to create-booking",
+      "ms": 1405
+    },
+    {
+      "id": "TC-15",
+      "area": "Booking",
+      "title": "Invalid input: 1-letter name, short phone, letters in phone",
+      "status": "PASS",
+      "evidence": "name \"A\" rejected; phone typed \"abc12345\" kept as \"12 345\" (letters dropped) and rejected as too short",
+      "ms": 2015
+    },
+    {
+      "id": "TC-16",
+      "area": "Booking",
+      "title": "Valid booking → confirmation screen (server answer MOCKED, nothing saved)",
+      "status": "PASS",
+      "evidence": "confirmation \"So'rovingiz yuborildi!\" shown; intercepted request: service d0000000…, barber d0000000…, time 2026-11-23T05:00:00+00:00, name \"QA Test\", phone +998900000099, honeypot empty. Request was answered by the mock — no appointment created.",
+      "ms": 4961
+    },
+    {
+      "id": "TC-17-desktop",
+      "area": "Responsive",
+      "title": "desktop 1440×900: homepage and salon page fit without sideways scrolling",
+      "status": "PASS",
+      "evidence": "no horizontal overflow (homepage 0px, salon 0px); salon layout: two columns (info panel + booking card)",
+      "ms": 6983
+    },
+    {
+      "id": "TC-17-tablet",
+      "area": "Responsive",
+      "title": "tablet 768×1024: homepage and salon page fit without sideways scrolling",
+      "status": "FAIL",
+      "evidence": "horizontal overflow: homepage 16px, salon page 0px",
+      "ms": 6197
+    },
+    {
+      "id": "TC-17-tablet-landscape",
+      "area": "Responsive",
+      "title": "tablet-landscape 1024×768: homepage and salon page fit without sideways scrolling",
+      "status": "FAIL",
+      "evidence": "horizontal overflow: homepage 27px, salon page 0px",
+      "ms": 6128
+    },
+    {
+      "id": "TC-17-mobile",
+      "area": "Responsive",
+      "title": "mobile 390×844: homepage and salon page fit without sideways scrolling",
+      "status": "PASS",
+      "evidence": "no horizontal overflow (homepage 0px, salon 0px); salon layout: single column",
+      "ms": 7306
+    },
+    {
+      "id": "TC-18",
+      "area": "Browser errors",
+      "title": "No console errors during the whole session",
+      "status": "PASS",
+      "evidence": "Total messages: 0 (Errors: 0, Warnings: 0)",
+      "ms": 9
+    },
+    {
+      "id": "TC-19",
+      "area": "Browser errors",
+      "title": "No failed network requests on clean page loads",
+      "status": "PASS",
+      "evidence": "/: 11 requests; /b/demo: 26 requests; /privacy: 7 requests; /admin/login: 7 requests — 0 with status 4xx/5xx or network errors. Whole session: 2 request(s) net::ERR_ABORTED (cancelled by navigation during the scripted run).",
+      "ms": 20924
+    },
+    {
+      "id": "TC-20",
+      "area": "Admin",
+      "title": "Admin panel after login (bookings, calendar, services, barbers, settings)",
+      "status": "NOT TESTED",
+      "evidence": "Requires owner credentials. Per the assignment restrictions no credentials were used. Access control (TC-07) and form validation (TC-08) were tested; the panel itself is covered by the project's automated component tests (see report)."
+    },
+    {
+      "id": "TC-21",
+      "area": "Telegram",
+      "title": "Telegram bot and Mini App booking",
+      "status": "NOT TESTED",
+      "evidence": "Requires the Telegram app and a real Telegram account; cannot be driven by Playwright. Bot links were checked for correct format (TC-03)."
+    }
+  ],
+  "toolCalls": 213
+}
