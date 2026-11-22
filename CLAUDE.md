@@ -61,7 +61,7 @@ plan).
 
 ## Status (update at the end of every session)
 
-_Last updated: 2026-11-14_
+_Last updated: 2026-11-22_
 
 - ✅ **Done and approved:** M0, M1 (migrations 1–6, pgTAP suite), design mockups
   (`design/01–03`), M2 (login, roles, shell), **M3 complete** — 3a (migration 7 +
@@ -88,6 +88,11 @@ _Last updated: 2026-11-14_
 - 👤 **Demo login for the teacher:** `demoprofil@gmail.com` = OWNER of the demo salon
   (business_members row, no staff profile; added 2026-11-14 at the user's request, user
   accepts the risks). Password only with the user — never in the repo.
+- 🧪 **QA assignment (2026-11-22):** Playwright MCP (`.mcp.json`, `@playwright/mcp@0.0.84`),
+  25-case run + report on branch `qa-playwright-mcp` (NOT merged; submission folder
+  `NAVBATLY_ASSIGNMENT/`). Its BUG-01 (homepage scrolled sideways 8–27 px at 600–1024 px —
+  laptop base `-mx-[5%]` in the panel section) fixed on `fix/landing-tablet-overflow`
+  (laptop `w-[90%]`), merged and live.
 - ❌ **Dropped:** M9 custom domain/SMTP. Password reset stays off (admin resets in the
   Supabase dashboard).
 - ⏭ **Postponed:** orphan-script real run, iPhone (HEIC) test, Russian UI, reminders,
