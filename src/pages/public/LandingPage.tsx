@@ -336,10 +336,12 @@ export function LandingPage() {
             <p className="mt-3 mb-9 max-w-[640px] text-[17px] text-muted-foreground">
               {t('landing.panelText')}
             </p>
+            {/* w-[90%]: the laptop base is 110% wide (-mx-[5%]), so at full content width it
+                stuck out past the screen edge on 600–1024px screens (QA BUG-01). */}
             <Laptop
               src="/landing/app-admin.jpg"
               alt={t('landing.altAdmin')}
-              className="mx-auto max-w-[980px]"
+              className="mx-auto w-[90%] max-w-[980px]"
             />
           </div>
         </section>
