@@ -1,0 +1,29 @@
+﻿# node test-results/mcp-handshake.mjs   (run 2026-11-22T10:22:12Z)
+server: {"name":"Playwright","version":"1.65.0-alpha-2026-10-30"} | protocol: 2025-06-18
+server capabilities: tools
+tools (25):
+ - browser_close: Close the page
+ - browser_resize: Resize the browser window
+ - browser_console_messages: Returns all console messages
+ - browser_handle_dialog: Handle a dialog
+ - browser_emulate_media: Emulate CSS media features for the page, for example switch between the light and dark col
+ - browser_evaluate: Evaluate JavaScript expression on page or element
+ - browser_file_upload: Upload one or multiple files
+ - browser_drop: Drop files or MIME-typed data onto an element, as if dragged from outside the page. At lea
+ - browser_find: Search the accessibility snapshot of the current page for text or a regular expression. Re
+ - browser_fill_form: Fill multiple form fields
+ - browser_press_key: Press a key on the keyboard
+ - browser_type: Type text into editable element
+ - browser_navigate: Navigate to a URL
+ - browser_navigate_back: Go back to the previous page in the history
+ - browser_network_requests: Returns a numbered list of network requests since loading the page. Use browser_network_re
+ - browser_network_request: Returns full details (headers and body) of a single network request, or a single part if `
+ - browser_run_code_unsafe: Run a Playwright code snippet. Unsafe: executes arbitrary JavaScript in the Playwright ser
+ - browser_take_screenshot: Take a screenshot of the current page. You can't perform actions based on the screenshot, 
+ - browser_snapshot: Capture accessibility snapshot of the current page, this is better than screenshot
+ - browser_click: Perform click on a web page
+ - browser_drag: Perform drag and drop between two elements
+ - browser_hover: Hover over element on page
+ - browser_select_option: Select an option in a dropdown
+ - browser_tabs: List, create, close, or select a browser tab.
+ - browser_wait_for: Wait for text to appear or disappear or a specified time to pass. When both text and textG

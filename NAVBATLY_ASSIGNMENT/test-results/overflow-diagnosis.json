@@ -1,0 +1,98 @@
+{
+  "base": "https://navbatly.vercel.app",
+  "started": "2026-11-22T10:20:47.235Z",
+  "finished": "2026-11-22T10:21:20.494Z",
+  "rows": [
+    {
+      "width": 390,
+      "overflowPx": 0,
+      "culprits": []
+    },
+    {
+      "width": 600,
+      "overflowPx": 8,
+      "culprits": [
+        {
+          "tag": "div",
+          "className": "-mx-[5%] h-[13px] rounded-b-xl bg-gradient-to-b from-[#cfc4b6] to-[#a99c8c]",
+          "right": 608
+        }
+      ]
+    },
+    {
+      "width": 700,
+      "overflowPx": 13,
+      "culprits": [
+        {
+          "tag": "div",
+          "className": "-mx-[5%] h-[13px] rounded-b-xl bg-gradient-to-b from-[#cfc4b6] to-[#a99c8c]",
+          "right": 713
+        }
+      ]
+    },
+    {
+      "width": 768,
+      "overflowPx": 16,
+      "culprits": [
+        {
+          "tag": "div",
+          "className": "-mx-[5%] h-[13px] rounded-b-xl bg-gradient-to-b from-[#cfc4b6] to-[#a99c8c]",
+          "right": 784
+        }
+      ]
+    },
+    {
+      "width": 820,
+      "overflowPx": 19,
+      "culprits": [
+        {
+          "tag": "div",
+          "className": "-mx-[5%] h-[13px] rounded-b-xl bg-gradient-to-b from-[#cfc4b6] to-[#a99c8c]",
+          "right": 839
+        }
+      ]
+    },
+    {
+      "width": 900,
+      "overflowPx": 23,
+      "culprits": [
+        {
+          "tag": "div",
+          "className": "-mx-[5%] h-[13px] rounded-b-xl bg-gradient-to-b from-[#cfc4b6] to-[#a99c8c]",
+          "right": 923
+        }
+      ]
+    },
+    {
+      "width": 1024,
+      "overflowPx": 27,
+      "culprits": [
+        {
+          "tag": "div",
+          "className": "-mx-[5%] h-[13px] rounded-b-xl bg-gradient-to-b from-[#cfc4b6] to-[#a99c8c]",
+          "right": 1051
+        }
+      ]
+    },
+    {
+      "width": 1100,
+      "overflowPx": 0,
+      "culprits": []
+    },
+    {
+      "width": 1180,
+      "overflowPx": 0,
+      "culprits": []
+    },
+    {
+      "width": 1280,
+      "overflowPx": 0,
+      "culprits": []
+    },
+    {
+      "width": 1440,
+      "overflowPx": 0,
+      "culprits": []
+    }
+  ]
+}

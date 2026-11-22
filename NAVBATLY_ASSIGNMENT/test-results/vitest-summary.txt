@@ -1,0 +1,4 @@
+﻿# npx vitest run   (project's own frontend test suite, run 2026-11-22T10:22:12Z)
+Test Files  29 passed (29)
+Tests  173 passed (173)
+Duration  24.03s (import 45%, environment 29%, tests 16%, setup 8%, transform 1%)
